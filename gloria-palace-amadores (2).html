@@ -2577,7 +2577,7 @@
     </button>
     <p class="sonido__estado" id="estado-sonido" role="status" hidden></p>
   </div>
-  <div class="sonido__reproductor" id="reproductor" aria-hidden="true"></div>
+ <audio class="sonido__reproductor" id="reproductor" src="jazz.mp3" loop preload="none" aria-hidden="true"></audio>
 
   <!-- ---- H4. Ventanas legales -------------------------------------------
        PENDIENTE: los tres textos son plantillas de estructura, NO textos
@@ -3550,141 +3550,54 @@
     })();
 
 
-    /* ====================================================================
-       MÓDULO S6 — SONIDO AMBIENTE
+/* ====================================================================
+       MÓDULO S6 — SONIDO AMBIENTE (AUDIO LOCAL)
        --------------------------------------------------------------------
-       Tres decisiones de diseño, y el motivo de cada una:
-
-       1. Empieza apagado. Los navegadores bloquean el audio automático con
-          sonido desde 2018, así que un reproductor que arranque solo no
-          suena: solo rompe. Además la norma WCAG 1.4.2 exige poder pararlo.
-
-       2. El reproductor se inserta al pulsar, no al cargar la página.
-          YouTube instala cookies en cuanto carga; insertarlo antes del
-          permiso saltaría el consentimiento del MÓDULO S4. Se usa el
-          dominio youtube-nocookie.com, que reduce el rastreo.
-
-       3. La preferencia solo se recuerda si el visitante ha aceptado las
-          cookies de personalización.
-
-       --------------------------------------------------------------------
-       POR QUÉ A VECES NO SUENA, Y QUÉ HACE ESTE MÓDULO AL RESPECTO
-       --------------------------------------------------------------------
-       Insertar un iframe y confiar en que suene es frágil: hay motivos
-       reales, fuera del alcance de este código, por los que puede no
-       sonar, y antes fallaba en silencio porque el reproductor mide 1x1
-       píxel y no hay manera de verlo fallar.
-
-       - El vídeo tiene la inserción externa desactivada por quien lo
-         subió. Es una opción que activa el propio canal de YouTube, y en
-         ese caso ningún código de esta página puede saltársela.
-       - La página vive dentro de un entorno que bloquea peticiones a
-         dominios externos (por ejemplo, una vista previa alojada dentro de
-         otra aplicación). Si estás viendo esta página dentro de un chat o
-         una vista previa de terceros en lugar del archivo abierto
-         directamente en el navegador, es la causa más probable.
-       - El visitante tiene bloqueadores de contenido activos.
-
-       Para no depender solo de que el iframe funcione, este módulo se
-       suscribe a los mensajes que el propio reproductor de YouTube envía
-       (eventos onReady, onStateChange y onError; no hace falta cargar la
-       API oficial para recibirlos, basta con enablejsapi=1 en la URL) y
-       pone un límite de tiempo: si en unos segundos el vídeo no ha
-       avisado de que está sonando, se da por bloqueado y aparece un aviso
-       con un enlace directo al vídeo en YouTube, para que el sonido no
-       dependa de que el iframe funcione.
-
-       PENDIENTE (licencia): reproducir música de fondo en la web de un
-       hotel es un uso público con ánimo comercial. Ni la licencia de
-       YouTube ni la de un vídeo cualquiera lo cubren. Antes de publicar
-       hace falta la licencia correspondiente, o sustituir la pista por
-       música libre de derechos o con licencia comercial contratada. El
-       identificador del vídeo está aislado en la constante PISTA para que
-       cambiarla sea inmediato.
+       Adaptado para usar una etiqueta <audio> nativa en lugar de YouTube.
        ==================================================================== */
     (function () {
       'use strict';
 
-      var PISTA = '0QlyE_hAXrk';  // identificador del vídeo de YouTube
       var CLAVE = 'gpa_sonido';
-      var ESPERA_MAXIMA = 4500;   // ms de margen antes de dar el iframe por bloqueado
 
       var boton = document.getElementById('boton-sonido');
-      var contenedor = document.getElementById('reproductor');
+      var audio = document.getElementById('reproductor'); // Ahora es un <audio>
       var estado = document.getElementById('estado-sonido');
-      if (!boton || !contenedor) return;
+      if (!boton || !audio) return;
 
-      var marco = null;          // el iframe, creado la primera vez que se enciende
-      var listo = false;         // true en cuanto YouTube confirma onReady
-      var sonandoDeVerdad = false; // true en cuanto YouTube confirma reproducción
-      var plazo = null;          // temporizador de la comprobación
+      var listo = false;
 
-      function anunciar(texto, conEnlace) {
+      function anunciar(texto) {
         if (!estado) return;
-        estado.innerHTML = conEnlace
-          ? texto + ' <a href="https://www.youtube.com/watch?v=' + PISTA +
-          '" target="_blank" rel="noopener">Abrir en YouTube</a>'
-          : texto;
+        estado.textContent = texto;
         estado.hidden = !texto;
-      }
-
-      /** Órdenes al reproductor por postMessage; no requieren la API oficial. */
-      function ordenar(funcion) {
-        if (!marco || !marco.contentWindow) return;
-        marco.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: funcion, args: [] }),
-          '*'
-        );
-      }
-
-      function crearReproductor() {
-        marco = document.createElement('iframe');
-        marco.title = 'Música ambiente';
-        marco.allow = 'autoplay';
-        // origin identifica esta página ante YouTube; en un archivo abierto
-        // con doble clic (protocolo file://) no hay origen que declarar, y
-        // el parámetro se omite sin que afecte al resto.
-        var origen = (window.location.origin && window.location.origin !== 'null')
-          ? '&origin=' + encodeURIComponent(window.location.origin)
-          : '';
-        marco.src = 'https://www.youtube-nocookie.com/embed/' + PISTA +
-          '?enablejsapi=1&autoplay=1&loop=1&playlist=' + PISTA +
-          '&controls=0&modestbranding=1&playsinline=1' + origen;
-        contenedor.appendChild(marco);
-
-        // Si en ESPERA_MAXIMA no ha llegado confirmación de que suena,
-        // se da el intento por bloqueado y se ofrece el enlace directo.
-        plazo = window.setTimeout(function () {
-          if (!sonandoDeVerdad) {
-            boton.dataset.cargando = 'false';
-            boton.setAttribute('aria-pressed', 'false');
-            boton.querySelector('span:last-child').textContent = 'Música';
-            anunciar(
-              'Aquí no se ha podido reproducir automáticamente. Ábrela en YouTube:',
-              true
-            );
-          }
-        }, ESPERA_MAXIMA);
       }
 
       function encender(sonando) {
         boton.setAttribute('aria-pressed', String(sonando));
         boton.dataset.cargando = sonando ? 'true' : 'false';
-        boton.querySelector('span:last-child').textContent =
-          sonando ? 'Silenciar' : 'Música';
+        boton.querySelector('span:last-child').textContent = sonando ? 'Silenciar' : 'Música';
 
         if (sonando) {
-          anunciar('');   // limpia cualquier aviso de un intento anterior
-          if (!marco) {
-            crearReproductor();   // el autoplay del propio src lo arranca
-          } else {
-            ordenar('playVideo');
+          anunciar(''); 
+          listo = true;
+          
+          // Inicia la reproducción local
+          var promesa = audio.play();
+          if (promesa !== undefined) {
+            promesa.catch(function(error) {
+              // Falla si el navegador bloquea el autoplay sin interacción
+              boton.setAttribute('aria-pressed', 'false');
+              boton.dataset.cargando = 'false';
+              boton.querySelector('span:last-child').textContent = 'Música';
+              anunciar('El navegador bloqueó el audio. Vuelve a pulsar.');
+            });
           }
         } else {
-          ordenar('pauseVideo');
+          audio.pause();
         }
 
-        // Solo se recuerda con permiso de personalización.
+        // Solo se recuerda con permiso de personalización (MÓDULO S4).
         if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
           try {
             localStorage.setItem(CLAVE, sonando ? '1' : '0');
@@ -3696,57 +3609,17 @@
         encender(boton.getAttribute('aria-pressed') !== 'true');
       });
 
-      /* ---- Mensajes reales del reproductor ------------------------------
-         YouTube manda estos eventos en cuanto enablejsapi=1 está en la URL,
-         sin necesidad de cargar ningún script adicional. playerState 1
-         significa "reproduciendo"; onError llega si el vídeo está
-         restringido, es privado o tiene la inserción externa desactivada. */
-      window.addEventListener('message', function (evento) {
-        if (!marco || evento.source !== marco.contentWindow) return;
-
-        var datos;
-        try {
-          datos = JSON.parse(evento.data);
-        } catch (error) {
-          return;   // mensajes que no son de la API de YouTube
-        }
-
-        if (datos.event === 'onReady') {
-          listo = true;
-        }
-
-        if (datos.event === 'onError') {
-          window.clearTimeout(plazo);
-          boton.dataset.cargando = 'false';
-          boton.setAttribute('aria-pressed', 'false');
-          boton.querySelector('span:last-child').textContent = 'Música';
-          anunciar('Este vídeo no admite reproducirse insertado. Ábrelo en YouTube:', true);
-        }
-
-        if (datos.event === 'infoDelivery' && datos.info &&
-          typeof datos.info.playerState !== 'undefined') {
-          if (datos.info.playerState === 1) {
-            sonandoDeVerdad = true;
-            window.clearTimeout(plazo);
-            anunciar('');
-          }
-        }
-      });
-
-      // Al cambiar de pestaña se pausa: música que sigue sonando de fondo
-      // en una pestaña que no se ve es de las cosas que más molestan.
+      // Al cambiar de pestaña se pausa para que no moleste de fondo
       document.addEventListener('visibilitychange', function () {
         if (!listo) return;
         if (document.hidden && boton.getAttribute('aria-pressed') === 'true') {
-          ordenar('pauseVideo');
+          audio.pause();
         } else if (!document.hidden && boton.getAttribute('aria-pressed') === 'true') {
-          ordenar('playVideo');
+          audio.play();
         }
       });
 
-      // Si en una visita anterior lo había dejado encendido y hay permiso,
-      // se anuncia pero no se arranca solo: hace falta un gesto suyo para
-      // que el navegador permita el audio.
+      // Si en una visita anterior lo dejó encendido
       try {
         if (localStorage.getItem(CLAVE) === '1') {
           boton.querySelector('span:last-child').textContent = 'Reanudar música';
