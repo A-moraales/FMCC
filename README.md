@@ -1,1 +1,3665 @@
-# FMCC
+<!DOCTYPE html>
+<html lang="es">
+
+<!--
+  ============================================================================
+  GLORIA PALACE AMADORES THALASSO & HOTEL
+  Sitio de una sola página. Todo el código va en este archivo, dividido en
+  módulos numerados para localizarlo rápido.
+
+  HOJA DE ESTILOS (<style>)
+    01  Tokens de diseño                 11  Thalasso y experiencias
+    02  Reinicio y base                  12  Motor de reserva
+    03  Tipografía                       13  Pie
+    04  Utilidades y accesibilidad       14  Aviso y panel de cookies
+    05  Botones                          15  Asistente (chatbot)
+    06  Cabecera y navegación            16  Control de sonido
+    07  Inmersión (portada)              17  Ventanas modales legales
+    08  Estructura de sección            18  Responsive
+    09  El hotel                         19  Movimiento reducido
+    10  Habitaciones (carrusel)
+
+  MAQUETACIÓN (<body>)
+    A  Cabecera            E  Thalasso y experiencias
+    B  Inmersión           F  Motor de reserva
+    C  El hotel            G  Pie
+    D  Habitaciones        H  Capas flotantes: cookies, asistente, sonido, legal
+
+  COMPORTAMIENTO (<script>)
+    S1  Motor de la inmersión      S5  Asistente
+    S2  Interfaz                   S6  Sonido ambiente
+    S3  Motor de reserva           S7  Ventanas modales legales
+    S4  Consentimiento de cookies
+
+  Datos del hotel tomados de gloriapalaceth.com. Fotografías, logotipo y
+  textos legales son marcadores de posición: ver los comentarios marcados
+  con la palabra PENDIENTE.
+  ============================================================================
+-->
+
+<head>
+  <!-- ======================================================================
+       MÓDULO 00 — METAETIQUETAS Y DATOS ESTRUCTURADOS
+       Construido siguiendo el tema 6. Orden: codificación, viewport, título,
+       descripción, indexación, canónica, social, JSON-LD.
+       ====================================================================== -->
+
+  <!-- Codificación. En los primeros 1024 bytes del documento. -->
+  <meta charset="UTF-8">
+
+  <!-- Viewport. Sin maximum-scale ni user-scalable=no: bloquear el zoom es
+       una barrera de accesibilidad. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Título: 50-60 caracteres, palabra clave principal al principio. -->
+  <title>Gloria Palace Amadores Thalasso &amp; Hotel 4* | Mogán, Gran Canaria</title>
+
+  <!-- Meta descripción: 150-160 caracteres. No posiciona, pero decide
+       cuánta gente hace clic en el resultado. -->
+  <meta name="description"
+    content="Hotel de 4 estrellas sobre el acantilado entre Puerto Rico y Playa de Amadores. Dos piscinas con vistas al Atlántico y 1.800 m² de talasoterapia.">
+
+  <!-- Indexación. Parámetros posibles: index/noindex, follow/nofollow,
+       noarchive, nosnippet, noimageindex, none (= noindex, nofollow). -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+  <meta name="author" content="Gloria Thalasso &amp; Hotels">
+  <meta name="theme-color" content="#0C3E50">
+
+  <!-- Canónica: evita que varias URL con el mismo contenido compitan. -->
+  <link rel="canonical" href="https://www.gloriapalaceth.com/gloria-palace-amadores-thalasso-hotel/">
+
+  <!-- Open Graph y Twitter Card: cómo se ve el enlace al compartirlo. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Gloria Thalasso &amp; Hotels">
+  <meta property="og:title" content="Gloria Palace Amadores Thalasso &amp; Hotel 4*">
+  <meta property="og:description"
+    content="Sobre el acantilado, entre Puerto Rico y Playa de Amadores. Dos piscinas con vistas al Atlántico y 1.800 m² de talasoterapia.">
+  <meta property="og:url" content="https://www.gloriapalaceth.com/gloria-palace-amadores-thalasso-hotel/">
+  <meta property="og:image" content="img/og-amadores.jpg">
+  <meta property="og:image:alt" content="Piscina infinita del Gloria Palace Amadores sobre el Atlántico">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gloria Palace Amadores Thalasso &amp; Hotel 4*">
+  <meta name="twitter:description" content="Sobre el acantilado, entre Puerto Rico y Playa de Amadores.">
+  <meta name="twitter:image" content="img/og-amadores.jpg">
+
+  <!-- Tipografías.
+       Marcellus -> titulares: romana clásica, de piedra tallada.
+       Manrope   -> texto: grotesca abierta y legible en pantalla. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Marcellus&display=swap">
+
+  <!-- Datos estructurados: describen el negocio en el vocabulario que los
+       buscadores entienden y pueden mostrar como resultado enriquecido. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Hotel",
+    "name": "Gloria Palace Amadores Thalasso & Hotel",
+    "url": "https://www.gloriapalaceth.com/gloria-palace-amadores-thalasso-hotel/",
+    "description": "Hotel de 4 estrellas construido sobre un acantilado entre las playas de Puerto Rico y Amadores, en Mogán, Gran Canaria.",
+    "starRating": { "@type": "Rating", "ratingValue": "4" },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle La Palma, 2",
+      "addressLocality": "Mogán",
+      "addressRegion": "Las Palmas",
+      "postalCode": "35139",
+      "addressCountry": "ES"
+    },
+    "telephone": "+34 928 12 85 10",
+    "email": "info.amadores@gloriapalaceth.com",
+    "petsAllowed": true,
+    "amenityFeature": [
+      { "@type": "LocationFeatureSpecification", "name": "Centro de talasoterapia", "value": true },
+      { "@type": "LocationFeatureSpecification", "name": "Piscinas climatizables con vistas al mar", "value": true },
+      { "@type": "LocationFeatureSpecification", "name": "Todo incluido Premium", "value": true },
+      { "@type": "LocationFeatureSpecification", "name": "Accesible para sillas de ruedas", "value": true }
+    ],
+    "sameAs": [
+      "https://www.facebook.com/GloriaThalassoHotels",
+      "https://instagram.com/gloriathalassohotels/"
+    ]
+  }
+  </script>
+
+  <style>
+    /* ====================================================================
+       MÓDULO 01 — TOKENS DE DISEÑO
+       Paleta sacada del emplazamiento: el azul profundo del Atlántico, el
+       turquesa de las piscinas, la espuma, la arena de Amadores y el tono
+       cálido del acantilado. Cambiando estos seis valores se re-viste el
+       sitio entero.
+       ==================================================================== */
+    :root {
+      /* Color */
+      --abismo: #062733;
+      /* fondo submarino, el punto más oscuro */
+      --oceano: #0C3E50;
+      /* secciones oscuras y texto principal */
+      --turquesa: #1E9BB4;
+      /* acento único: filetes, enlaces, estados */
+      --espuma: #CFE7EA;
+      /* velos y superficies de agua */
+      --arena: #F5F2EC;
+      /* fondo claro */
+      --risco: #8A7B6C;
+      /* texto secundario, tono del acantilado */
+      --alerta: #B4432F;
+      /* errores de formulario */
+
+      /* Tipografía */
+      --romana: "Marcellus", "Iowan Old Style", Georgia, serif;
+      --grotesca: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+      /* Escala tipográfica, razón 1.25, fluida con clamp() */
+      --t-xs: 0.78rem;
+      --t-s: 0.9rem;
+      --t-base: 1.0625rem;
+      --t-m: clamp(1.2rem, 0.9rem + 1vw, 1.5rem);
+      --t-l: clamp(1.7rem, 1.1rem + 2.4vw, 2.6rem);
+      --t-xl: clamp(2.2rem, 1.2rem + 4vw, 3.6rem);
+      --t-portada: clamp(2.6rem, 1rem + 7.5vw, 7rem);
+
+      /* Ritmo y medidas */
+      --hueco: clamp(1.5rem, 4vw, 3rem);
+      --aire-seccion: clamp(5rem, 12vh, 10rem);
+      --ancho-max: 78rem;
+      --medida: 34rem;
+      /* línea de menos de 80 caracteres */
+
+      --suave: 480ms cubic-bezier(0.16, 1, 0.3, 1);
+      --sombra: 0 18px 50px rgba(6, 39, 51, 0.28);
+
+      /* Altura de la capa flotante inferior, para que el asistente, el
+         botón de sonido y el aviso de cookies no se pisen entre sí. */
+      --zocalo: 0px;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 02 — REINICIO Y BASE
+       ==================================================================== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--arena);
+      color: var(--oceano);
+      font-family: var(--grotesca);
+      font-size: var(--t-base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+
+      /* clip, no hidden: overflow-x:hidden convierte el body en contenedor
+         de scroll y rompe el position:sticky de la portada. */
+      overflow-x: clip;
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    ul,
+    ol,
+    dl,
+    dd {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    a {
+      color: inherit;
+      text-underline-offset: 0.25em;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--turquesa);
+      outline-offset: 3px;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 03 — TIPOGRAFÍA
+       ==================================================================== */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--romana);
+      font-weight: 400;
+      line-height: 1.06;
+      letter-spacing: -0.005em;
+      margin: 0;
+      text-wrap: balance;
+    }
+
+    p {
+      margin: 0 0 1.1em;
+      max-width: var(--medida);
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .titular {
+      font-size: var(--t-l);
+      max-width: 19ch;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 04 — UTILIDADES Y ACCESIBILIDAD
+       ==================================================================== */
+    .oculto-visual {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .salto-contenido {
+      position: absolute;
+      top: -100%;
+      left: var(--hueco);
+      z-index: 100;
+      padding: 0.7rem 1.2rem;
+      background: var(--arena);
+      color: var(--oceano);
+      text-decoration: none;
+    }
+
+    .salto-contenido:focus {
+      top: 1rem;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 05 — BOTONES
+       ==================================================================== */
+    .boton {
+      display: inline-block;
+      padding: 0.95rem 2rem;
+      background: transparent;
+      /* Sin este fondo explícito, un <button> (no una etiqueta <a>) cae en
+         el fondo gris claro que le da el navegador por defecto. Con el
+         texto en un color claro encima —como en el aviso de cookies—
+         ambos quedaban casi del mismo tono y el texto se leía mal. Un
+         fondo transparente de partida es justo el aspecto que ya tenían
+         los botones de contorno (.boton--linea); .boton--solido, que va
+         justo debajo, sigue pintando su propio fondo sólido encima sin
+         que esto le afecte. */
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: var(--t-s);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color var(--suave), color var(--suave), border-color var(--suave);
+    }
+
+    .boton--solido {
+      background: var(--oceano);
+      border-color: var(--oceano);
+      color: var(--arena);
+    }
+
+    .boton--solido:hover {
+      background: var(--turquesa);
+      border-color: var(--turquesa);
+    }
+
+    .boton--linea:hover {
+      background: rgba(245, 242, 236, 0.16);
+    }
+
+    .boton--ancho {
+      width: 100%;
+    }
+
+    .boton--menudo {
+      padding: 0.6rem 1.2rem;
+      font-size: var(--t-xs);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 06 — CABECERA Y NAVEGACIÓN
+       ==================================================================== */
+    .cabecera {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--hueco);
+      padding: 1.3rem var(--hueco);
+      color: var(--arena);
+      transition: background-color var(--suave), padding var(--suave);
+    }
+
+    .cabecera.is-fija {
+      padding-block: 0.8rem;
+      background: rgba(12, 62, 80, 0.94);
+      backdrop-filter: blur(10px);
+    }
+
+    /* La marca y el botón van por encima del panel desplegable, para que
+       sigan viéndose con el menú abierto. */
+    .cabecera__marca,
+    .cabecera__boton {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cabecera__marca {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+
+    /* Logotipo provisional: una ola sobre el borde de la piscina.
+       PENDIENTE: sustituir por el logotipo oficial de la cadena. */
+    .marca__glifo {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .marca__texto {
+      font-family: var(--romana);
+      font-size: 1.15rem;
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+    }
+
+    .marca__texto small {
+      display: block;
+      font-family: var(--grotesca);
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      opacity: 0.75;
+    }
+
+    .cabecera__nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.1rem, 2.6vw, 2.2rem);
+      font-size: var(--t-s);
+    }
+
+    .cabecera__nav a {
+      text-decoration: none;
+      padding-block: 0.3rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--suave);
+    }
+
+    .cabecera__nav a:hover {
+      border-bottom-color: currentColor;
+    }
+
+    .nav__reservar {
+      padding: 0.55rem 1.3rem;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+    }
+
+    .nav__reservar:hover {
+      border-bottom-color: currentColor;
+      background: rgba(245, 242, 236, 0.16);
+    }
+
+    /* Botón de tres barras: solo aparece en el punto de ruptura móvil */
+    .cabecera__boton {
+      display: none;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .boton__barras,
+    .boton__barras::before,
+    .boton__barras::after {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: currentColor;
+      transition: transform var(--suave), opacity var(--suave);
+    }
+
+    .boton__barras {
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .boton__barras::before,
+    .boton__barras::after {
+      content: "";
+      position: absolute;
+    }
+
+    .boton__barras::before {
+      top: -7px;
+    }
+
+    .boton__barras::after {
+      top: 7px;
+    }
+
+    .cabecera__boton[aria-expanded="true"] .boton__barras {
+      background: transparent;
+    }
+
+    .cabecera__boton[aria-expanded="true"] .boton__barras::before {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .cabecera__boton[aria-expanded="true"] .boton__barras::after {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 07 — INMERSIÓN
+       --------------------------------------------------------------------
+       La portada no es una imagen quieta: es un descenso. La sección mide
+       340vh y dentro lleva un lienzo pegado (position: sticky) que ocupa la
+       pantalla entera. Mientras se baja, el script calcula un progreso de 0
+       a 1 y lo escribe en la variable --p del lienzo. Todo lo demás está en
+       CSS leyendo esa variable.
+
+         --p 0.00 - 0.25   vistas del hotel desde el acantilado
+         --p 0.25 - 0.65   la cámara baja, aparece el borde de la piscina
+         --p 0.65 - 1.00   el agua cubre el encuadre: se entra en la piscina
+
+       PENDIENTE: para usar fotografías reales, sustituir el contenido de
+       cada .capa por <img src="..." alt=""> conservando data-velocidad,
+       que es lo que lee el script.
+       ==================================================================== */
+    .inmersion {
+      position: relative;
+      height: 340vh;
+      background: var(--abismo);
+    }
+
+    .lienzo {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--arena);
+      --p: 0;
+      /* valor inicial por si el script no llega a cargar */
+    }
+
+    /* La cámara se acerca ligeramente durante el descenso.
+       En los navegadores que ya entienden las animaciones ligadas al
+       scroll de forma nativa (@supports más abajo), este acercamiento lo
+       calcula directamente el navegador a partir de cuánto se ve
+       .inmersion, sin que intervenga JavaScript en cada fotograma; en el
+       resto sigue funcionando exactamente igual que antes, leyendo --p. */
+    .escena {
+      position: absolute;
+      inset: 0;
+      transform: scale(calc(1 + var(--p) * 0.14));
+      transform-origin: 50% 40%;
+      will-change: transform;
+    }
+
+    /* OPTIMIZACIÓN DE RENDIMIENTO: mismo acercamiento de cámara, pero
+       resuelto enteramente por el navegador. view-timeline convierte el
+       propio recorrido de scroll de .inmersion en una línea de tiempo de
+       animación nativa; animation-range "contain" es, literalmente, el
+       tramo en el que .inmersion "contiene" a la pantalla —el mismo
+       tramo que ocupa el lienzo fijo—, así que reproduce el mismo
+       recorrido que --p sin que JavaScript tenga que tocarlo. Al no
+       depender de un valor que llega por JavaScript, el navegador puede
+       resolverlo íntegramente en el hilo de composición, en paralelo con
+       cualquier otra cosa que esté pasando en la página.
+       Es una mejora progresiva: en un navegador que no la entienda,
+       @supports no llega a aplicarse y todo sigue exactamente como en la
+       regla de arriba. Comprobado a fotograma por fotograma que reproduce
+       el mismo valor que la versión por JavaScript en todo el recorrido. */
+    @supports (animation-timeline: view()) {
+      .inmersion {
+        view-timeline-name: --recorrido-inmersion;
+        view-timeline-axis: block;
+      }
+
+      @keyframes gp-zoom-camara {
+        from {
+          transform: scale(1);
+        }
+
+        to {
+          transform: scale(1.14);
+        }
+      }
+
+      .escena {
+        animation: gp-zoom-camara linear both;
+        animation-timeline: --recorrido-inmersion;
+        animation-range: contain 0% contain 100%;
+      }
+    }
+
+    /* Cada capa desborda el encuadre para que al desplazarse no se vea el
+       borde. El script le aplica translate3d según data-velocidad. */
+    .capa {
+      position: absolute;
+      inset: -15% -2%;
+      will-change: transform;
+    }
+
+    /* OPTIMIZACIÓN DE RENDIMIENTO: las cuatro ilustraciones de la portada
+       eran <svg> vivos. Un SVG es contenido vectorial: cuando su tamaño en
+       pantalla cambia —y aquí cambiaba en cada fotograma, tanto por su
+       propio desplazamiento como por el zoom de la cámara en .escena—,
+       el navegador vuelve a dibujar sus trazos y degradados desde cero
+       para que no se vea borroso, en vez de limitarse a mover un dibujo
+       ya hecho. Comprobado con el propio navegador: era, con diferencia,
+       el coste más alto de toda la portada.
+       Ahora cada capa es una imagen ya renderizada a partir de ese mismo
+       SVG, a una resolución de sobra para pantallas grandes: un bloque de
+       píxeles fijo que la tarjeta gráfica solo tiene que desplazar, nunca
+       volver a dibujar. El resultado en pantalla es idéntico —es, píxel a
+       píxel, una foto de ese mismo dibujo—, pero mucho más barato.
+       PENDIENTE: el día que lleguen las fotografías reales del hotel,
+       estas imágenes son justo lo que hay que sustituir; ver el aviso en
+       el módulo D más abajo. */
+    .capa__imagen {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .capa svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ---- Agua de la piscina: crece desde abajo a partir de --p 0.28 ----
+       OPTIMIZACIÓN DE RENDIMIENTO: esta capa medía "height" con un valor
+       que cambiaba en cada fotograma del scroll. "height" es una
+       propiedad de diseño: cada vez que cambiaba, el navegador tenía que
+       recalcular la posición de todo lo demás en la página antes de
+       poder pintar el siguiente fotograma, y ese recálculo es justo lo
+       que se nota como cortes en equipos modestos.
+
+       Ahora la caja mide siempre 150vh, fija, y lo único que cambia es su
+       posición vertical con translate3d. Una traslación no es una
+       propiedad de diseño: la resuelve directamente la tarjeta gráfica
+       por composición de capas, sin tocar el resto de la página. El
+       resultado en pantalla es idéntico —la fórmula de abajo reproduce
+       exactamente el mismo punto de la pantalla en el que antes quedaba
+       el borde superior del agua— pero mucho más barato de calcular. */
+    .agua {
+      position: absolute;
+      left: -5%;
+      right: -5%;
+      bottom: 0;
+      height: 150vh;
+      transform: translate3d(0, clamp(0px, calc(150vh - (var(--p) - 0.28) * 200vh), 150vh), 0);
+      will-change: transform;
+      background: linear-gradient(to bottom,
+          rgba(74, 176, 190, 0.86) 0%,
+          rgba(30, 129, 155, 0.94) 35%,
+          rgba(10, 66, 90, 0.97) 100%);
+    }
+
+    /* Línea de flotación ondulada sobre el borde superior del agua */
+    .agua::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -22px;
+      height: 24px;
+      background-repeat: repeat-x;
+      background-size: 240px 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 24'%3E%3Cpath d='M0 14 Q30 2 60 14 T120 14 T180 14 T240 14 V24 H0 Z' fill='%234AB0BE' fill-opacity='0.86'/%3E%3C/svg%3E");
+      animation: oleaje 7s linear infinite;
+    }
+
+    /* Espuma justo bajo la línea de flotación */
+    .agua::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 70px;
+      background: linear-gradient(to bottom, rgba(245, 242, 236, 0.5), transparent);
+    }
+
+    @keyframes oleaje {
+      to {
+        background-position-x: 240px;
+      }
+    }
+
+    /* ---- Fondo sumergido: tinte y cáusticas, solo al final ------------- */
+    .sumergido {
+      position: absolute;
+      inset: 0;
+      opacity: calc((var(--p) - 0.66) * 3.4);
+      background:
+        radial-gradient(60% 40% at 25% 12%, rgba(160, 232, 240, 0.34), transparent 70%),
+        radial-gradient(45% 35% at 72% 22%, rgba(190, 240, 240, 0.26), transparent 70%),
+        linear-gradient(to bottom, rgba(20, 110, 140, 0.55), rgba(6, 39, 51, 0.92));
+    }
+
+    .burbujas {
+      position: absolute;
+      inset: 0;
+      opacity: calc((var(--p) - 0.72) * 4);
+    }
+
+    .burbujas span {
+      position: absolute;
+      bottom: -40px;
+      width: 10px;
+      height: 10px;
+      border: 1px solid rgba(207, 231, 234, 0.55);
+      border-radius: 50%;
+      animation: subir 9s linear infinite;
+    }
+
+    .burbujas span:nth-child(1) {
+      left: 12%;
+      animation-delay: 0s;
+      transform: scale(0.6);
+    }
+
+    .burbujas span:nth-child(2) {
+      left: 28%;
+      animation-delay: 1.8s;
+    }
+
+    .burbujas span:nth-child(3) {
+      left: 47%;
+      animation-delay: 3.4s;
+      transform: scale(1.4);
+    }
+
+    .burbujas span:nth-child(4) {
+      left: 66%;
+      animation-delay: 0.9s;
+      transform: scale(0.8);
+    }
+
+    .burbujas span:nth-child(5) {
+      left: 83%;
+      animation-delay: 4.6s;
+    }
+
+    /* OPTIMIZACIÓN DE RENDIMIENTO: el oleaje y las burbujas son
+       animaciones "infinite": sin este freno seguirían corriendo para
+       siempre en segundo plano mucho después de que el visitante haya
+       dejado atrás la portada, gastando ciclos de la tarjeta gráfica en
+       algo que ya no se ve. El script (MÓDULO S1) añade la clase
+       is-en-pausa en cuanto la sección deja de estar cerca de la
+       pantalla, y la quita en cuanto vuelve a acercarse. */
+    .lienzo.is-en-pausa .agua::before,
+    .lienzo.is-en-pausa .burbujas span {
+      animation-play-state: paused;
+    }
+
+    @keyframes subir {
+      to {
+        transform: translateY(-110svh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .lienzo__velo {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+          rgba(6, 39, 51, 0.55) 0%,
+          rgba(6, 39, 51, 0.1) 35%,
+          rgba(6, 39, 51, 0.5) 100%);
+    }
+
+    /* ---- Rótulos: tres bloques que se relevan durante el descenso.
+       La opacidad se recorta sola, el navegador limita el valor a 0-1. */
+    .rotulo {
+      position: absolute;
+      left: var(--hueco);
+      right: var(--hueco);
+      max-width: var(--ancho-max);
+      margin-inline: auto;
+      pointer-events: none;
+    }
+
+    .rotulo.is-visible {
+      pointer-events: auto;
+    }
+
+    .rotulo--vistas {
+      bottom: clamp(4rem, 14vh, 9rem);
+      opacity: calc(1 - var(--p) * 4.4);
+      transform: translateY(calc(var(--p) * -90px));
+    }
+
+    .rotulo__lugar {
+      font-size: var(--t-s);
+      letter-spacing: 0.14em;
+      margin-bottom: 1.3rem;
+      color: rgba(245, 242, 236, 0.8);
+    }
+
+    .portada__titulo {
+      font-size: var(--t-portada);
+      line-height: 0.95;
+      margin-bottom: 1.6rem;
+    }
+
+    .titulo__linea {
+      display: block;
+    }
+
+    /* La segunda línea cae y se sangra: anticipa el descenso */
+    .titulo__linea--cae {
+      margin-left: clamp(1.2rem, 11vw, 11rem);
+    }
+
+    .rotulo__entrada {
+      font-size: var(--t-m);
+      line-height: 1.5;
+      max-width: 30rem;
+      margin-bottom: 2.2rem;
+      color: rgba(245, 242, 236, 0.9);
+    }
+
+    .rotulo__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+    }
+
+    .lienzo .boton--solido {
+      background: var(--arena);
+      border-color: var(--arena);
+      color: var(--oceano);
+    }
+
+    .lienzo .boton--solido:hover {
+      background: var(--turquesa);
+      border-color: var(--turquesa);
+      color: var(--arena);
+    }
+
+    .rotulo--borde {
+      bottom: 42%;
+      text-align: center;
+      opacity: min(calc((var(--p) - 0.30) * 7), calc((0.66 - var(--p)) * 7));
+    }
+
+    .rotulo--agua {
+      top: 46%;
+      text-align: center;
+      opacity: calc((var(--p) - 0.76) * 5);
+    }
+
+    .rotulo--borde p,
+    .rotulo--agua p {
+      max-width: 26rem;
+      margin-inline: auto;
+      color: rgba(245, 242, 236, 0.85);
+    }
+
+    .rotulo h2 {
+      font-size: var(--t-xl);
+      margin-bottom: 0.8rem;
+    }
+
+    .lienzo__pista {
+      position: absolute;
+      left: 50%;
+      bottom: 1.6rem;
+      transform: translateX(-50%);
+      margin: 0;
+      font-size: var(--t-xs);
+      letter-spacing: 0.22em;
+      color: rgba(245, 242, 236, 0.7);
+      opacity: calc(1 - var(--p) * 9);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 08 — ESTRUCTURA DE SECCIÓN
+       ==================================================================== */
+    .seccion {
+      padding: var(--aire-seccion) var(--hueco);
+      scroll-margin-top: 5rem;
+      /* la cabecera fija no tapa el destino del ancla */
+    }
+
+    .seccion>*,
+    .reserva__envoltorio,
+    .habitaciones__cabecera {
+      max-width: var(--ancho-max);
+      margin-inline: auto;
+    }
+
+    /* Nombre de la sección en el margen: orienta, no decora */
+    .seccion__indice {
+      font-size: var(--t-xs);
+      letter-spacing: 0.16em;
+      color: var(--risco);
+      margin-bottom: 2.6rem;
+      padding-left: 1.1rem;
+      border-left: 2px solid var(--turquesa);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 09 — EL HOTEL
+       ==================================================================== */
+    .seccion--hotel .titular {
+      margin-bottom: 1.8rem;
+    }
+
+    .hotel__texto p {
+      color: var(--risco);
+    }
+
+    .hotel__datos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--hueco);
+      margin-top: clamp(3rem, 7vh, 5rem);
+      padding-top: 2rem;
+      border-top: 1px solid rgba(138, 123, 108, 0.3);
+    }
+
+    .hotel__datos dt {
+      font-size: var(--t-xs);
+      letter-spacing: 0.1em;
+      color: var(--risco);
+      margin-bottom: 0.5rem;
+    }
+
+    .hotel__datos dd {
+      font-family: var(--romana);
+      font-size: var(--t-m);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 10 — HABITACIONES (CARRUSEL)
+       scroll-snap nativo: funciona con el dedo, la rueda y el teclado sin
+       librerías. El script solo añade los botones y el indicador.
+       ==================================================================== */
+    .habitaciones__cabecera {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--hueco);
+      margin-bottom: 2.8rem;
+    }
+
+    .carrusel__mandos {
+      display: flex;
+      gap: 0.6rem;
+      flex-shrink: 0;
+    }
+
+    .mando {
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(138, 123, 108, 0.5);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      transition: background-color var(--suave), color var(--suave), border-color var(--suave);
+    }
+
+    .mando:hover:not(:disabled) {
+      background: var(--oceano);
+      border-color: var(--oceano);
+      color: var(--arena);
+    }
+
+    .mando:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .carrusel {
+      display: flex;
+      gap: clamp(1rem, 2.5vw, 2rem);
+      max-width: var(--ancho-max);
+      margin-inline: auto;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 1.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(138, 123, 108, 0.4) transparent;
+    }
+
+    .carrusel__elemento {
+      flex: 0 0 clamp(17rem, 30vw, 24rem);
+      scroll-snap-align: start;
+    }
+
+    .ficha {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* PENDIENTE: marcador de posición de la fotografía. Al recibir las
+       imágenes oficiales, sustituir este div por:
+         <img class="ficha__imagen" src="img/doble-vista-mar.jpg"
+              alt="Dormitorio con balcón y vistas al Atlántico"
+              loading="lazy" width="800" height="1000"> */
+    .ficha__imagen {
+      aspect-ratio: 4 / 5;
+      margin-bottom: 1.4rem;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .ficha__imagen--doble {
+      background-image: linear-gradient(160deg, #7FC4CE 0%, #2E7D96 55%, #0F4157 100%);
+    }
+
+    .ficha__imagen--thalasso {
+      background-image: linear-gradient(160deg, #BFE2E4 0%, #6FA8B4 55%, #2A5C6E 100%);
+    }
+
+    .ficha__imagen--familiar {
+      background-image: linear-gradient(160deg, #E4D9C6 0%, #A79684 55%, #55483E 100%);
+    }
+
+    .ficha__imagen--premium {
+      background-image: linear-gradient(160deg, #6FD3D8 0%, #1B7E9C 50%, #082F44 100%);
+    }
+
+    .ficha__nombre {
+      font-size: var(--t-m);
+      margin-bottom: 0.4rem;
+    }
+
+    .ficha__dato {
+      font-size: var(--t-xs);
+      letter-spacing: 0.06em;
+      color: var(--risco);
+      margin-bottom: 0.9rem;
+    }
+
+    .ficha__texto {
+      font-size: var(--t-s);
+      color: var(--risco);
+      margin-bottom: 1.2rem;
+    }
+
+    .ficha__precio {
+      margin-top: auto;
+      font-family: var(--romana);
+      font-size: 1.35rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(138, 123, 108, 0.3);
+    }
+
+    .ficha__precio span {
+      font-family: var(--grotesca);
+      font-size: var(--t-xs);
+      color: var(--risco);
+    }
+
+    .carrusel__posicion {
+      max-width: var(--ancho-max);
+      margin: 0.8rem auto 0;
+      font-size: var(--t-xs);
+      letter-spacing: 0.1em;
+      color: var(--risco);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 11 — THALASSO Y EXPERIENCIAS
+       Única sección oscura del cuerpo: enlaza con el fondo submarino.
+       ==================================================================== */
+    .seccion--thalasso {
+      background: var(--oceano);
+      color: var(--arena);
+    }
+
+    .seccion--thalasso .seccion__indice {
+      color: rgba(245, 242, 236, 0.7);
+    }
+
+    .seccion--thalasso .titular {
+      color: var(--arena);
+      margin-bottom: clamp(3rem, 8vh, 5rem);
+      max-width: 22ch;
+    }
+
+    .experiencias {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: var(--hueco);
+      row-gap: clamp(2.5rem, 6vh, 4rem);
+    }
+
+    .experiencia {
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(245, 242, 236, 0.22);
+    }
+
+    .experiencia h3 {
+      font-size: var(--t-m);
+      margin-bottom: 0.7rem;
+    }
+
+    .experiencia p {
+      font-size: var(--t-s);
+      color: rgba(245, 242, 236, 0.75);
+      max-width: 26rem;
+    }
+
+    .experiencia__nota {
+      margin-top: 0.8rem;
+      font-size: var(--t-xs);
+      letter-spacing: 0.06em;
+      color: var(--espuma);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 12 — MOTOR DE RESERVA
+       ==================================================================== */
+    .reserva__envoltorio {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2.5rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    .reserva__texto p {
+      color: var(--risco);
+    }
+
+    .reserva__texto a {
+      color: var(--turquesa);
+    }
+
+    .formulario {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      padding: clamp(1.6rem, 3vw, 2.4rem);
+      background: #fff;
+      border: 1px solid rgba(138, 123, 108, 0.25);
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .campo--ancho,
+    .formulario>.boton,
+    .resumen,
+    .formulario__aviso,
+    .formulario__consentimiento {
+      grid-column: 1 / -1;
+    }
+
+    .campo label {
+      font-size: var(--t-xs);
+      letter-spacing: 0.08em;
+      color: var(--risco);
+    }
+
+    .campo input,
+    .campo select {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      background: var(--arena);
+      border: 1px solid transparent;
+      border-radius: 0;
+      font-size: var(--t-s);
+      transition: border-color var(--suave);
+    }
+
+    .campo input:hover,
+    .campo select:hover {
+      border-color: rgba(138, 123, 108, 0.45);
+    }
+
+    .campo input[aria-invalid="true"] {
+      border-color: var(--alerta);
+      background: rgba(180, 67, 47, 0.06);
+    }
+
+    /* Casilla de consentimiento: por ley no puede estar marcada de serie */
+    .formulario__consentimiento {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: var(--t-xs);
+      color: var(--risco);
+      line-height: 1.5;
+    }
+
+    .formulario__consentimiento input {
+      margin-top: 0.25rem;
+      accent-color: var(--turquesa);
+      flex-shrink: 0;
+    }
+
+    .formulario__consentimiento a {
+      color: var(--turquesa);
+    }
+
+    .resumen {
+      display: block;
+      padding: 1rem 0;
+      border-top: 1px solid rgba(138, 123, 108, 0.3);
+      font-size: var(--t-s);
+      color: var(--risco);
+    }
+
+    .resumen strong {
+      font-family: var(--romana);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--oceano);
+    }
+
+    .formulario__aviso {
+      margin: 0;
+      min-height: 1.4em;
+      font-size: var(--t-xs);
+      color: var(--alerta);
+    }
+
+    .formulario__aviso.is-correcto {
+      color: var(--turquesa);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 13 — PIE
+       ==================================================================== */
+    .pie {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--hueco);
+      padding: clamp(3.5rem, 8vh, 6rem) var(--hueco) 2rem;
+      padding-bottom: calc(2rem + var(--zocalo));
+      background: var(--abismo);
+      color: rgba(245, 242, 236, 0.75);
+      font-size: var(--t-s);
+    }
+
+    .pie__nombre {
+      font-family: var(--romana);
+      font-size: 1.7rem;
+      line-height: 1.2;
+      color: var(--arena);
+      margin-bottom: 0.6rem;
+    }
+
+    .pie__nav {
+      display: grid;
+      gap: 0.5rem;
+      justify-items: end;
+    }
+
+    .pie__nav a:hover {
+      color: var(--arena);
+    }
+
+    .pie__legal {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.4rem;
+      max-width: none;
+      margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(245, 242, 236, 0.18);
+      font-size: var(--t-xs);
+      color: rgba(245, 242, 236, 0.55);
+    }
+
+    /* Los enlaces legales abren una ventana modal, así que son botones:
+       no llevan a otra dirección, ejecutan una acción en esta página. */
+    .pie__legal button {
+      padding: 0;
+      background: none;
+      border: 0;
+      border-bottom: 1px solid rgba(245, 242, 236, 0.35);
+      font-size: inherit;
+      color: inherit;
+      cursor: pointer;
+      transition: color var(--suave), border-color var(--suave);
+    }
+
+    .pie__legal button:hover {
+      color: var(--arena);
+      border-bottom-color: var(--arena);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 14 — AVISO Y PANEL DE COOKIES
+       --------------------------------------------------------------------
+       El aviso ofrece las tres acciones al mismo nivel: aceptar, rechazar y
+       configurar. Rechazar tiene que costar lo mismo que aceptar, y ninguna
+       cookie que no sea imprescindible se activa antes de la respuesta.
+       ==================================================================== */
+    .cookies {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 80;
+      padding: clamp(1.2rem, 3vw, 1.8rem) var(--hueco);
+      background: var(--oceano);
+      color: var(--arena);
+      box-shadow: 0 -14px 40px rgba(6, 39, 51, 0.3);
+    }
+
+    .cookies__caja {
+      max-width: var(--ancho-max);
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2.5rem);
+      flex-wrap: wrap;
+    }
+
+    .cookies__texto {
+      flex: 1 1 22rem;
+      margin: 0;
+      max-width: 46rem;
+      font-size: var(--t-s);
+      color: rgba(245, 242, 236, 0.85);
+    }
+
+    .cookies__texto strong {
+      display: block;
+      font-family: var(--romana);
+      font-size: var(--t-m);
+      font-weight: 400;
+      color: var(--arena);
+      margin-bottom: 0.3rem;
+    }
+
+    .cookies__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .cookies .boton--solido {
+      background: var(--arena);
+      border-color: var(--arena);
+      color: var(--oceano);
+    }
+
+    .cookies .boton--solido:hover {
+      background: var(--turquesa);
+      border-color: var(--turquesa);
+      color: var(--arena);
+    }
+
+    /* Panel de preferencias, dentro de la ventana modal genérica */
+    .preferencia {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.4rem 0.9rem;
+      padding: 1.1rem 0;
+      border-top: 1px solid rgba(138, 123, 108, 0.28);
+    }
+
+    .preferencia input {
+      margin-top: 0.35rem;
+      accent-color: var(--turquesa);
+    }
+
+    .preferencia h4 {
+      margin: 0;
+      font-family: var(--romana);
+      font-size: 1.15rem;
+      font-weight: 400;
+    }
+
+    .preferencia p {
+      grid-column: 2;
+      margin: 0;
+      font-size: var(--t-s);
+      color: var(--risco);
+    }
+
+    .preferencia--fija input {
+      opacity: 0.5;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 15 — ASISTENTE
+       --------------------------------------------------------------------
+       Asistente de respuestas preparadas, no un modelo de lenguaje: cada
+       pregunta se compara con una lista de intenciones y devuelve la
+       respuesta escrita por el hotel. Ver MÓDULO S5 para el detalle y para
+       saber cómo enchufarlo a una API real.
+       ==================================================================== */
+    .asistente__abrir {
+      position: fixed;
+      right: var(--hueco);
+      bottom: var(--hueco);
+      z-index: 70;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.4rem;
+      background: var(--oceano);
+      border: 0;
+      border-radius: 999px;
+      color: var(--arena);
+      font-size: var(--t-s);
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--sombra);
+      transition: background-color var(--suave), transform var(--suave);
+    }
+
+    .asistente__abrir:hover {
+      background: var(--turquesa);
+      transform: translateY(-2px);
+    }
+
+    .asistente__abrir svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+    }
+
+    .asistente {
+      position: fixed;
+      right: var(--hueco);
+      bottom: var(--hueco);
+      z-index: 75;
+      display: flex;
+      flex-direction: column;
+      width: min(24rem, calc(100vw - 2 * var(--hueco)));
+      height: min(34rem, calc(100svh - 2 * var(--hueco)));
+      background: var(--arena);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+    }
+
+    .asistente__cabecera {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--oceano);
+      color: var(--arena);
+    }
+
+    .asistente__titulo {
+      font-family: var(--romana);
+      font-size: 1.1rem;
+      line-height: 1.2;
+    }
+
+    .asistente__titulo small {
+      display: block;
+      font-family: var(--grotesca);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      opacity: 0.75;
+    }
+
+    .asistente__cerrar {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      background: none;
+      border: 1px solid rgba(245, 242, 236, 0.4);
+      border-radius: 50%;
+      color: inherit;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .asistente__cerrar:hover {
+      background: rgba(245, 242, 236, 0.16);
+    }
+
+    .asistente__hilo {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      scrollbar-width: thin;
+    }
+
+    .mensaje {
+      max-width: 85%;
+      padding: 0.7rem 0.95rem;
+      border-radius: 14px;
+      font-size: var(--t-s);
+      line-height: 1.55;
+    }
+
+    .mensaje p {
+      margin: 0 0 0.6em;
+      max-width: none;
+    }
+
+    .mensaje p:last-child {
+      margin-bottom: 0;
+    }
+
+    .mensaje--hotel {
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid rgba(138, 123, 108, 0.25);
+      border-bottom-left-radius: 4px;
+    }
+
+    .mensaje--visitante {
+      align-self: flex-end;
+      background: var(--oceano);
+      color: var(--arena);
+      border-bottom-right-radius: 4px;
+    }
+
+    .mensaje a {
+      color: var(--turquesa);
+    }
+
+    .mensaje--visitante a {
+      color: var(--espuma);
+    }
+
+    /* Sugerencias: atajos a las preguntas que más se repiten */
+    .asistente__sugerencias {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0 1.1rem 0.8rem;
+    }
+
+    .sugerencia {
+      padding: 0.45rem 0.85rem;
+      background: transparent;
+      border: 1px solid rgba(138, 123, 108, 0.45);
+      border-radius: 999px;
+      font-size: var(--t-xs);
+      cursor: pointer;
+      transition: background-color var(--suave), color var(--suave), border-color var(--suave);
+    }
+
+    .sugerencia:hover {
+      background: var(--oceano);
+      border-color: var(--oceano);
+      color: var(--arena);
+    }
+
+    .asistente__formulario {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.9rem 1.1rem;
+      border-top: 1px solid rgba(138, 123, 108, 0.25);
+      background: #fff;
+    }
+
+    .asistente__formulario input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.65rem 0.85rem;
+      background: var(--arena);
+      border: 1px solid transparent;
+      font-size: var(--t-s);
+    }
+
+    .asistente__enviar {
+      width: 42px;
+      flex-shrink: 0;
+      background: var(--oceano);
+      border: 0;
+      color: var(--arena);
+      cursor: pointer;
+      transition: background-color var(--suave);
+    }
+
+    .asistente__enviar:hover {
+      background: var(--turquesa);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 16 — CONTROL DE SONIDO
+       --------------------------------------------------------------------
+       El sonido arranca apagado y solo suena si el visitante lo pide. Las
+       normas de accesibilidad (WCAG 1.4.2) exigen poder pararlo, y todos
+       los navegadores bloquean el audio automático de todas formas.
+       El reproductor se inserta en el momento de activarlo, no antes, para
+       no cargar nada de YouTube sin permiso.
+
+       El conjunto de abajo (.sonido__estado) es la red de seguridad: si el
+       vídeo no llega a sonar en unos segundos —está bloqueado por quien lo
+       subió, ha caído la conexión, el entorno donde se ve esta página
+       bloquea los iframes externos—, aparece un aviso con un enlace directo
+       a YouTube para que el sonido no dependa de que el iframe funcione.
+       Ver el porqué exacto en el MÓDULO S6.
+       ==================================================================== */
+    .sonido {
+      position: fixed;
+      left: var(--hueco);
+      bottom: var(--hueco);
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .sonido__boton {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1.1rem;
+      background: rgba(12, 62, 80, 0.9);
+      backdrop-filter: blur(8px);
+      border: 0;
+      border-radius: 999px;
+      color: var(--arena);
+      font-size: var(--t-xs);
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: var(--sombra);
+      transition: background-color var(--suave);
+    }
+
+    .sonido__boton:hover {
+      background: var(--turquesa);
+    }
+
+    .sonido__boton[data-cargando="true"] .sonido__barras {
+      opacity: 0.5;
+    }
+
+    /* Cuatro barras que se mueven solo cuando hay música sonando */
+    .sonido__barras {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+
+    .sonido__barras i {
+      display: block;
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+    }
+
+    .sonido__boton[aria-pressed="true"] .sonido__barras i {
+      animation: ecualizador 1.1s ease-in-out infinite;
+    }
+
+    .sonido__barras i:nth-child(2) {
+      animation-delay: 0.18s;
+    }
+
+    .sonido__barras i:nth-child(3) {
+      animation-delay: 0.36s;
+    }
+
+    .sonido__barras i:nth-child(4) {
+      animation-delay: 0.54s;
+    }
+
+    @keyframes ecualizador {
+
+      0%,
+      100% {
+        height: 4px;
+      }
+
+      50% {
+        height: 14px;
+      }
+    }
+
+    /* El reproductor no se ve: solo aporta el audio */
+    .sonido__reproductor {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Aviso de respaldo: oculto mientras todo va bien, aparece si el
+       iframe no llega a sonar. Nunca sustituye al botón, se añade debajo. */
+    .sonido__estado {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 15rem;
+      padding: 0.55rem 0.9rem;
+      background: rgba(12, 62, 80, 0.94);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      color: var(--espuma);
+      font-size: 0.72rem;
+      line-height: 1.4;
+      box-shadow: var(--sombra);
+    }
+
+    .sonido__estado a {
+      color: var(--arena);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+
+    /* ====================================================================
+       MÓDULO 17 — VENTANAS MODALES LEGALES
+       Se usa <dialog> nativo: el navegador ya se encarga del foco atrapado,
+       de la tecla Escape y de ocultar el resto de la página al lector de
+       pantalla. No hace falta programar nada de eso.
+       ==================================================================== */
+    .ventana {
+      width: min(46rem, calc(100vw - 2rem));
+      max-height: min(80svh, 48rem);
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: var(--arena);
+      color: var(--oceano);
+      box-shadow: var(--sombra);
+    }
+
+    .ventana::backdrop {
+      background: rgba(6, 39, 51, 0.65);
+      backdrop-filter: blur(3px);
+    }
+
+    .ventana__cabecera {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.6rem clamp(1.4rem, 4vw, 2.4rem) 1.1rem;
+      background: var(--arena);
+      border-bottom: 1px solid rgba(138, 123, 108, 0.28);
+    }
+
+    .ventana__cabecera h2 {
+      font-size: var(--t-l);
+    }
+
+    .ventana__cerrar {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      padding: 0;
+      background: none;
+      border: 1px solid rgba(138, 123, 108, 0.45);
+      border-radius: 50%;
+      cursor: pointer;
+      line-height: 1;
+      transition: background-color var(--suave), color var(--suave);
+    }
+
+    .ventana__cerrar:hover {
+      background: var(--oceano);
+      color: var(--arena);
+    }
+
+    .ventana__cuerpo {
+      padding: 1.4rem clamp(1.4rem, 4vw, 2.4rem) 2rem;
+      font-size: var(--t-s);
+    }
+
+    .ventana__cuerpo h3 {
+      font-size: var(--t-m);
+      margin: 1.8rem 0 0.6rem;
+    }
+
+    .ventana__cuerpo h3:first-child {
+      margin-top: 0;
+    }
+
+    .ventana__cuerpo p,
+    .ventana__cuerpo li {
+      color: var(--risco);
+      max-width: none;
+    }
+
+    .ventana__cuerpo ul {
+      list-style: disc;
+      padding-left: 1.2rem;
+      margin-bottom: 1.1em;
+    }
+
+    .ventana__cuerpo li {
+      margin-bottom: 0.4em;
+    }
+
+    .ventana__cuerpo a {
+      color: var(--turquesa);
+    }
+
+    /* Aviso de texto provisional: tiene que cantar, para que nadie lo
+       publique por descuido. */
+    .ventana__provisional {
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.6rem;
+      background: rgba(180, 67, 47, 0.08);
+      border-left: 3px solid var(--alerta);
+      font-size: var(--t-xs);
+      color: var(--alerta);
+    }
+
+    .ventana__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 1.8rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(138, 123, 108, 0.28);
+    }
+
+    /* Tabla de cookies */
+    .tabla {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--t-xs);
+      margin-bottom: 1.2rem;
+    }
+
+    .tabla th,
+    .tabla td {
+      padding: 0.6rem 0.7rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(138, 123, 108, 0.28);
+      vertical-align: top;
+    }
+
+    .tabla th {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--oceano);
+    }
+
+    .tabla td {
+      color: var(--risco);
+    }
+
+
+    /* ====================================================================
+       MÓDULO 18 — RESPONSIVE
+       ==================================================================== */
+
+    /* Tabletas */
+    @media (max-width: 62rem) {
+
+      .experiencias {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .reserva__envoltorio {
+        grid-template-columns: 1fr;
+      }
+
+      .hotel__datos {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 1.8rem;
+      }
+    }
+
+    /* ---- Menú desplegable --------------------------------------------
+       El punto de ruptura sube a 56rem: por debajo de ese ancho los cuatro
+       enlaces ya se amontonaban contra el logotipo.
+
+       El panel baja desde detrás de la barra, con fondo opaco y una altura
+       propia. La barra superior queda por encima (z-index en MÓDULO 06),
+       así que el logotipo y el aspa siguen viéndose con el menú abierto.  */
+    @media (max-width: 56rem) {
+
+      /* En móvil la barra lleva fondo siempre: sobre la portada clara, el
+         texto blanco sin fondo no se leía. */
+      .cabecera {
+        background: rgba(12, 62, 80, 0.92);
+        backdrop-filter: blur(10px);
+      }
+
+      .cabecera__boton {
+        display: block;
+      }
+
+      .cabecera__nav {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 5.2rem var(--hueco) 1.8rem;
+        background: var(--oceano);
+        font-size: var(--t-m);
+        box-shadow: 0 24px 50px rgba(6, 39, 51, 0.35);
+
+        /* Se oculta desplazándolo, no con display:none, para que la
+           transición se pueda animar. visibility evita que quede
+           tabulable mientras está fuera de pantalla. */
+        transform: translateY(-100%);
+        visibility: hidden;
+        transition: transform var(--suave), visibility var(--suave);
+      }
+
+      .cabecera__nav.is-abierto {
+        transform: translateY(0);
+        visibility: visible;
+      }
+
+      .cabecera__nav a {
+        padding: 1.05rem 0;
+        border-bottom: 1px solid rgba(245, 242, 236, 0.16);
+      }
+
+      .cabecera__nav a:hover {
+        border-bottom-color: rgba(245, 242, 236, 0.16);
+        color: var(--espuma);
+      }
+
+      .nav__reservar {
+        margin-top: 1.4rem;
+        padding: 0.9rem 1.3rem;
+        text-align: center;
+        border: 1px solid rgba(245, 242, 236, 0.7);
+        border-radius: 999px;
+      }
+
+      .nav__reservar:hover {
+        border-color: var(--arena);
+      }
+    }
+
+    /* Móvil */
+    @media (max-width: 44rem) {
+
+      /* El recorrido de la portada se acorta: en pantallas altas y
+         estrechas, 340vh de scroll se hacen largos. */
+      .inmersion {
+        height: 280vh;
+      }
+
+      .titulo__linea--cae {
+        margin-left: 1rem;
+      }
+
+      .rotulo--borde {
+        bottom: 38%;
+      }
+
+      .habitaciones__cabecera {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .carrusel__elemento {
+        flex-basis: 78vw;
+      }
+
+      .experiencias {
+        grid-template-columns: 1fr;
+      }
+
+      .formulario {
+        grid-template-columns: 1fr;
+      }
+
+      .pie {
+        grid-template-columns: 1fr;
+      }
+
+      .pie__nav {
+        justify-items: start;
+      }
+
+      /* Las capas flotantes comparten el borde inferior: el asistente a la
+         derecha, el sonido a la izquierda, y ninguno tapa al otro. */
+      .asistente {
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 88svh;
+        border-radius: 18px 18px 0 0;
+      }
+
+      .asistente__abrir span {
+        display: none;
+      }
+
+      .asistente__abrir {
+        padding: 0.9rem;
+      }
+
+      .sonido__boton span {
+        display: none;
+      }
+
+      .sonido__boton {
+        padding: 0.85rem;
+      }
+
+      .sonido__estado {
+        max-width: calc(100vw - 2 * var(--hueco) - 3.5rem);
+      }
+
+      .cookies__acciones .boton {
+        flex: 1 1 auto;
+      }
+    }
+
+
+    /* ====================================================================
+       MÓDULO 19 — MOVIMIENTO REDUCIDO
+       Si el sistema lo pide, la portada se queda quieta en las vistas y la
+       sección se reduce a una pantalla. El script comprueba la misma
+       consulta y no se activa.
+       ==================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .inmersion {
+        height: 100svh;
+      }
+
+      .escena,
+      .capa {
+        transform: none !important;
+      }
+
+      .agua {
+        /* Con movimiento reducido, --p ya no se actualiza (el MÓDULO S1
+           ni siquiera arranca), así que esta capa se queda congelada en
+           su posición inicial. Se fuerza aquí una franja de 18vh fija en
+           la parte baja, para conservar la misma referencia visual de
+           "hay agua abajo" sin ninguna animación. */
+        transform: translate3d(0, 132vh, 0) !important;
+      }
+
+      .rotulo--vistas {
+        opacity: 1;
+        transform: none;
+      }
+
+      .lienzo__pista {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="salto-contenido" href="#hotel">Ir al contenido</a>
+
+  <!-- ======================================================================
+       MÓDULO A — CABECERA
+       ====================================================================== -->
+  <header class="cabecera" id="cabecera">
+    <a class="cabecera__marca" href="#top" aria-label="Gloria Palace Amadores, inicio">
+      <svg class="marca__glifo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <path d="M2 20 Q9 12 16 20 T30 20" />
+        <path d="M2 27 H30" />
+        <circle cx="16" cy="7" r="3.5" />
+      </svg>
+      <span class="marca__texto">
+        Gloria Palace Amadores
+        <small>Thalasso &amp; Hotel</small>
+      </span>
+    </a>
+
+    <nav class="cabecera__nav" id="menu" aria-label="Navegación principal">
+      <a href="#hotel">El hotel</a>
+      <a href="#habitaciones">Habitaciones</a>
+      <a href="#thalasso">Thalasso</a>
+      <a class="nav__reservar" href="#reserva">Reservar</a>
+    </nav>
+
+    <button class="cabecera__boton" id="boton-menu" type="button" aria-expanded="false"
+      aria-controls="menu">
+      <span class="boton__barras" aria-hidden="true"></span>
+      <span class="oculto-visual">Abrir menú</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ==================================================================
+         MÓDULO B — INMERSIÓN
+         Portada de 340vh. Se empieza mirando la bahía desde el acantilado
+         y se termina dentro de la piscina. Ver MÓDULO 07 y S1.
+         ================================================================== -->
+    <section class="inmersion" id="inmersion">
+      <div class="lienzo" id="lienzo">
+
+        <div class="escena" aria-hidden="true">
+
+          <!-- Cielo: la capa más lejana, apenas se mueve -->
+          <div class="capa" data-velocidad="0.06">
+            <img class="capa__imagen" src="data:image/png;base64,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" alt="">
+          </div>
+
+          <!-- Océano y la punta de Puerto Rico al fondo -->
+          <div class="capa" data-velocidad="0.16">
+            <img class="capa__imagen" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAASwCAYAAAAaMFf2AAAAAXNSR0IArs4c6QAAIABJREFUeJzswQEBAAAAgJD+r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNm79yA77/q+49/vc1aS8VVaGeNcyI06JASQyJ00IYSQC1ADtvZYJoSG3IS9stx4JpOkEBrxR0j+wKGtZJHRTG7NtMEc27Di4tCmCUmTqacFcoWWTBOvY4jHtyPLGFuW9jzf/rErWYAxtrWrZ/fZ12vG0q50dM7Ha1l/6H2e5wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABfTnY9AAAAAAAAANaj84fXTU/lwo6omomofxEZvzque34vRqNJ19tYuwRgAAAAAAAAOEPOe92uC6eOT+1oMocV8dLMHHzeA6o+VZVvHd+0/6aIqM6GsmYJwAAAAAAAALCCzr3sqos2TA12NBnDqnjJF0Xfx1Ufr6q3jEcH/vBMbKQ/BGAAAAAAAABYZudedtVFmzYMrqyIHRn5kqf7PBX1oar8pcOj/X+7vAvpKwEYAAAAAAAAlsE5w9mLz8q8oiqGkfk9GdEsx/NWVUXkeyYR//bIaP/ty/Gc9JcADAAAAAAAAE/ThVde85XtQl0RGcOIeHFmrlh/q4qFyPidowvHfuXhWw7etVKvw9omAAMAAAAAAMBTMH35nq+OZrIzmmYmqr5rJaPv46ujVXFgITb+6oOjd47P7Guz2gnAAAAAAAAA8GVsGV77NRGTnU3GMCK/o+s9ERFR9dnKvH5c7fUxOvBQ13NYHQRgAAAAAAAAeBybr7zq67Id7GwWz/T9tq73fCkVdV9U/Nr4oeaGuHXfo13voVsCMAAAAAAAACy5YOee50xVuzMqZyLjRV3veSqq4tNR9bZx3vM7MRpNut5DNwRgOnPeZbu3btqUm+579/5/7noLAAAAAACwfp2/49pLNuRkZ2UMM/OFXe85ffX3VfnvxqP974mI6noNZ5YAzBm3dbjnOyvb2YzYWRWbMuOjUTnXNgtzh2/8zb/reh8AAAAAANB/08M9z4toZyJzmBHP73rPiqj4y7biLYdv2n9r11M4cwRgzow3vvGs6YfOfV1mzEbGt3+ph1XVP0bGobbNuQfy7v/h9gQAAAAAAMBy2bLzqudnOxhG5ExmPK/rPWdKRdwWmdeNb9x3W9dbWHkCMCvqgsuv/obBVDMblT+ZGdNP5ddWxTgzPlTVzo3POvvW+P13fG7llgIAAAAAAH20eeeebU21M1kxjMzndr2nSxX1oar8pcOj/X/b9RZWjgDM8tu7t9nyyXtelZWzEfEjmXn6v88qHq2oP6nMuWODwXs/9wf/4e7lmAoAAAAAAPTP5h17XjQYtMOonImMS7res5pUVUXGjZPKNx8Z7b+96z0sPwGYZXPe63ZdOLWw8Wcy6qrM/NqVep2qqoz8WFTNtdUeOnzzu/5mpV4LAAAAAABYGy4YXv1tU9kMI3ImIp7T9Z7VrioWIuN3ji4c+5WHbzl4V9d7WD4CMKdterj7xZk5GxXDyNh0pl+/ouajcm4ScehI3P2nzg0GAAAAAID1Yetwz3dWtDNLZ/p+fdd71qY6WhE3LNTGtz84eue46zWcPgGYp2d43TOm69jrM3M2Ml7U9ZwTKupwRnyoIg6NNz3jg84NBgAAAACAfpneuee7o22HEbFjJe9Iuu5UfbYyrx9Xe32MDjzU9RyePgGYp+T8HddeMjWYzEblGzNjc9d7nkhVHIuMP6mquUcnx9/n9gUAAAAAALAm5fTM7IujycXoG/nsrgf1WUXdF5FvH382D8St+x7teg9PnQDMlzccDrbmsy6tqtmIeHlmrs3fN1Ufq8y5NvPQAzfu++uu5wAAAAAAAF9SbpnZ873ZtDNRsSMzv6rrQetNVXw6qt42znt+x/Gba8vaDHmcEededtVFm6amfray3tS3d9NU1R2RMZdtHLr/vmf+aXxk70LXmwAAAAAAYF3bu7fZ/In7v2+Q7TAqL4+Mr+h6EhER9fcV8dbxe24YRUR1vYYvTwDmi2wZzn5vZjO7+I6a2Nj1npVWFQ+cPDc42g+6rz0AAAAAAJwhe/c2mz95z/cPKoeReXlEPKvrSXwJFX/ZVrzl8E37b+16Ck9MAGbRG37+nC2PPPzjmTmbmS/sek5XKup4VP5JZh16ZOH4Lc4NBgAAAACAZTYcDrbmxT9Q0c7k4pW+z+x6Ek9eRdwWmdeNb9x3W9dbeHwC8Dp33vDq507lYHdG/ERGnN/1ntWnPl6Rh9pq5x4YHfirrtcAAAAAAMCaNBwOpuuZPxhNDiPitRl5YdeTOD1V8cGI/IXxaN8nu97C5xOA16OX7p2avui+12TFbGS8rOs5a0VV/FNFHGoy5+6/Z+tHnBsMAAAAAABP4KV7p7ZceN8PZVMzUfnazJjuehLLq6oqMm6cVL75yGj/7V3vYZEAvI6cM5y9eFPkrojYlZlf1fWetayqjkTGrdXGXG5qPjT+z/se7HoTAAAAAAB0bteuDVsOb/rhjHYmMl6TkVu6nsTKq4qFiPrto5Pjex2v2T0BeB3YPNzz/U22sxFxWUZu6HpP31TU8Yj806x2LqJ97/2j3/xM15sAAAAAAOCMGQ43bsln/khTOayIV2fmBV1Poit1tCJuWKiNb39w9M5x12vWKwG4py589U+dN9l49hsyazYzv6XrPetJVf1VZM61k5x74OZ9f9n1HgAAAAAAWHav2LNp63n1ioiaqchLM+L8riexelTEg1F1/TjqN2J04KGu96w3AnDPTA/3PC+zdkfVGyLzvK73rHcVdWdGHKqKufGW4x+JgwePd70JAAAAAACelje+8aytD533ympqJqsujcxzu57EKldxb2X82rjuviFGo2Ndz1kvBOA+2LVrw/QDGy6LiN0Z+ZKu5/D4Ft/tErdWtnO5YfBB5wYDAAAAALDqXbrr7Omzpl4ZmcOMfFVEnNP1JNaeirozKt82jrt/N0ajSdd7+k4AXsMuvPKar2wn9aaM2BWZF3e9hyevKhYy6k+jci5y4RbnBgMAAAAAsGpcuuvs6bM2XhpRMxnxysg8u+tJ9EX9fUW8dfyeG0aL186xEgTgNeiC4TUvG0TsjohXZ8ZU13s4fRXx11E1N4n20JHRuz7W9R4AAAAAANaZN/z8OVseffjVWTnMyB+NjGd0PYkeq/jLivbN49GBP+x6Sh8JwGvE9Ov3nJ+P1k9ExmxkfFPXe1g5VfHpzDhUEYfGm4/9sXODAQAAAABYEcPZc7dUvKbJHEbGj0TkWV1PYn2piNsi87rxjftu63pLnwjAq9yW4TUvyKhrMvP17qu/DlV9tjJurbYORS584PDo4JGuJwEAAAAAsHYtXnAWr42mnYnKH46MTV1vgqr4YET+wni075Ndb+kDAXg1Gg43bsln7shodmfEv+x6DqvD4rnB8WcVcSgG7S3jdx+4s+tNAAAAAACsfluGuy5oYuqyyhxG5cszY2PXm+ALVVVF5rsnFW85Mtp/e9d71jIBeBWZvnL22dXmVU3Fz0TmRV3vYXWrqr+JjEOTSc4duXn/R7veAwAAAADA6nHBj129ZbDQXBYVw8j4wYzc0PUmeDKqYiGifvvo5Pjeh285eFfXe9YiAbh7OT3c/fKM2F0R/yozB10PYu2pqs9k5vur2rnxloX/7txgAAAAAID15/zhddNTubAjqmYi4mWZMdX1Jnj66mhF7l+oDb/24Oid467XrCUCcEc2v/bnNjcbF34yK66OjEu63kOPVH22Ij5cmXNRx97v3GAAAAAAgP4673W7Lpw6PrWjyRxWxEtdaEbfVMSDUXX9OOo3YnTgoa73rAUC8Bm2eTi7vYnmmox6XWSe3fUe+m3p3OA/r6q5mKqbnRsMAAAAALD2nXvZVRdtmBrsaDKGVfES0Zd1oeLeqnr7OO85EKPRsa7nrGYC8Jnwij2bNp/bXtFkzmbEd3c9h/WrIv6uKuaapp27v43/450yAAAAAABrwznD2YvPipiJaGYq4/syoul6E3Shou6MyreN4+7fjdFo0vWe1UgAXkGbL9/9tYOpuLoifjojL+x6D5yqoo5HxUcyY+6RheO3OEgdAAAAAGB1OWc4e/FZmVdUxTAyv0f0hVNUfaoq3zq+af9Ni9fAcYIAvPxyy8w1P9pkzVbmK/1hzNpRH6+KubZp5h64cd9fd70GAAAAAGA9uvDKa76ybWNnVM1ExIszU8uBJ1Qfr6q3jEcH/rDrJauFPzSWyebX/tzmZuPCz2TEVRHxnK73wOmoqPmonGuznXug7v0zt1AAAAAAAFg505fv+epoJjujaWai6rtEX3jqKuK2yST2HLl5/0e73tI1f4Ccps3D2e1N5L/JjCsj8qyu98Byq6jDGfnBqnZufNbZt8bvv+NzXW8CAAAAAFjrtgyv/ZqIyc4mYxiR39H1HuiLqvhgRP7CeLTvk11v6YoA/HS8Ys+mredOXheZs/5QZl2peLQi/riqnTueg1seGu27t+tJAAAAAABrxeYrr/q6nExd2UTNROa3db0H+qqqKjLfPal4y5HR/tu73nOmCcBPwebLd39tM5XXRMVPZcZ013ugS1VVEfm/M2uuJjE3vvmGT3S9CQAAAABgtblg557nTFW7MypnIuNFXe+B9aQqFiLrt44uHH/bw7ccvKvrPWeKAPzl5ZaZ3a/KzNmI+lH33Ycv6R+qaq6qed/h52/9i9i7t+16EAAAAABAF87fce0lG3KyszKGmfnCrvcAdbQi9y/Uhl97cPTOcddrVpqY+SWcP7xuepDHfjYjrsrIr+t6D6wlFXVfVHwgM+furw0fjtE7H+l6EwAAAADASpoe7nleZA0jYiYjnt/1HuCLVcSDEfGO8SPHro/3H3y46z0rRQD+AtM793x3tu1sRF4RGZu63gNrXsUjkfVHVTl3fOrgAYfhAAAgAElEQVTY3Gf/4OB9XU8CAAAAAFgOW3Ze9fxsB8PIGGbkN3e9B3iSKu6tqreP854DMRod63rOchOAIyLe+Mazpj937uszazYiv7XrOdBXFdFG1W1VOddmjNbjwesAAAAAwNq2eeeebU21M1kxjMzndr0HePoq6s6I2Duue34vRqNJ13uWy7oOwBdcfvU3DKYG10TFT2bG5q73wLpT9anInKu2nRvfdOB/LjZiAAAAAIDVZfOOPS8aDNphVM5ExiVd7wGWWdWnqvKt45v239SHVrH+AvDevc3mv7v30iZzNqJ+KDPX39cAVqe7q+IDVfW+w59r/lvcuu/RrgcBAAAAAOvXBTuu+fapQc1E5ExEPKfrPcCZUB+vyDeP37P/w10vOR3rJn6e97pdF26cbNhVlW/KjK/peg/wBKoerogPZ8bcwlR76Mh/edfhricBAAAAAP23dbjnOyvamYicyYyv73oP0I2KuG0yiT1Hbt7/0a63PB29D8BbrrjmXzYVsxUxkxkbu94DPDVVNYmMv4iKuXYSNz9wyw13dL0JAAAAAOiP6Z17vjvadhgROzLza7veA6wiVR+oaH5xPNr3ya6nPBX9DMDD656xJY69ITNnM2Jb13OA5VNVn6iMuaaauftH+/5X13sAAAAAgDUnt1xxzfdk1ExE7MjIZ3c9CFi9qqoi892TirccGe2/ves9T0avAvD5O669ZGowuSYqfiIzL+h6D7Di/rmi3l9tzh2ePvZHcfDg8a4HAQAAAACrUm6Z2fO92bQzUbEjM7+q60HA2lIVC5H1W0cXjr/t4VsO3tX1niey9gPwcDjYWhe/JrJ2R8bLup4DdKTqs5X5h9W2c5ELHzg8Onik60kAAAAAQIf27m02f+L+7xtkO4zKyyPjK7qeBPRAxSMVtX8hNv76g6N3jrue83jWbAA+97KrLtq4YepNUfUm79QBTlUVCxnxZ5E1FzW5+f7Rb36m600AAAAAwMo6+/JdX7Gp2bg9MrZlxPaIenlmbu16F9BPFfFgRLxj/Mix6+P9Bx/ues+p1lwA3nzF7pc0Ebsj4rKM3ND1HmD1q4i/jqq5SRNzR2684eNd7wEAAAAATsPevc3Wv73vG9us7U0T2yty+2LwjWd1PQ1YhyrurYhfHcfd74rR6FjXc2LNBOA3/Pw5W44+8q8zczYjnt/1HGDtqqg7M+JQVcyNtxz/iHODAQAAAGAVu3TX2dNnb3phVW3PqO1RsT0jXhCZZ3c9DeBUVfFPkfW2cd3zezEaTbrcsqoD8HnDq5+7MQfXRtUbIvO8rvcA/VJVRyLj1mpj7nDWB2J04KGuNwEAAADAenXOcPbiTRHbK5rtGbE9o7ZX5iUZ0XS9DeBJq/pURf3yeHTg5sWblJ55qy8Av3Tv1PSF912WGbsj4/u7ngOsDxV1PCr/pCrmHm2PvffhWw7e1fUmAAAAAOilvXub8z5x9yUbYrA9I7ZX1OItnDMv7noawPKpj1fkm8fv2f/hM/3KqyYAL76zJ6/OyJ+NjK/oeg+wzlV9rDLnajKZO3zzu/6m6zkAAAAAsCZduuvsrRs3vGDxvN5me0Vsz6oXuoUzsF5U1Z9P2rzuyM37P3qmXrPzALz5itkfaCJ3R+VrMmOq6z0AX6ii5qNyrs127oG698+6vnc/AAAAAKxG51521UUbN0y96MQVvVm5vTK+0S2cASKi6gMVzS+OR/s+udIv1UkAvvDVP3VebTz7jdXU1Rn5zV1sAHhaKh6NiH+qjDsiaj4r59tq56Np5nMh7xjfsu8zXd3THwAAAADOCLdwBnhaqqoy8g8WIn75yGj/7Sv1Omc0AE8P9zwvsr02I388Is45k68NcCZUxbHMuDOq5ityPjLuaKvms5r5nJrMj9994NMCMQAAAABrhls4Ayy7qliIrN86unD8bQ/fcvCu5X7+lQ/Au3Zt2PLA1ExWzmbm96746wGsYhV1PCo/nbkUiJfi8CTjjpi08w+88Jl3xt69bdc7AQAAAFh/3MIZ4AyreKSi9rfHN7z9gff9+weW62lXLABfeOU1XzmZxGyT8TMR8ayVeh2APll618+ns3K+ouYj846sdn5SzXxMLcw/MLn/TmcQAwAAAHBa3MIZYFWpqiORef34kWPXx/sPPny6z7fsAXh6uPuHMnO2qi7NzMFyPz/AelZVk4j8TGTNZ+R8Vc1H5dIVxJP5I4P77hCIAQAAADjJLZwB1o6qeyry7eO4+10xGh17uk+zLAF4+vV7zo9H25/KJq6OyG9cjucE4KmriDaiPhOV85lxR8ViIM6q+YVBM3/k7q13xEf2LnS9EwAAAIDl5xbOAP1QFf8UFXvHefd/ejoXfZ1WAN4yvOYFmXVtVvyYdwsBrH4V0UbVXZE5n1HzbeV8Zt4R1c4vtIP5B7cenY+DB493vRMAAACAJ+AWzgDrQ8X/rWjfOh4duHnxr/ifnKcegIfDjVvyWVdk1Wxmvvgp/3oAVq2qqsy8q6rueCwSx3xWzR/PuuOzcd/tp3PbCQAAAACeuunL93x1DWJbU+0LK+M1GfnCyHhG17sAOEOqPlZVbx7fdOC/PpmHP+kAPH3l7LNz0sxGxE9HxjNPayQAa1JVVUbcXZnzETWfEXe0kfNZ7Xy2zfz9zd3/KBADAAAAPE27dm3YfHjqWwaZ2ypyW1Zsq6htmbm162kAdK+q/nzS5nVHbt7/0Sd63JcLwDk9nP2RzJytyFc5JwCAL2vxkPr5yJrPyPm2aj4y7shq5scPxT/Erfse7XoiAAAAQNfOH143PRXHvi0yt2XEtqrYFlnflJEbut4GwGpX769qfmk82vfJx/vZxw3Am1/7c5ubqWM/nU1zdUQ8Z8U3ArB+VNwbWfNVccptppv5bNv5cbPxH2P0zke6nggAAACwbIbDwXR70TdVk9uajG0VsS2rtjmvF4DTURFtVrx7IeKXj4z2337qz31eAN48nN3eZHNtVlzp/AAAulBV92fEfGXMRyyeP9xm3BHVzB+ODf9PIAYAAABWq+nX7zm/fbS+tcnYFhnbMmpbVH5LZGzqehsA/VRRxzPytx49vvArD733N++JEwF46xW7f6IqZzPjO7seCQBPpCrG+QVXEE8q57OdzB8++5x/iN9/x+e63ggAAAD0Xp63c/clGya5rTK2NVHbKmNbRj6762EArFMVj1TU/vb4hrfnG379N/7m6LHJVNebAGA5bJyammw+96xHNg6atustAAAAQP8sTCbNfQ8+cvZC2zZdbwGAL7RxamoydcnFW17Q9RAAAAAAAFgrnnm+ExQBWL28QwkAAAAAAACgJwRgAAAAAAAAgJ4QgAEAAAAAAAB6QgAGAAAAAAAA6AkBGAAAAAAAAKAnpv7jX8x3vQEAAAAAAACAZeAKYAAAAAAAAICeEIABAAAAAAAAekIABgAAAAAAAOgJARgAAAAAAACgJwRgAAAAAAAAgJ4QgAEAAAAAAAB6QgAGAAAAAAAA6AkBGAAAAAAAAKAnBGAAAAAAAACAnhCAAQAAAAAAAHpCAAYAAAAAAADoCQEYAAAAAAAAoCcEYAAAAAAAAICeEIABAAAAAAAAekIABgAAAAAAAOgJARgAAAAAAACgJwRgAAAAAAAAgJ4QgAEAAAAAAAB6QgAGAAAAAAAA6AkBGAAAAAAAAKAnBGAAAAAAAACAnhCAAQAAAAAAAHpCAAYAAAAAAADoCQEYAAAAAAAAoCcEYAAAAAAAAICeEIABAAAAAAAAekIABgAAAAAAAOgJARgAAAAAAACgJwRgAAAAAAAAgJ4QgAEAAAAAAAB6QgAGAAAAAAAA6AkBGAAAAAAAAKAnBGAAAAAAAACAnhCAAQAAAAAAAHpCAAYAAAAAAADoCQEYAAAAAAAAoCcEYAAAAAAAAICemOp6AAAAAADAmpNL39SJjyMiMzIzoioiFn/qlG+iKiKXPgYAWCkCMAAAAACwvmQ+FmtP+adZ+r7yRN/Nk3U3I6IiF39ouVRERZ0MxCfbcNVSN66IaiMqom2XHlcV0bbLOAIA6BsBGAAAAADoh6Y5Jeo2ERmRmZHNYsjNpR/7cr7UQ5az/Z54wozHIvOpL/CFr/V4Z/lV1clIXG2cDMR14vNqT16NDACsHwIwAAAAALB2ZEY0TTTZRDQZ2Sx+H9ksf6Bd5U7G7mgiB4//mDoRhSeLMbjaNqLaaCftuvt6AcB6IQADAAAAAKtODgaP3aZ50Cxevdvk0hWzPFkZS7e7nvr8a4gHS1cQV1XEZHLyauIToTicVQwAa5YADAAAAAB0aOkq3kETORhEnriNMysuTwT25vPjcEVEtG3UZBJVbcRk6cphURgA1gQBGAAAAAA4IyoycpCRzVLoPXFlL6tKxtJ5yqeE4ZNR+EQYbtuItu1wJQDwpQjAAAAAAMAKyMXAuxQSazBYvOK061k8LZ8XhacW/1q5YunK4MlSGBaFAWBVEIABAAAAgGWQ0UxNLd3K+Yuv7BV++ydj8WruaAYnf6wqotrHrhBePFNYFGZRLd16fPGcaQBWigAMAAAAAJy+qSaaTRu7XkHHMiNyMIgYPBaF40QUXrp1dLWtALhenLjVe7P4e6LJjIWjRyMmk66XAfSaAAwAAAAAwMpZisJ5ShSuth67UnjSRrWC4JqXufjfuFkMvjnIcNN3gG4IwAAAAAAAnFHZZGTz2F9PV8TSLaMnJ+Ow84RXqYrFW703g4hBRtM0Edks3toZgFVBAAYAAAAAoFMZS7cLbh47O/pkFF66ZfTi9220k4oMt5A+I05e1ZuROYhscvG/U9e7AHhCAjAAAAAAAKvO40XhiIhBRNSJINy2UVWLVwtXRU3aUCefhozIbE7evjmaE1f2+mICrEUCMAAAAAAAa0qeuDL1lHOF48RVw9UuhuBT4nDbrvOrhisiB01U5uLXLhev5F28stftmwH6RgAGAAAAAKAXMmLxPNqpx7lqOGqxELe1GIZr8YzhxY8X/zn5cVtr40ribE78Sy+eq5x58vPIXPxanPjxVSJPhHoAVowADAAAAACctlR0WOUyluLoIJfa7uAJH1+LhxBHVS1Gy8XLiyPrxJXGi1E5azEWL323GJHjsc/jxOf5WFOuzJMfZ2RULjXbyqhmaWtkZC49Nk95bNTi2bxrolAD0AUBGAAAAAA4baVF0TOL0bU5Jb6e8nNncscXfb62/2fzXhGAldc8iccAAAAAAAAAsAYIwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0x1fUAAAAAAGDtyzaiJpOuZwCrXFZFdT0CoOcEYAAAAADgtFU7iclRARgAoGtuAQ0AAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA9IQADAAAAAAAA9IQADAAAAAAAANATAjAAAAAAAABATwjAAAAAAAAAAD0hAAMAAAAAAAD0hAAMAAAAAAAA0BMCMAAAAAAAAEBPCMAAAAAAAAAAPSEAAwAAAAAAAPSEAAwAAAAAAADQEwIwAAAAAAAAQE8IwAAAAAAAAAA98f/bswMZAAAAgEH+1vf4SiMBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADAhgAEAAAAAAAAmBDAAAAAAAADAhAAGAAAAAAAAmBDAAAAAAAAAABMCGAAAAAAAAGBCAAMAAAAAAABMCGAAAAAAAACACQEMAAAAAAAAMCGAAQAAAAAAACYEMAAAAAAAAMCEAAYAAAAAAACYEMAAAAAAAAAAEwIYAAAAAAAAYH09+4MAAABvSURBVEIAAwAAAAAAAEwIYAAAAAAAAIAJAQwAAAAAAAAwIYABAAAAAAAAJgQwAAAAAAAAwIQABgAAAAAAAJgQwAAAAAAAAAATAhgAAAAAAABgQgADAAAAAAAATAhgAAAAAAAAgAkBDAAAAAAAADARghqunrh70w0AAAAASUVORK5CYII=" alt="">
+          </div>
+
+          <!-- Acantilado: enmarca la bahía por los dos lados -->
+          <div class="capa" data-velocidad="0.34">
+            <img class="capa__imagen" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAASwCAYAAAAaMFf2AAAAAXNSR0IArs4c6QAAIABJREFUeJzswQEBAAAAgJD+r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOi/8PsiayzJ5bStcAAAAASUVORK5CYII=" alt="">
+          </div>
+
+          <!-- Terraza del hotel: balaustrada, sombrillas y borde de la
+               piscina infinita. Es la capa que más se desplaza. -->
+          <div class="capa" data-velocidad="0.62">
+            <img class="capa__imagen" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAASwCAYAAAAaMFf2AAAAAXNSR0IArs4c6QAAIABJREFUeJzswQEBAAAAgJD+r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgNm72xhLz7qO4///mbPTfepuHzYBtw0ssHT7tGeaTJOytKGHzkx3ZgCjgS0oQRpU0kIopVVKExMgRhTQBAwmKhEIPgTFhBcYINAmRUtQkBjULBUMUURIVNBEeXC7O7cvusX2dLfdnT3nXPd9nc/n5dnd+/rtbjJvvnNfAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTkKUHAAAAAAAAlHT98vXPiJy7NzKXo2l+/T//9T8+ePTo0WOldwFshgAMAAAAAADMpP8Pv/GajJx/9POmab4REe8QgoEuEoABAAAAAICZcrrwO0oIBrpIAAYAAAAAAGbCmYbfUUIw0CUCMAAAAAAAULXNht9RQjDQBQIwAAAAAABQpXGF31FCMNBmAjAAAAAAAFCVSYXfUUIw0EYCMAAAAAAAUIVphd9RQjDQJgIwAAAAAADQaaXC7yghGGgDARgAAAAAAOiktoTfUUIwUJIADAAAAAAAdEpbw+8oIRgoQQAGAAAAAAA6oSvhd5QQDEyTAAwAAAAAALRaV8PvKCEYmAYBGAAAAAAAaKVawu8oIRiYJAEYAAAAAABolVrD7yghGJgEARgAAAAAAGiFWQm/o4RgYJwEYAAAAAAAoKhZDb+jhGBgHARgAAAAAACgCOH31IRg4FwIwAAAAAAAwFQJv2dGCAY2QwAGAAAAAACmQvjdHCEYOBsCMNBZi4uLW7ZetP1nI3t3R9PcF82JX/3cfZ/7RuldAAAAAMDjCb/jIQQDZ0IABjpnOBxufXjLiVsj8t7MfMajnzfRHIsmPiAEAwAAAEA7CL+TIQQDT0YABjpjOBxufbh/4rbs9e6JiKef7vcJwQAAAABQlvA7HUIwcCoCMNB6Zxp+RwnBAAAAADBdwm8ZQjDwWAIw0FqbDb+jhGAAAAAAmCzhtx2EYCAEYKCNxhV+RwnBAAAAADBewm87CcEw2wRgoDUmFX5HCcEAAAAAcG6E324QgmE2CcBAcdMKv6OEYAAAAAA4O8JvNwnBMFsEYKCYUuF3lBAMAAAAAE9O+K2DEAyzQQAGpq4t4XeUEAwAAAAAjyf81kkIhroJwMDUDG4e7Dh/Y/fPty38jhKCAQAAAJh1wu9sEIKhTgIwMHGDmwc7zo8L3pBN3h0Ze0rvOVNCMAAAAACzRvidTUIw1EUABiamq+F3lBAMAAAAQO2EX0IIhmoIwMDY1RJ+RwnBAAAAANRG+OVUhGDoNgEYGJtaw+8oIRgAAACArhN+ORNCMHSTAAycs1kJv6OEYAAAAAC6RvhlM4Rg6BYBGNi0WQ2/o4RgAAAAANpO+GUchGDoBgEYOGvC76kJwQAAAAC0jfD71JomItWSsyIEQ7v5kgacMeH3zAjBAAAAAJQm/J6FRi3ZLCEY2smXNOApCb+bIwQDAAAAMG3C7yYIwOdMCIZ28SUNOK3F5cXdW3s7bhd+z40QDAAAAADtdcPKjUci409GP3/w05/VUIBO6pceALTP4vLi7m29HW9qmrwzI3b7VpFzk5HzkXFbk3OvuX7lBUIwAAAAAAAwMQIw8COPDb8RsTuF37ESggEAAAAAgEkTgAHhd8qEYAAAAAAAYFIEYJhhwm9ZQjAAAAAAADBuAjDMoGuGwwt2zm/cKfy2gxAMAAAAAACMiwAMM+Rk+H1jNM2dEXmB8Nsuj4bgyP5t16+84LeFYAAAAAAA4GwJwDADRsNvCL+tl5neCAYAAAAAAM6aAAwVGw6HO4/Pb9wt/HaTq6EBAAAAAICzJQBDhYbD4c7jWzZefzyaX4jIPcJvtwnBAAAAAADAmRKAoSKPC7+Ze0rvYbyEYAAAAAAA4KkIwFAB4Xe2CMEAAAAAAMDpCMDQYcLvbBOCAQAAAACAUQIwdJDwy2MJwQAAAAAAwKMEYOiQQ4cObZvbueUO4ZdTEYIBAAAAAAABGDrgZPh9bWTcE5E/VnoP7SYEAwAAAADA7BKAocWEX86FEAwAAAAAALNHAIYWEn43r2kiMkuvaBchGAAAAAAAZocADC0i/J477ff0hGAAAAAAAKifAAwtcOWVV85fdMme24VfpkEIBgAAAACAegnA0AJHjx49FkfjvRHx3tJbuuSGm29sTvHxLQ9++rMfLTAHAAAAAACguF7pAQAAAAAAAACMhwAMAAAAAAAAUAkBGAAAAAAAAKASAjAAAAAAAABAJQRgAAAAAAAAgEoIwAAAAAAAAACVEIABAAAAAAAAKiEAAwAAAAAAAFRCAAYAAAAAAACohAAMAAAAAAAAUAkBGAAAAAAAAKASAjAAAAAAAABAJQRgAAAAAAAAgEoIwAAAAAAAAACVEIABAAAAAAAAKiEAAwAAAAAAAFSiX3oAAAAAAAAA0B1XrKw8t7+luSEiLsuIyyIimoivRmz8w/GH5z73lc985ms8/d3FAAAgAElEQVSlN84yARgAAAAAAAB4SlcdHu7v9+be1mTzUzly03BGREQvtmxpNgbry394/Fj80tH77vtGqa2zzBXQAAAAAAAAwJNaWF96X3+u/7XIfOVo/H2sjOhlxKu2zMc/L6wvvW+6KwlvAAMAAAAAAACnc9Xhwxf1545/PCKff/Z/Ol8/WFteOHas+YmH7r//O5PYxxN5AxgAAAAAAAB4gsHqCw/0e8e/tLn4+4jMuGH+vPjC1S9avmK86zgdARgAAAAAAAB4nKvXbnpO9noPRua+c31WRj57rmn+/KrDw/3jWceTEYABAAAAAACAH7l8aeniueh9KiL3jO+puac/1//E5UtLF4/vmZyKAAwAAAAAAABERMS+4XDr/Hz+WWRM4m3d587Px8f3DYdbJ/BsThKAAQAAAAAAgIiI3L1t7o8y43kTOyDz0K7tc38QETmpM2adAAwAAAAAAADEwuryPZH5k5M+JyNfurC6fM+kz5lVAjAAAAAAAADMuIMvWnp204u3T+u8phdvv3rtpudM67xZIgADAAAAAADAbMveRn44I+andmDEfC96H9Irx88/KAAAAAAAAMywR65+juunfW5m3LCwuvzmaZ9bOwEYAAAAAAAAZtTVq0uDaV79PMpV0OMnAAMAAAAAAMCM6mW+a5pXP486eRX0b5U6v0b90gN4vEsPHdp20QU7Xp/RXBsZl0fEZRHxb03EV6LJv89s3v/lT9z/1dI7AQAAAAAA6LbB+tJqRhwuvSMzDg/Wl1b/9hP3f6r0lhoIwO3RG6wuvSp78SsRcUlEPvbXnpkRz4yM1WjizsHa8vvn4n/f+jef/It/LzcXAAAAAACADutF5LtLj/iRJt8VEQLwGLgCugUOrKzsHawt/1X28kMRecmT/ubMfmbcvhHn/eNgdenVUxsJAAAAAABANQ6u3/QzGXF16R2PyoyDg9WlV5TeUQMBuLCDq0uHtvabL2bGtWf1BzN2ZS8/tLC29M44cmRuYgMBAAAAAACoyv61tfN6Tb619I4n6OU79q+tnVd6RtcJwAUdXF/+6ezlA5Gxd9MPyXzz4Hvf/dRVhw9fNNZxAAAAAAAAVGlH8/CbInNf6R2jMuJZ2+Ph20vv6DoBuJCTP1T79zNi/lyflZHL/bkT9+8bDreOZx0AAAAAAAA1OvDj158fGfeW3nFa2bxl/9p1u0rP6LJ+6QGzaGF96bJo8iORYw3w1+ze3v9wRLw8IpoxPhcAAAAAAKrVNPkvmc2flt4B03Le8W13R0ZrA2tGPm1Hc/7rIuLXSm/pqiw9YNbsX7tu1/bY+YXMPDCRA5rmnV/+5P1vmcizoWVuuPnGJ36zQxO3PPiZz360yCAAAAAAAGixfcPh1l3b+9/KiAtLb3kyTdN887v/9f3Lvvn5z/+g9JYucgX0dOX22PmRicXfiIjMewZrSy+b2PMBAAAAAADopN3be7e2Pf5GRGTmpRdfuO3VpXd0lQA8RYO15Tdm5toUjvrgVYeH+6dwDgAAAAAAAB3RNHln6Q1nqoneHaU3dJUAPCULL77pkojml6dxVmbunJub+71pnAUAAAAAAED7DdaXVid6S+2YZcQVg/Wl1dI7ukgAnpYT+RuZuXNax2XkCxbWb7ptWucBAAAAAADQYk2+pfSEs9ahN5bbRACegoNrKzdG5sunfW7T5LsPrKzsnfa5AAAAAAAAtMdgbfl5mXFj6R1nr7n54M3Dy0uv6BoBeMKuPHLlfMbG75Q4OzN3bt1S5mwAAAAAAADaounkrbGZmTk31703lwsTgCes/z97X1f2PvV88WB16RXlzgcAAAAAAKCUSw8d2paZR0rv2Lx82eJLFreXXtElAvAE7V9bOy+yuaf0jujlO/xfAwAAAAAAzJ6LL9z26ojobEDNjB3HTuy+pfSOLhEFJ2h7PHx7Rj699I6MeNbC+k2vLb0DAAAAAACAactOXv/8WBm9zv8dpkkAnpD9a9ftasXbvyc1kW/bv3bdrtI7AAAAAAAAmI4r11euiciF0jvOVUZc98jfhTMhAE/I9jz/rja8/fuojHza9jz/rtI7AAAAAAAAmI4tsVHNm7P9ZuPW0hu6QgCehCNH5jKanys94xTuuGY4vKD0CAAAAAAAACbr0kOHtkXkq0rvGJfMeOXiSxY7+7OMp0kAnoDBf3/3SEReUnrHqIy4sNnar+Y7PQAAAAAAADi1Cy/c9vKIqCiY5p5jJ3bfUnpFF/RLD6hSL+8sPeG0Mt6wbzh8zz898MAPS08BAAAAAABgQo5v/OWJXu+FpWeM01wvv1V6QxcIwGM2WFt+XkZcV3rHaWXs3bWtf1tEvKf0FAAAAAAAACbj7z79wEMR8VDpHUyfK6DHLKNp79u/J2XEL8aRI3OldwAAAAAAAADjJQCP0YGVlb0R8dLSO55Sxt6D3/tONT/0GwAAAAAAAHiEADxGW/sbd0RmJ67V7kXeW3oDAAAAAAAAMF757a//9ZHSI2rw/R/8cMtvfuRjv3tiY2NH6S1navGKA+9eff61Xyy9AzbrA3/8sbtGP1u44rKPLw6u+lqZRQAAAAAAAGXlt7/+pab0CAAAAAAAAADOnSugAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAAAAAAAQCUEYAAAAAAAAIBKCMAAAAAAAAAAlRCAAQAAAAAAACohAAMAAAAAAABUQgAGAAAAAAAAqIQADAAAAAAAAFAJARgAAAAAAACgEgIwAAD/1969bMeNJfh+/uMWN16yTp9T7uP21IPzCH6Ffks/Q08875En5xnskSe9enWXSMYV2PAAiCApKUllSZmSIr9vFQrABiIYVNZF0o97AwAAAAC4EgIwAAAAAAAAwJUQgAEAAAAAAACuhAAMAAAAAAAAcCUEYAAAAAAAAIArIQADAAAAAAAAXAkBGAAAAAAAAOBKCMAAAAAAAAAAV0IABgAAAAAAALgSAjAAAAAAAADAlRCAAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAl2uXm7nt/BgAAAAAAAAC+gbbtVt/7MwAAAAAAAADwDVgCGgAAAAAAAOBKCMAAAAAAAAAAV0IABgAAAAAAALgSAjAAAAAAAADAlRCAAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAlBGAAAAAAAACAKyEAAwAAAAAAAFwJARgAAAAAAADgSgjAAAAAAAAAAFdCAAYAAAAAAAC4Eu3/9f89/N/f+0MAAAAAAAAA8PXa//P/+ff/43t/CAAAAAAAAAC+niWgAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAlBGAAAAAAAACAKyEAAwAAAAAAAFwJARgAAAAA4Fes2yaL2l+jAt9XU1e5aZvv/TGAn0T7vT8AAAAAAMCP6n/8cpubrk1Jsu/7HIaSfV+yH4bsS8lhmLZTKd/7owI/sapKlnWdVdNm1dZZNXWWTZ1V02RV1+ma6QdR/ue//Wd2w/C9Py7wgxOAAQAAAAB+xbIM2f/7f6Qcj9P5vP3y0X19KdkdT9mdjtkfT9Px8ZT96ZjdqU8v2MCf3rLtsl52WXdd1otF1os2626R1aLLqmtTlSrpkxxev+6UpK+bdHe3WTW1AAy8SwAGAAAAAPiMRVWnXS7TLv+a4XDI6fFDTg8f5v3Dq33p+1evXc/b2eGwz+OHhzw9POTx4UMeHx7y+OHD5Xj46PXAz2e5WuX27i63d/e5vZ+3u/vc3t3l5u4uTfN6Cec+ycO8parSbm7S3d1lcXuf7u4+3cv9zU1SVVn3T/mP4+l7fYvAT0IABgAAAAD4jLaps+uHrNsmzXKZZvnXrP7rXz9777Df5fjwIgw/fsjp8WEOxg9ZLldZ/nWV//rXz79+v9tdYvDTR3H4w3/+5+/8nQJfomnb3N3f5+buLnf3v8yh9zn4dl339utXq0vUXdzdp7u9mwLv3X26m7tUzdvP+D0OJdU3/p6A61T987/86/i9PwQAAAAAwI9sUddZtXWWdZNVU2fVTvtlPT2ns6reyDLjmH63vcTh42Um8RSI+6fHjG88Q3gcxxwPh+y222nbbbM/H2+32e+ejw/7/e/zCwBXbLFYZn2zyXqzyXq9yfrmZjq+bNP5Yrl8833qrpsD71262znyXmby3qXuFm++vi9j9kOffT9mX4YchiH7YZyeOd4PEXOALyUAAwAAAAB8hSrJ4hyF6zrLpsmymYLxqqmzqJu3Z+2VktP26cWM4Q8vYvFDhqenjOOvB+LXb1Wy3+2mMDzH4ksofnG+325zOllGlutVVVVW6/WrgPtx0D1vTftli6VWdZPu9vZ51u7tc9xd3N2nWa3ffH0Zx+z7IftSsh9K9sOQw1AuY0ORa4BvwxLQAAAAAABfYUxyGEoOQ8nfPnO9qpJlPQXiZVNnVTdTHK6bLNs6XV1PS8He3iX//Z8+ff9SMux36Xfb9NunDLv5eLdNv92m3z9l2G7T73bJ6ZjNzU02Nzfvfu7+dJpnE+9eheHdR6F4u92+OUMZ/kh102TzcdA9z9hdb+aZvDdZrlap6/qL3rNq2rSbzbStb9KuN2k35/0mzbxvl+vkjfccxzGHc9zthznwTrN59/2Qk8AL/EEEYHjDum0ylDFHv8EFvqOmSlZNk6d++N4fBQAAgL/DOGae7ff5v2Oqk3nGcJtVU2XVtlnWVVZNk2Vdp2vqKUZtbpJfeQbx5Wv1p/S7Xfrt00eReDtH4mkbdtu0XZe77pfc3f/y7vdwOOynUPzOMtT73e7v/nXiz6NumiyXyyyWyywW837elsvX5+exbjHt23ees/tSs1xO8XZ9M8fdF5F3Pm/WN2neWdr5bExyGsoUdC+Rd/rhj/0w5DgUyzQDPwQBGN7wP365zU3XTktzDEP2fcluKDnMP7F1fv5CGf3fOvD3q6tqen7UvETYcj5eNVVWTZu2nhYK+5//9p/ZDSIwAADAtSlJdkPJbjjOI4dX1+skXVNn0dRZ1HUWdTXNGq4/HavbLt1dl+7u/u0vOo4ZDof0++1zLN5OYfhlJO632wzHQ5bLVZbLVX75L//lnbcd059OOZ2OOR1POZ1OOR2POZ2O0/jx+GJsuq8/vrz/xfXj8c2vxffVtO3nY+3i07GXoXe5XH7xksufU1V1mtVqnrF7k2a1uRy3L2Pv5iZV03zRe47jmNM45jgMOZYxx2HMsQw5lTIfl2kTeIGfhAAMb1iWIft//4+U+Tebq3n72KHvszuesjsdszvM++Mpu+Mph9PJbwrgT65Kslp0WS8WWXdd1i+OV4suy7ad/rT/mUcvHZOc5ufLrJpaAAYAAPgTKi+WmH5PW1VZNFMcPs8e7uoqi3raL5s6XTWNN6tVmtUqy7/8w5vvOS1BPc8kfhmIP5pR3O+2KadTusUi3WKRvL8K9bummPx+SO4/Oh+GPqWUjOOYsYwZx+n4eaykvLhWXtwzlpK+77/+w//B6rpO07ZpmiZN26Zt2zTNvG+b+drzedt2l3ubtk378nXzvdN9L1/XXr7Gly6v/DlVVadeLNIsl6kX09Ys5+3F+WV8sUyzXE3ni8W0rvoXKOOY41ByHEuO/TnqjjkM5UXwLZZmBq6OAAy/YlHVaZfLtMu/Zjjsc3r4kOPDh5zm7fjwIf3jh5weH149A6VNcjdvSVKGIY+Pj3n88CGPDx+m/YcPeZiPj4fDr34G4OdQ1XVubm5zc3eX2/u73N7d5/Zu3t/fZb25SfXRH0yO8/a3+fXt5jbd3V262/vn/e1dFnf30xJfVZX18JT/OH6mEgMAAMCsH8f0/ZDk/R8gXjZ12nMorut0dbJomiyqOou2mvZNnXr+c2u7uX33PcdSUo7HlNMx5XS67IfTMeN8PrwYn/bHlFOfcjq8ek3p+7Rdl7brsv5Gvz5fo+/7jOWjkDyWjGVMmffnsUtQvlz7do+Y6xaLOdg+B9nuNyyL/K1Udf1GqH2Ou82re1bTcdt9ccT9nNNYcuqniHuYA+5hGHKaZ+4eh5JjGTNYuRH4kxKA4Ve0TZ3dULJu6vk3Jqus/tv/8umNpeS0fcrp4W85PTzk+PC3nB4/5PThIcfHD8lum/tffsn9L59/lkp/OmX79JTt0+O8f8puO+23j0/Zbp+yfXz8/b9h4E2b29sXUXcKvDd3z7H3TVWVdnOT7vYu3d1z2O1up9Db3tymeuenZo9Dyd//xyIAAAD41HlW8dM79zVVLstNd3V9mU28eLEEdTcvQ13VzzOLv9o4pvRzED6ew/Ep42cj8kf74ymln+4b5/GvjbDtVyxb/EeoqjpV26ZqmtRtm6ppU7fNPNambl6Pnc9fvub5ddPY5fhyf/Pq+t9rTDKMY/pS0peXx2NOY5mOx2Qo4/RDDZdrY/qxxJKLAG+r/vlf/tX/VMIbqvkZK6umybqps2ybrOo6q7bOqm7SNfWbUWbsT5/MHD49fsjp4SGnhw8p/fuz+cZxzG67zW4OxK8i8Ytw7Lko8Nt0XZfVZpP1ZpP1evN8/Op8ndV68/ayRlWVdrV+PXv37jn2djd37/6h6FhKDv38jPGhvHjOeJ+D58sAAADwk6irKk2VNFWVtq7T1FXqJG01HTfn63WdNlXqelq2uqmq1FWddn5t09T5+xcYft849Mk4zdhNkrGMU5a8jI1TZDyfn++7xMfne6fb57j88vUlGef78g1notZddwm1VTsF2Wax/Gbv/6XGJP1Ypkg7B9t+mILtkDGnobyKt/04X5vv93cdAL8fARi+Ul1VWTXTUjmrrs2qqV8E4jrNW9FoHKflpZ8e02+fPtlO26f0T08ZDvsv+k3i82ziaebw7qNAPIXj7TddcgZ+NFVdZ7PZvAq7680mq/N+s76Mt79heaRmtZqXZZ7i7uISe6fgW73zU8B9mWLuFHWHy09Z74cp+BZLEgEAAMArVeYYPIfjdj6uqypNqrTn8TkWn+9tqzpNlSkup7685tpX1hrHMWV+7m2ZI2wp1Tw+LYdcSp6PxylQl3mp5FJV89LV82vH+d5hen2ZX3N+f3/DCPDjEoDhd9bWdVZNnfU8Y3jZ1Fm30371hcukjKVMUfjpKf3uKf3TY07bbfrti3D89PRFs4mTZLfdppQhh/0hh/0+h/1uOj68OH45vt/ldPLcUb6v1Xp9mZ37HHOfA+857i6XX77EVFXXadabtPPWbDZpV5u0m+exdj2dV+3bsbgfp2fN7PuS/VByGIYcynkm75DB/9sCAADAD2MKwuc/rE9xuKqmkSpjXubi86Nqq/mgmmcAX87z+vr5NdN91fyvb/cXA/04x945xg6jZ90C8NqP/dACuAJ9KXksJY+f6adVnp+fsmiqLOfnpSznZ6dM+yZtXc+zDN9+zmg5Hec4/ByFX80m3j5l2G2z3mySJDfvvN/Hdtvtcxg+nCPxR9thn+PhkOPhmOPxkKHvf9svGH8qi8Uyq3mJ5c3Np8swr17E3S9WVWmWqynorj8fc8/XmsXy+U9x7yhJDv2L5ZnL8+zd41ByMrMeAAAAfhqvV+Kajz83BgA/IQEYvqNxfu7nsZTkjQm2VVVNMbiaQvHiHIgv8bjJsq5Sd4ss/vIPWfzlH978uv32KRnH9Id9hv0+w2Gfst/P57sMh2nsfG047FOOx98e4pIMwzAH4RfbcdofDoecjsccDvucDsf5fBo/ztf48bRtm26xSNct0i66dF13OT8ft103nS8+3bcvzt98ru5H6q57jrovZ+x+FHeb1SbVF77vmKQvQ45lzHEYcyxTyD0NJcdxCrtT3J2eaQMAAAAAAD86ARh+AuM4TjMOM7wZiptzKG7qLOoqy7qZA/EUjKetSru5SZK0N7e/6XP0u6fnKPxr++NhCsaHQ4bjIU3yd4Xjs5fB+Hg8ZuiHDEP/vB+GDP28f3Xcf3pvPzxf+8zrfiZN205LFVV1qrpKVVWp6zpVVaWa95fz+Z66er5e19UUbT8Kt133OtB+HG4Xi8U3/17am9t3l2Bu1uvU3Zd/7aGUKerOQfc4lPmHLcYp8JbxMgYAAAAAANdEAIYrMoxjtv2QbT+8ed+irpMqWdRVmnlWcVvV6aoqbV2la+q0VZWurqblp6sqTV2nXd+kXd/8ps80Dn2G42EOwsfLbOIpFB9SXu6PxwzHfcphul5OxyyWyyyWy+S3rVb91frTKeP8/OVxHD/aXoyVj6+9uF7GjBkzlvIi1E7x9ZMwO1/7OOTWVZW2e/vZs3+0qmlSd13qbnHZN90iVdel7roXx4s0H91Xd13qxYvzd56r+7HDvNTy8UXUPZ1D74vIWzz3BgAAAACAPykBGP6EzrMej0OSvB2LX1rU9etAfA7G5/F531ZTOF7UdaqmTbtuk98Yjs8uwfiwTzkdMw5DyjBk7Pv5uM849PPYkLH0Gfvz+HxfGVIu1+Z752vT8XTvSz9adP1an0TYV/G2SzWfN5dAO19vp2vnkNusVt/8s/VzwD1elmJ+PUP3dJm1a7YuAAAAAAC8RwAGvtgU6ZK8M8P4pepFKD6H4baq0tSfjrV1nbaelrJu6zpNVaVZrtIsV+nu7n/X7+2lse8zzs97HcuYzDN6M2/jZV+ex8r4/JrzeHm+N1WSTDN/c9mSKs/nVaqkruZbX4yd70+Vqp7eJ9X8XnnxXi9eU7W/3/+8j+OYIckwlgxlmnnel5IyJkPG9EPJME7j0zbd15/PS0nJfF7M1AUAAAAAgG9JAAZ+V+M45jiOUzj+O7RVlbaZYnBbVWmqKlWV1KlSV1XqKtN+bqZNVU3X6tfX6qpOPQfXuhrn107X2rp+9TWrtp0i7JU5DWUKtCUpY7kE2r7MQbeMz9G2jOnHKeSWOfBO12J5ZQAAAAAA+IEJwMAPrR/H9L9hxvG3UM+ROUmqcZ5km3m27mVy7nw8b9PVcRofk6p+PZ6qytRNx/O/psnDVVJlnI4v2Xmcr59DazU9S3j+WtO9Y8b5E43jdC2Xf69EWgAAAAAA+JMSgAE+Usbx3FIn4ycHP4hf+zw/2ucEAAAAAAD+KPUX3AMAAAAAAADAT0AABgAAAAAAALgSAjAAAAAAAADAlRCAAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAlBGAAAAAAAACAKyEAAwAAAAAAAFwJARgAAAAAAADgSgjAAAAAAAAAAFdCAAYAAAAAAAC4Eu33/gAAAADfWltX+d/vb3IYSvZDyWEYLvth/N6fDrhmTV1l3TRZNnVWdZ11W6cfk//3Yfu9PxoAAPAnIQADAABXZ103+W+r5WevncoUhffDkMNQcuiH7EvJvi/Zl5JxVIiBX1clWc6Bd902WTX1dNw0WTVN2rr65DX7YRCAAQCAP4wADAAAXJ1VV6ffPub08JDj44ecHh5yeviQ09NjMpZX93bzdpdkHMfs9/s8bZ/y9LTNdrvN0+NTnraPeXraZrfbpZTyq18XuA7dosvtzW1ubm5zc3uT281Nbm42ubm9yWa9SV0/P1GrJNnNW5JUTZPu9j7d7V0W97+ku7tPd3ufqqr8gAkAAPCHEIABAICrs2natJt12s1t1v/4vz5fKCWn7VNOj3MQPsfhxw85Pj5keHrKOJZskmy6JvnlbtouLy/ZPT3l8eFDHh8epu3D+fhDdk9PAg/8BOq6zs3dXW7v7nN3f5/bebu7v8/t3X0Wy8+sIFD65MPfsn/4kHa9Tnf3S7rb+yzu7qfIe3efxf192vVNUn06C3hV77Ibhj/mGwQAAP7UBGAAAODq/Nv+kEMpWdZ1Vk2dVTst17qo63S3d+lu75L//k+fvG4sJf3T4xSEH57j8DkY97ttbu7ucnN3l3/8la/98OFvefzwkKc5Cr+MxLvt0+/+vcOf3XK1yubmJuvNzbzfZHN7Ox2vp0Le5n0AAAkASURBVOP1ZvPme9RtN0fduynyzjN5F+fZvO3bf51yOC8zX0p2p+kZ5CerBwAAAH+Q6p//5V/9eDoAAPCnUCdZttNzOldNlVXbZllXWTZNVnWdrqnffP04DFMMfvwwzyCeZw/PS0wP+92bry/DkN1ul/1um/12l91um/1ul/12exnfbaf9Yb//xt89/Nzqpsnm5uZV3L2cn483N2neibNJkqpKu7mZZ+++iLvz1q7fDsT9OGbflxyGIbthCryHoWTfD9mXIRYCAAAAviczgAEAgD+NkmTXD9n152VYD6+uN1WybKbZwqumyaptsmrqLOsmq7ZO2zRZ/PKXLH75y2fff+xPOT0+TLOHL6H44RKLc9jn5vY2N7e373/WUqY4/CIK73e77LbbV+O77TaHd8Iz/IiqqspqvX7eVussXxyv1uss16us1pusVqvPL8v8GXXbpt3cPG83N+k2t2k2N+kuY7ep6l//gY9xHKegW6aoexjKFHr7kkMxmxcAAPixCcAAAACzYUy2/ZBtPyQ5fXK9reosm+qypPSqrp8jcdOkabss/vIPWfzlHz77/uPQp396Sr/bpd9vM+y26XfbDLtd+t02/X53GcvpdJnd+J5SSg77/UdxePtJQJ5i8d5zivldVFWV5Wp1CbrL1fqTwPscdddZLJapPvOs3F9//zrNen0Ju93N7UeR9ybN+ibNF4bivozZD332Q5m2fpiC77x8c/zXBAAA+EkJwAAAAF+oH0v6Pnm6zCB+ra2rrObZwudlppdNm2U7jddNm+7+l3T3v7z7tcZhSL99mkPxHIh3Hx9P0TjHY9abzbvPNc08s/F0OuV0POZ0POZ4POR0POV0POQ4j03jnzk+HXM8HHM8iMh/Fi+D7udm6K7OM3TX6yyWvy3opqrSLJZpVus061Xa1SbNap12tZ7H1mlXqzTrTZrlKu1qnXzB+4/jmGMpOZZpFu+xlBznJZqn8em4+M8wAABwpQRgAACAb6QvYx5Ln8f+89fbqkpXV1k0dbq6nvZVnUVdp2uqy76rm9RNc3ke6XvGYZhnEM+BeLt9FY6nWcW7DPtthsMhi8Uii8Xiq77XYRimaHx4EYffDMhTaJ6C8zTWnz6dZc3XWa5WabsuXdel6xZp2iaLxfIy1s5b1y2m80WXru3Sdm26xSLtPH6+9zepqjSLxRRvzyF3vU6zXKddz2PzebNep12ukjeWYf6cvow5lmGOuWMOw5DTPIP3OI45zZEXAADgz0wABgAA+IP045h+GLMb3g9U51jcNU0WczRu6zrLao7EVZ1FU2XZNKmaJt3tXbrbu/c/xDhmOB5SjscMp2PK8Zgy74fjIeV0Svno+uW+872nY5okzXqT1fr9WcdvOR4Ol4B8OBxShpJSSsYy7UsZ5v28Dc/nwzBkHMcX98/XhvL6NfP4WEqG4aN7X7336/uH/nXJb9o2dVUlVZWqqlJVder6fDydT5frVJ+MvzifrzVNm6Zp0rRtmrZJ07Rp22msbpr5+Pnay/2vzYP9x3/6377qn8fH6sXieUbuZVbu61m659jbrta/OegOc7Q9lTGncd7Ps3RPw5h+nJ63eypjDqVYlhkAAOALCMAAAAA/oN8Si5u6yqKq0zX1NMO4no+rKRwv5mi8aJrUVZVmuUqzXOU3zu98pfSnSxAeXkTkKRgfnq8dPnPP+XrfZ7FcZvGFz2zlfc1ylarr0rRdqq5L3XWp23n/2ePF5bxquzTzvu4WabruNwfdMo5zsJ2i7XHen4aSfhxfjE0zeC0lDgAA8O0JwAAAAD+5oYzZZchu+PyziV+q52DcVFXauk5TJW1dp62qebxOWyVNVaepk7aar1VJU0/X6rqe4mHbJbn56s9fTseMw5CxlI/283EZPr3+cqwMGYdfue+j+zPP8M04pvR9xjIk82vLfH/m9yv96yWqq6adnnE7z+CdpvvWl+OqqpMq8/k0C/g8WzhV/eK4SlXX09a0qds2VTM9I7pqm+nrNPPYq2tt6ma+Pt9Xf3xf93VLe39svETbOezOs3T7eQnmUxlymu85lZKhCLoAAADfmwAMAADwJ1KSlDLmlDH5gtnFv2YKyNVl387BuKnqNEnapk5TzdfnuNyej+fzupoWMq67Rb5qOjIXp7GkjGNKmWaRlzEZSskwjhnGZMiYoZSU8Xx9zFDG9OM0G3cYxww5v2aa0QsAAMDPRQAGAADgNxvGMcPw9XGwrqrUqVJVY6qqSj2PVcl8Pl2rq3q6J/NYMj1/93L/dE+deWLufP3yXmOVqk7qzGPze1WZZjdPr6lSV+P0bN/5fV86x9BxHDNWVTImY0rGsZofTTtmHJOxqjKmJGU+HpOkZJyf3DvO95VxGh3HcQ7zJUOqjGWKsKWUlKpKKVOoLeOYcf61Lxmn8flznbdv8I8EAACAn5wADAAAwHdT5pg5FVT1EgAAAL5W/b0/AAAAAAAAAADfhgAMAAAAAAAAcCUEYAAAAAAAAIArIQADAAAAAAAAXAkBGAAAAAAAAOBKCMAAAAAAAAAAV0IABgAAAAAAALgSAjAAAAAAAADAlRCAAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAlBGAAAAAAAACAKyEAAwAAAAAAAFwJARgAAAAAAADgSgjAAAAAAAAAAFdCAAYAAAAAAAC4EgIwAAAAAAAAwJUQgAEAAAAAAACuhAAMAAAAAAAAcCUEYAAAAAAAAIArIQADAAAAAAAAXAkBGAAAAAAAAOBKCMAAAAAAAAAAV0IABgAAAAAAALgSAjAAAAAAAADAlRCAAQAAAAAAAK6EAAwAAAAAAABwJQRgAAAAAAAAgCshAAMAAAAAAABcCQEYAAAAAAAA4EoIwAAAAAAAAABXQgAGAAAAAAAAuBICMAAAAAAAAMCVEIABAAAAAAAAroQADAAAAAAAAHAlBGAAAAAAAACAKyEAAwAAAAAAAFwJARgAAAAAAADgSvz/ESq73yID7i8AAAAASUVORK5CYII=" alt="">
+          </div>
+
+          <!-- Agua de la piscina: sube hasta cubrir el encuadre -->
+          <div class="agua"></div>
+
+          <!-- Fondo sumergido: tinte, cáusticas y burbujas -->
+          <div class="sumergido"></div>
+          <div class="burbujas">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="lienzo__velo"></div>
+        </div>
+
+        <!-- Rótulo 1: las vistas -->
+        <div class="rotulo rotulo--vistas is-visible" data-rango="0 0.22">
+          <p class="rotulo__lugar">Mogán, Gran Canaria</p>
+          <h1 class="portada__titulo">
+            <span class="titulo__linea">Sobre el</span>
+            <span class="titulo__linea titulo__linea--cae">acantilado</span>
+          </h1>
+          <p class="rotulo__entrada">
+            Entre Puerto Rico y Playa de Amadores, a trescientos metros de la
+            orilla y con el Atlántico entero delante. Sigue bajando.
+          </p>
+          <div class="rotulo__acciones">
+            <a class="boton boton--solido" href="#reserva">Consultar fechas</a>
+            <a class="boton boton--linea" href="#habitaciones">Ver habitaciones</a>
+          </div>
+        </div>
+
+        <!-- Rótulo 2: el borde de la piscina -->
+        <div class="rotulo rotulo--borde" data-rango="0.34 0.62">
+          <h2>El borde no termina</h2>
+          <p>
+            Dos piscinas climatizables en la terraza, apoyadas en el filo del
+            acantilado. Una de ellas con acceso para personas con movilidad
+            reducida.
+          </p>
+        </div>
+
+        <!-- Rótulo 3: dentro del agua -->
+        <div class="rotulo rotulo--agua" data-rango="0.8 1">
+          <h2>Ya estás dentro</h2>
+          <p>
+            Y todavía queda el talaso: 1.800 m² de agua de mar climatizada,
+            veintiocho cabinas y estaciones de hidroterapia.
+          </p>
+        </div>
+
+        <p class="lienzo__pista" aria-hidden="true">Baja</p>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         MÓDULO C — EL HOTEL
+         ================================================================== -->
+    <section class="seccion seccion--hotel" id="hotel">
+      <p class="seccion__indice">El hotel</p>
+      <div class="hotel__texto">
+        <h2 class="titular">Construido en el filo, entre dos playas.</h2>
+        <p>
+          El Gloria Palace Amadores se levanta sobre el acantilado que separa
+          Puerto Rico de la Playa de Amadores, en el municipio de Mogán. Desde
+          casi cualquier punto del hotel &mdash;la habitación, la terraza del
+          restaurante, el borde de la piscina&mdash; se ve el mismo mar.
+        </p>
+        <p>
+          Todas las habitaciones tienen balcón o terraza propia. Abajo, el
+          talaso ocupa más de mil ochocientos metros cuadrados y funciona con
+          agua de mar tomada directamente del Atlántico.
+        </p>
+      </div>
+      <dl class="hotel__datos">
+        <div><dt>Categoría</dt><dd>4 estrellas</dd></div>
+        <div><dt>A la playa</dt><dd>300 m</dd></div>
+        <div><dt>Talaso</dt><dd>1.800 m<sup>2</sup></dd></div>
+        <div><dt>Al aeropuerto</dt><dd>35 min</dd></div>
+      </dl>
+    </section>
+
+    <!-- ==================================================================
+         MÓDULO D — HABITACIONES
+         Los cuatro tipos son los de la carta oficial del hotel.
+         PENDIENTE: las tarifas son provisionales. Sustituir por el plan de
+         precios real antes de publicar.
+         ================================================================== -->
+    <section class="seccion seccion--habitaciones" id="habitaciones">
+      <p class="seccion__indice">Habitaciones</p>
+
+      <div class="habitaciones__cabecera">
+        <h2 class="titular">Todas miran al mismo sitio.</h2>
+        <div class="carrusel__mandos">
+          <button class="mando" type="button" data-carrusel="anterior">
+            <span aria-hidden="true">&#8592;</span>
+            <span class="oculto-visual">Habitación anterior</span>
+          </button>
+          <button class="mando" type="button" data-carrusel="siguiente">
+            <span aria-hidden="true">&#8594;</span>
+            <span class="oculto-visual">Habitación siguiente</span>
+          </button>
+        </div>
+      </div>
+
+      <ul class="carrusel" id="carrusel-habitaciones" tabindex="0"
+        aria-label="Tipos de habitación, desplazable horizontalmente">
+
+        <li class="carrusel__elemento">
+          <article class="ficha">
+            <div class="ficha__imagen ficha__imagen--doble" role="img"
+              aria-label="Doble Vista Mar: dormitorio con balcón orientado al Atlántico"></div>
+            <div class="ficha__cuerpo">
+              <h3 class="ficha__nombre">Doble Vista Mar</h3>
+              <p class="ficha__dato">2 huéspedes &nbsp; Balcón &nbsp; Vistas al Atlántico</p>
+              <p class="ficha__texto">
+                La habitación base del hotel, pensada para el descanso junto al
+                mar. Balcón amueblado, aire acondicionado y baño completo.
+              </p>
+              <p class="ficha__precio"><span>desde</span> 132 € <span>/ noche</span></p>
+            </div>
+          </article>
+        </li>
+
+        <li class="carrusel__elemento">
+          <article class="ficha">
+            <div class="ficha__imagen ficha__imagen--thalasso" role="img"
+              aria-label="Doble Thalasso Vista Mar: habitación con acceso al centro de talasoterapia"></div>
+            <div class="ficha__cuerpo">
+              <h3 class="ficha__nombre">Doble Thalasso Vista Mar</h3>
+              <p class="ficha__dato">2 huéspedes &nbsp; Talaso incluido &nbsp; Balcón</p>
+              <p class="ficha__texto">
+                Misma habitación, con el circuito del Thalasso Gloria incluido en
+                la tarifa durante toda la estancia.
+              </p>
+              <p class="ficha__precio"><span>desde</span> 168 € <span>/ noche</span></p>
+            </div>
+          </article>
+        </li>
+
+        <li class="carrusel__elemento">
+          <article class="ficha">
+            <div class="ficha__imagen ficha__imagen--familiar" role="img"
+              aria-label="Suite Familiar Vista Mar: dos ambientes separados con terraza"></div>
+            <div class="ficha__cuerpo">
+              <h3 class="ficha__nombre">Suite Familiar Vista Mar</h3>
+              <p class="ficha__dato">Hasta 6 huéspedes &nbsp; Dos ambientes</p>
+              <p class="ficha__texto">
+                Dos espacios separados y terraza, para familias que necesitan
+                horarios distintos bajo el mismo techo.
+              </p>
+              <p class="ficha__precio"><span>desde</span> 215 € <span>/ noche</span></p>
+            </div>
+          </article>
+        </li>
+
+        <li class="carrusel__elemento">
+          <article class="ficha">
+            <div class="ficha__imagen ficha__imagen--premium" role="img"
+              aria-label="Doble Premium Vista Mar: terraza con piscina privada sobre el océano"></div>
+            <div class="ficha__cuerpo">
+              <h3 class="ficha__nombre">Doble Premium Piscina Privada</h3>
+              <p class="ficha__dato">Solo adultos &nbsp; Piscina privada &nbsp; 2 huéspedes</p>
+              <p class="ficha__texto">
+                Terraza con piscina propia asomada al Atlántico. La categoría más
+                reservada del hotel y la que antes se agota.
+              </p>
+              <p class="ficha__precio"><span>desde</span> 295 € <span>/ noche</span></p>
+            </div>
+          </article>
+        </li>
+      </ul>
+
+      <p class="carrusel__posicion" id="posicion-carrusel" aria-live="polite">1 de 4</p>
+    </section>
+
+    <!-- ==================================================================
+         MÓDULO E — THALASSO Y EXPERIENCIAS
+         ================================================================== -->
+    <section class="seccion seccion--thalasso" id="thalasso">
+      <p class="seccion__indice">Thalasso y experiencias</p>
+      <h2 class="titular">El agua del Atlántico entra en el edificio.</h2>
+
+      <ul class="experiencias">
+        <li class="experiencia">
+          <h3>Thalasso Gloria</h3>
+          <p>
+            Más de 1.800 m² con estaciones de hidroterapia, piscina de agua de
+            mar climatizada, sauna y baño turco.
+          </p>
+          <p class="experiencia__nota">Abierto a diario. Acceso desde 15 años</p>
+        </li>
+        <li class="experiencia">
+          <h3>Veintiocho cabinas</h3>
+          <p>
+            Tratamientos personalizados de fisioterapia, masaje y estética, con
+            envolturas de algas y sal marina.
+          </p>
+          <p class="experiencia__nota">Con cita previa</p>
+        </li>
+        <li class="experiencia">
+          <h3>Piscinas en la terraza</h3>
+          <p>
+            Dos piscinas de agua dulce climatizables sobre el acantilado, una de
+            ellas accesible, más una piscina infantil y el Splash Park.
+          </p>
+          <p class="experiencia__nota">Incluido en la estancia</p>
+        </li>
+        <li class="experiencia">
+          <h3>Mesa con vistas</h3>
+          <p>
+            Bufé con cocina en vivo y cenas temáticas cada noche, el Bar Paseo y
+            varias terrazas orientadas a la puesta de sol.
+          </p>
+          <p class="experiencia__nota">Todo incluido Premium disponible</p>
+        </li>
+        <li class="experiencia">
+          <h3>Deporte al aire libre</h3>
+          <p>
+            Pista de tenis iluminada, gimnasio, petanca, tiro con carabina y
+            tenis de mesa en las terrazas altas.
+          </p>
+          <p class="experiencia__nota">Tenis con reserva previa</p>
+        </li>
+        <li class="experiencia">
+          <h3>Golf en el sur</h3>
+          <p>
+            Condiciones especiales en los green fees de los campos del sur de la
+            isla para huéspedes del hotel.
+          </p>
+          <p class="experiencia__nota">Consultar en recepción</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ==================================================================
+         MÓDULO F — MOTOR DE RESERVA
+         Valida en el cliente y estima el total. PENDIENTE: en producción el
+         envío va al motor de reservas de la cadena y el servidor tiene que
+         volver a validarlo todo.
+         ================================================================== -->
+    <section class="seccion seccion--reserva" id="reserva">
+      <p class="seccion__indice">Reserva</p>
+
+      <div class="reserva__envoltorio">
+        <div class="reserva__texto">
+          <h2 class="titular">Mejor precio reservando aquí.</h2>
+          <p>
+            Tarifa reducida exclusiva de la web y prolongación del Todo incluido
+            hasta las 18:00 del día de salida en estancias de cuatro noches o
+            más. Si lo prefieres, llámanos al
+            <a href="tel:+34928128510">928 12 85 10</a>.
+          </p>
+        </div>
+
+        <form class="formulario" id="formulario-reserva" novalidate>
+          <div class="campo">
+            <label for="entrada">Entrada</label>
+            <input type="date" id="entrada" name="entrada" required>
+          </div>
+
+          <div class="campo">
+            <label for="salida">Salida</label>
+            <input type="date" id="salida" name="salida" required>
+          </div>
+
+          <div class="campo">
+            <label for="huespedes">Huéspedes</label>
+            <select id="huespedes" name="huespedes">
+              <option value="1">1 huésped</option>
+              <option value="2" selected>2 huéspedes</option>
+              <option value="3">3 huéspedes</option>
+              <option value="4">4 huéspedes</option>
+              <option value="5">5 huéspedes</option>
+              <option value="6">6 huéspedes</option>
+            </select>
+          </div>
+
+          <!-- El value es la tarifa base por noche; el régimen la multiplica -->
+          <div class="campo">
+            <label for="habitacion">Habitación</label>
+            <select id="habitacion" name="habitacion">
+              <option value="132">Doble Vista Mar</option>
+              <option value="168" selected>Doble Thalasso Vista Mar</option>
+              <option value="215">Suite Familiar Vista Mar</option>
+              <option value="295">Doble Premium Piscina Privada</option>
+            </select>
+          </div>
+
+          <div class="campo campo--ancho">
+            <label for="regimen">Régimen</label>
+            <select id="regimen" name="regimen">
+              <option value="1">Alojamiento y desayuno</option>
+              <option value="1.18">Media pensión</option>
+              <option value="1.32">Pensión completa</option>
+              <option value="1.45">Todo incluido Premium</option>
+            </select>
+          </div>
+
+          <div class="campo campo--ancho">
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="nombre@correo.com" required>
+          </div>
+
+          <!-- Consentimiento expreso. Sin marcar de serie: el RGPD no
+               admite casillas premarcadas ni consentimiento tácito. -->
+          <label class="formulario__consentimiento">
+            <input type="checkbox" id="consiento" name="consiento">
+            <span>
+              He leído la
+              <button type="button" class="enlace-legal" data-ventana="ventana-privacidad">política de privacidad</button>
+              y acepto que el hotel trate mis datos para gestionar esta consulta.
+            </span>
+          </label>
+
+          <output class="resumen" id="resumen-reserva" for="entrada salida habitacion regimen"
+            aria-live="polite">
+            Elige las fechas para ver el total estimado.
+          </output>
+
+          <button class="boton boton--solido boton--ancho" type="submit">Comprobar disponibilidad</button>
+
+          <p class="formulario__aviso" id="aviso-reserva" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================
+       MÓDULO G — PIE
+       Los enlaces de navegación llevan a su sección; los de contacto abren
+       el cliente de correo y el marcador del teléfono; los legales abren
+       una ventana modal, por eso son <button> y no <a>.
+       ====================================================================== -->
+  <footer class="pie">
+    <div class="pie__marca">
+      <p class="pie__nombre">Gloria Palace Amadores<br>Thalasso &amp; Hotel</p>
+      <p>Calle La Palma, 2<br>35139 Mogán, Las Palmas</p>
+    </div>
+
+    <nav class="pie__nav" aria-label="Enlaces del pie">
+      <a href="#hotel">El hotel</a>
+      <a href="#habitaciones">Habitaciones</a>
+      <a href="#thalasso">Thalasso</a>
+      <a href="#reserva">Reservar</a>
+      <a href="mailto:info.amadores@gloriapalaceth.com">info.amadores@gloriapalaceth.com</a>
+      <a href="tel:+34928128510">928 12 85 10</a>
+    </nav>
+
+    <p class="pie__legal">
+      <span>&copy; 2026 Gloria Thalasso &amp; Hotels</span>
+      <button type="button" class="enlace-legal" data-ventana="ventana-aviso">Aviso legal</button>
+      <button type="button" class="enlace-legal" data-ventana="ventana-privacidad">Política de privacidad</button>
+      <button type="button" class="enlace-legal" data-ventana="ventana-cookies">Política de cookies</button>
+      <button type="button" id="abrir-preferencias">Configuración de cookies</button>
+    </p>
+  </footer>
+
+  <!-- ======================================================================
+       MÓDULO H — CAPAS FLOTANTES
+       ====================================================================== -->
+
+  <!-- ---- H1. Aviso de cookies -------------------------------------------
+       Empieza oculto: el script lo muestra solo si no hay una decisión
+       guardada. Las tres acciones tienen el mismo peso visual. -->
+  <section class="cookies" id="aviso-cookies" aria-labelledby="titulo-cookies" hidden>
+    <div class="cookies__caja">
+      <p class="cookies__texto">
+        <strong id="titulo-cookies">Cookies</strong>
+        Usamos cookies propias necesarias para que la web funcione. Con tu
+        permiso usaríamos también cookies de medición, para saber qué páginas
+        se visitan, y de personalización, para recordar tus preferencias de
+        búsqueda. Puedes cambiar de idea cuando quieras desde el pie.
+      </p>
+      <div class="cookies__acciones">
+        <button class="boton boton--linea" type="button" id="cookies-configurar">Configurar</button>
+        <button class="boton boton--linea" type="button" id="cookies-rechazar">Rechazar</button>
+        <button class="boton boton--solido" type="button" id="cookies-aceptar">Aceptar todas</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- H2. Asistente --------------------------------------------------
+       El botón abre el panel. El panel empieza oculto con [hidden]. -->
+  <button class="asistente__abrir" id="abrir-asistente" type="button" aria-expanded="false"
+    aria-controls="asistente">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M21 12a8 8 0 1 1-3.2-6.4" />
+      <path d="M4 20l1.6-3.4" />
+      <path d="M9 11h6M9 14.5h4" />
+    </svg>
+    <span>¿Te ayudo?</span>
+  </button>
+
+  <div class="asistente" id="asistente" role="dialog" aria-labelledby="titulo-asistente" hidden>
+    <div class="asistente__cabecera">
+      <p class="asistente__titulo" id="titulo-asistente">
+        Recepción
+        <small>Respuestas automáticas</small>
+      </p>
+      <button class="asistente__cerrar" id="cerrar-asistente" type="button">
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar el asistente</span>
+      </button>
+    </div>
+
+    <!-- aria-live: los lectores de pantalla anuncian cada respuesta nueva -->
+    <div class="asistente__hilo" id="hilo-asistente" aria-live="polite"></div>
+
+    <div class="asistente__sugerencias" id="sugerencias-asistente"></div>
+
+    <form class="asistente__formulario" id="formulario-asistente">
+      <label class="oculto-visual" for="pregunta">Escribe tu pregunta</label>
+      <input type="text" id="pregunta" name="pregunta" autocomplete="off"
+        placeholder="Escribe tu pregunta">
+      <button class="asistente__enviar" type="submit">
+        <span aria-hidden="true">&#8594;</span>
+        <span class="oculto-visual">Enviar</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- ---- H3. Sonido ambiente --------------------------------------------
+       Apagado de serie. El reproductor se inserta al pulsar, nunca antes.
+       El aviso de abajo (oculto mientras todo va bien) es la red de
+       seguridad si el iframe no llega a sonar: ver el MÓDULO S6.
+       PENDIENTE: ver el mismo comentario sobre la licencia de la música. -->
+  <div class="sonido">
+    <button class="sonido__boton" id="boton-sonido" type="button" aria-pressed="false">
+      <span class="sonido__barras" aria-hidden="true">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <span>Música</span>
+    </button>
+    <p class="sonido__estado" id="estado-sonido" role="status" hidden></p>
+  </div>
+ <audio class="sonido__reproductor" id="reproductor" src="jazz.mp3" loop preload="none" aria-hidden="true"></audio>
+
+  <!-- ---- H4. Ventanas legales -------------------------------------------
+       PENDIENTE: los tres textos son plantillas de estructura, NO textos
+       legales válidos. Antes de publicar tienen que redactarlos o revisarlos
+       los servicios jurídicos del hotel. -->
+
+  <dialog class="ventana" id="ventana-aviso">
+    <div class="ventana__cabecera">
+      <h2>Aviso legal</h2>
+      <button class="ventana__cerrar" type="button" data-cerrar>
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar</span>
+      </button>
+    </div>
+    <div class="ventana__cuerpo">
+      <p class="ventana__provisional">
+        Texto provisional. Estructura correcta según la Ley 34/2002 (LSSI-CE),
+        pero pendiente de redacción y revisión jurídica.
+      </p>
+
+      <h3>Titular del sitio</h3>
+      <p>
+        Denominación social, NIF, domicilio en Calle La Palma 2, 35139 Mogán
+        (Las Palmas), datos de inscripción registral, teléfono 928 12 85 10 y
+        correo info.amadores@gloriapalaceth.com. Número de registro turístico
+        del establecimiento.
+      </p>
+
+      <h3>Objeto</h3>
+      <p>
+        Condiciones de acceso y uso de este sitio. La navegación atribuye la
+        condición de usuario e implica la aceptación de estas condiciones.
+      </p>
+
+      <h3>Propiedad intelectual e industrial</h3>
+      <p>
+        Titularidad de los contenidos, fotografías, marcas y logotipos, y
+        condiciones de reproducción. Incluir aquí la autoría de las imágenes y
+        la licencia de la música ambiente.
+      </p>
+
+      <h3>Responsabilidad y enlaces</h3>
+      <p>
+        Alcance de la responsabilidad sobre la disponibilidad del servicio, los
+        contenidos de terceros y los enlaces externos.
+      </p>
+
+      <h3>Legislación aplicable</h3>
+      <p>Legislación española y fuero competente.</p>
+    </div>
+  </dialog>
+
+  <dialog class="ventana" id="ventana-privacidad">
+    <div class="ventana__cabecera">
+      <h2>Política de privacidad</h2>
+      <button class="ventana__cerrar" type="button" data-cerrar>
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar</span>
+      </button>
+    </div>
+    <div class="ventana__cuerpo">
+      <p class="ventana__provisional">
+        Texto provisional. Recoge los apartados que exigen el RGPD y la LOPDGDD,
+        pero necesita redacción y revisión jurídica antes de publicarse.
+      </p>
+
+      <h3>Responsable del tratamiento</h3>
+      <p>
+        Identificación de la sociedad titular, domicilio y datos de contacto del
+        delegado de protección de datos.
+      </p>
+
+      <h3>Qué datos recogemos y para qué</h3>
+      <ul>
+        <li>Formulario de reserva: fechas, número de huéspedes, tipo de
+          habitación, régimen y correo electrónico, para tramitar la consulta
+          de disponibilidad y responderla.</li>
+        <li>Asistente: el texto que escribas, para resolver la consulta.</li>
+        <li>Cookies de medición y personalización, solo si las has aceptado.</li>
+      </ul>
+
+      <h3>Base jurídica</h3>
+      <p>
+        Consentimiento del interesado para la consulta y para las cookies no
+        necesarias; ejecución del contrato para las reservas confirmadas;
+        obligación legal para los registros de viajeros.
+      </p>
+
+      <h3>Plazo de conservación</h3>
+      <p>
+        Mientras dure la finalidad y después durante los plazos de prescripción
+        legal. Concretar plazos por cada tipo de dato.
+      </p>
+
+      <h3>Destinatarios</h3>
+      <p>
+        Encargados del tratamiento: motor de reservas, proveedor de alojamiento
+        web, herramienta de analítica. Indicar si hay transferencias fuera del
+        Espacio Económico Europeo y con qué garantías.
+      </p>
+
+      <h3>Tus derechos</h3>
+      <p>
+        Acceso, rectificación, supresión, oposición, limitación y portabilidad,
+        y derecho a retirar el consentimiento en cualquier momento. Escribiendo
+        a <a href="mailto:info.amadores@gloriapalaceth.com">info.amadores@gloriapalaceth.com</a>.
+        También puedes reclamar ante la Agencia Española de Protección de Datos.
+      </p>
+    </div>
+  </dialog>
+
+  <dialog class="ventana" id="ventana-cookies">
+    <div class="ventana__cabecera">
+      <h2>Política de cookies</h2>
+      <button class="ventana__cerrar" type="button" data-cerrar>
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar</span>
+      </button>
+    </div>
+    <div class="ventana__cuerpo">
+      <p class="ventana__provisional">
+        Texto provisional. La tabla refleja lo que este prototipo guarda de
+        verdad; habrá que ampliarla con las cookies que añadan la analítica y
+        el motor de reservas.
+      </p>
+
+      <h3>Qué usamos ahora mismo</h3>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Para qué sirve</th>
+            <th scope="col">Duración</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>gpa_consentimiento</td>
+            <td>Necesaria</td>
+            <td>Guarda tu decisión sobre las cookies para no volver a preguntarte.</td>
+            <td>12 meses</td>
+          </tr>
+          <tr>
+            <td>gpa_sonido</td>
+            <td>Personalización</td>
+            <td>Recuerda si habías encendido la música ambiente.</td>
+            <td>12 meses</td>
+          </tr>
+          <tr>
+            <td>Cookies de YouTube</td>
+            <td>Terceros</td>
+            <td>Solo si enciendes la música. Las instala YouTube al cargar el
+              reproductor.</td>
+            <td>Según YouTube</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Categorías</h3>
+      <ul>
+        <li><strong>Necesarias</strong>: sin ellas la web no funciona. No se
+          pueden desactivar y no requieren consentimiento.</li>
+        <li><strong>Medición</strong>: cuentan visitas de forma agregada para
+          saber qué contenidos interesan.</li>
+        <li><strong>Personalización</strong>: recuerdan tus preferencias entre
+          visitas.</li>
+      </ul>
+
+      <h3>Cómo cambiar tu decisión</h3>
+      <p>
+        Desde el enlace «Configuración de cookies» del pie, o borrando los datos
+        del sitio en tu navegador.
+      </p>
+
+      <div class="ventana__acciones">
+        <button class="boton boton--solido boton--menudo" type="button" id="abrir-preferencias-2">
+          Configurar cookies
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Panel de preferencias granulares -->
+  <dialog class="ventana" id="ventana-preferencias">
+    <div class="ventana__cabecera">
+      <h2>Configuración de cookies</h2>
+      <button class="ventana__cerrar" type="button" data-cerrar>
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar</span>
+      </button>
+    </div>
+    <div class="ventana__cuerpo">
+      <p>
+        Elige qué quieres permitir. Puedes volver aquí cuando quieras desde el
+        pie de la página.
+      </p>
+
+      <form id="formulario-preferencias">
+        <div class="preferencia preferencia--fija">
+          <input type="checkbox" id="pref-necesarias" checked disabled>
+          <h4>Necesarias</h4>
+          <p>
+            Hacen que la web funcione: guardan esta misma decisión y mantienen
+            el formulario de reserva operativo. No se pueden desactivar.
+          </p>
+        </div>
+
+        <div class="preferencia">
+          <input type="checkbox" id="pref-medicion">
+          <h4>Medición</h4>
+          <p>
+            Cuentan cuánta gente visita cada sección, de forma agregada y sin
+            identificarte, para saber qué mejorar.
+          </p>
+        </div>
+
+        <div class="preferencia">
+          <input type="checkbox" id="pref-personalizacion">
+          <h4>Personalización</h4>
+          <p>
+            Recuerdan tus preferencias entre visitas: las fechas que buscabas o
+            si tenías la música encendida.
+          </p>
+        </div>
+
+        <div class="ventana__acciones">
+          <button class="boton boton--linea boton--menudo" type="button" id="preferencias-rechazar">
+            Rechazar todas
+          </button>
+          <button class="boton boton--solido boton--menudo" type="submit">
+            Guardar preferencias
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+    /* ====================================================================
+       MÓDULO S1 — MOTOR DE LA INMERSIÓN
+       --------------------------------------------------------------------
+       Calcula un progreso de 0 a 1 según lo recorrido de la sección
+       .inmersion y lo publica en la variable CSS --p del lienzo. El CSS
+       (MÓDULO 07) hace el resto: el agua sube, el tinte aparece y los
+       rótulos se relevan.
+
+       Además desplaza cada capa hacia arriba en proporción a su atributo
+       data-velocidad. Al bajar la cámara, lo cercano se desplaza mucho y lo
+       lejano casi nada: de ahí la sensación de profundidad.
+
+       --------------------------------------------------------------------
+       OPTIMIZACIÓN DE RENDIMIENTO (por qué el arranque iba a tirones en
+       equipos modestos, y qué cambia aquí sin tocar el resultado visual):
+
+       1. Antes, cada fotograma llamaba a seccion.getBoundingClientRect()
+          y a seccion.offsetHeight. Son lecturas de diseño: si algo en la
+          página tiene un cambio de diseño pendiente —y el fotograma
+          anterior siempre dejaba uno pendiente, porque el agua entonces
+          animaba su "height"—, el navegador tiene que recalcular el
+          diseño de toda la página ahí mismo, de forma síncrona, antes de
+          poder devolver el dato. Eso, repetido en cada fotograma durante
+          todo el descenso, es exactamente lo que se nota como cortes.
+          Ahora esas dos medidas se toman solo una vez, al cargar la
+          página y al cambiar el tamaño de la ventana, y se guardan; en
+          cada fotograma solo se lee window.scrollY, que es la posición
+          del scroll y no obliga a recalcular nada.
+
+       2. El agua (MÓDULO 07) ha dejado de animar "height" —una propiedad
+          de diseño— y ahora se traslada con translate3d, que la tarjeta
+          gráfica resuelve por composición. Entre los dos cambios, todo
+          el recorrido queda en manos de la GPU y no exige ya ningún
+          recálculo de diseño.
+
+       3. Un IntersectionObserver apaga el motor entero en cuanto la
+          portada lleva un rato fuera de la pantalla (el visitante ya ha
+          bajado a las demás secciones) y lo vuelve a encender solo si
+          sube de nuevo. Mientras está apagado tampoco se anima el
+          oleaje ni las burbujas (MÓDULO 07), así que no queda nada
+          corriendo en segundo plano el resto de la visita.
+
+       Otros detalles que ya evitaban tirones y se mantienen igual:
+       - translate3d, que compone la GPU, en lugar de top o margin.
+       - El evento scroll solo anota la posición; el dibujado ocurre dentro
+         de requestAnimationFrame, sincronizado con el refresco de pantalla.
+       - Si el sistema pide movimiento reducido, el módulo no se activa.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      var seccion = document.getElementById('inmersion');
+      var lienzo = document.getElementById('lienzo');
+      if (!seccion || !lienzo) return;
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var capas = lienzo.querySelectorAll('[data-velocidad]');
+      var rotulos = lienzo.querySelectorAll('[data-rango]');
+      var pendiente = false;
+      var enPantalla = true;   // el IntersectionObserver de más abajo lo mantiene al día
+
+      // Medidas cacheadas: nada de esto se vuelve a leer del DOM dentro de
+      // dibujar(). Se recalculan solo al cargar y al cambiar el tamaño.
+      var inicioSeccion = 0;
+      var recorrido = 1;
+      var alto = window.innerHeight;
+
+      function medir() {
+        inicioSeccion = seccion.offsetTop;
+        recorrido = Math.max(1, seccion.offsetHeight - window.innerHeight);
+        alto = window.innerHeight;
+      }
+
+      function limitar(valor, minimo, maximo) {
+        return Math.max(minimo, Math.min(maximo, valor));
+      }
+
+      function dibujar() {
+        pendiente = false;
+
+        var p = limitar((window.scrollY - inicioSeccion) / recorrido, 0, 1);
+
+        // Una sola escritura: el CSS lee --p para todo lo demás.
+        lienzo.style.setProperty('--p', p.toFixed(4));
+
+        // Desplazamiento de las capas. Hacia arriba, porque la cámara baja.
+        for (var i = 0; i < capas.length; i++) {
+          var velocidad = parseFloat(capas[i].dataset.velocidad) || 0;
+          capas[i].style.transform =
+            'translate3d(0, ' + (-p * velocidad * alto) + 'px, 0)';
+        }
+
+        // Solo el rótulo visible acepta clics: los demás están a opacidad 0
+        // pero seguirían siendo pulsables si no se desactivaran.
+        for (var j = 0; j < rotulos.length; j++) {
+          var rango = rotulos[j].dataset.rango.split(' ');
+          var dentro = p >= parseFloat(rango[0]) && p <= parseFloat(rango[1]);
+          rotulos[j].classList.toggle('is-visible', dentro);
+        }
+      }
+
+      function alHacerScroll() {
+        if (!enPantalla || pendiente) return;
+        pendiente = true;
+        window.requestAnimationFrame(dibujar);
+      }
+
+      function alCambiarTamano() {
+        medir();
+        alHacerScroll();
+      }
+
+      medir();
+      window.addEventListener('scroll', alHacerScroll, { passive: true });
+      window.addEventListener('resize', alCambiarTamano, { passive: true });
+      alHacerScroll();
+
+      // Apaga el motor —y, con la clase is-en-pausa, también el oleaje y
+      // las burbujas— en cuanto la portada queda lejos de la pantalla en
+      // cualquiera de las dos direcciones, y lo reengancha al volver a
+      // acercarse. El margen del 25% evita que se note el enganche justo
+      // en el borde.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entradas) {
+          enPantalla = entradas[0].isIntersecting;
+          lienzo.classList.toggle('is-en-pausa', !enPantalla);
+          if (enPantalla) alHacerScroll();
+        }, { rootMargin: '25% 0px 25% 0px' }).observe(seccion);
+      }
+    })();
+
+
+    /* ====================================================================
+       MÓDULO S2 — INTERFAZ
+       Cabecera, menú desplegable y carrusel de habitaciones.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      /* ---- Cabecera ---------------------------------------------------
+         Fondo sólido al salir de la portada. IntersectionObserver en lugar
+         del evento scroll: el navegador avisa solo al cambiar el estado. */
+      var cabecera = document.getElementById('cabecera');
+      var inmersion = document.getElementById('inmersion');
+
+      if (cabecera && inmersion && 'IntersectionObserver' in window) {
+        new IntersectionObserver(function (entradas) {
+          cabecera.classList.toggle('is-fija', !entradas[0].isIntersecting);
+        }, { rootMargin: '-90px 0px 0px 0px' }).observe(inmersion);
+      }
+
+      /* ---- Menú desplegable --------------------------------------------
+         CORRECCIÓN DEL BUG: antes el panel se pintaba a pantalla completa
+         y tapaba el logotipo, y el fondo transparente de la barra dejaba
+         el texto ilegible sobre la portada clara. Ahora el panel baja por
+         detrás de la barra (MÓDULO 18), que conserva su fondo y su
+         logotipo, y el resto de la página sigue a la vista por debajo.
+
+         Se bloquea el scroll del cuerpo mientras está abierto y el menú se
+         cierra solo al elegir destino, al pulsar Escape o al ensanchar la
+         ventana por encima del punto de ruptura. */
+      var botonMenu = document.getElementById('boton-menu');
+      var menu = document.getElementById('menu');
+
+      if (botonMenu && menu) {
+        var anchoMovil = window.matchMedia('(max-width: 56rem)');
+
+        var alternarMenu = function (abrir) {
+          botonMenu.setAttribute('aria-expanded', String(abrir));
+          menu.classList.toggle('is-abierto', abrir);
+          botonMenu.querySelector('.oculto-visual').textContent =
+            abrir ? 'Cerrar menú' : 'Abrir menú';
+          document.body.style.overflow = abrir ? 'hidden' : '';
+        };
+
+        botonMenu.addEventListener('click', function () {
+          alternarMenu(botonMenu.getAttribute('aria-expanded') !== 'true');
+        });
+
+        menu.addEventListener('click', function (evento) {
+          if (evento.target.tagName === 'A') alternarMenu(false);
+        });
+
+        document.addEventListener('keydown', function (evento) {
+          if (evento.key === 'Escape' && botonMenu.getAttribute('aria-expanded') === 'true') {
+            alternarMenu(false);
+            botonMenu.focus();
+          }
+        });
+
+        // Al pasar a escritorio, el panel deja de existir: si se quedara
+        // marcado como abierto, el body seguiría sin poder desplazarse.
+        anchoMovil.addEventListener('change', function (consulta) {
+          if (!consulta.matches) alternarMenu(false);
+        });
+      }
+
+      /* ---- Carrusel ----------------------------------------------------
+         El desplazamiento lo hace el navegador con scroll-snap. El script
+         solo añade los botones y el indicador, así que sigue funcionando
+         aunque el JavaScript falle. */
+      var carrusel = document.getElementById('carrusel-habitaciones');
+      var posicion = document.getElementById('posicion-carrusel');
+      var mandos = document.querySelectorAll('[data-carrusel]');
+
+      if (carrusel && mandos.length) {
+        var elementos = carrusel.querySelectorAll('.carrusel__elemento');
+
+        var paso = function () {
+          if (!elementos.length) return carrusel.clientWidth;
+          var separacion = parseFloat(getComputedStyle(carrusel).columnGap) || 0;
+          return elementos[0].getBoundingClientRect().width + separacion;
+        };
+
+        var actualizarEstado = function () {
+          var maximo = carrusel.scrollWidth - carrusel.clientWidth;
+
+          mandos.forEach(function (mando) {
+            if (mando.dataset.carrusel === 'anterior') {
+              mando.disabled = carrusel.scrollLeft <= 4;
+            } else {
+              mando.disabled = carrusel.scrollLeft >= maximo - 4;
+            }
+          });
+
+          if (posicion) {
+            var indice = Math.min(
+              elementos.length - 1,
+              Math.round(carrusel.scrollLeft / paso())
+            );
+            posicion.textContent = (indice + 1) + ' de ' + elementos.length;
+          }
+        };
+
+        mandos.forEach(function (mando) {
+          mando.addEventListener('click', function () {
+            var direccion = mando.dataset.carrusel === 'siguiente' ? 1 : -1;
+            carrusel.scrollBy({ left: paso() * direccion, behavior: 'smooth' });
+          });
+        });
+
+        carrusel.addEventListener('scroll', actualizarEstado, { passive: true });
+        window.addEventListener('resize', actualizarEstado);
+        actualizarEstado();
+      }
+    })();
+
+
+    /* ====================================================================
+       MÓDULO S3 — MOTOR DE RESERVA
+       Validación en español y estimación del total. El formulario lleva
+       novalidate para dar mensajes propios; en producción el servidor debe
+       repetir todas las comprobaciones.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      var formulario = document.getElementById('formulario-reserva');
+      if (!formulario) return;
+
+      var entrada = document.getElementById('entrada');
+      var salida = document.getElementById('salida');
+      var habitacion = document.getElementById('habitacion');
+      var regimen = document.getElementById('regimen');
+      var huespedes = document.getElementById('huespedes');
+      var correo = document.getElementById('correo');
+      var consiento = document.getElementById('consiento');
+      var resumen = document.getElementById('resumen-reserva');
+      var aviso = document.getElementById('aviso-reserva');
+
+      var MS_DIA = 86400000;
+
+      /** Fecha en formato aaaa-mm-dd, el que acepta input[type=date]. */
+      function aISO(fecha) {
+        return fecha.toISOString().slice(0, 10);
+      }
+
+      // No se puede reservar en el pasado ni salir antes de entrar.
+      var hoy = new Date();
+      entrada.min = aISO(hoy);
+      salida.min = aISO(new Date(hoy.getTime() + MS_DIA));
+
+      entrada.addEventListener('change', function () {
+        if (!entrada.value) return;
+
+        var minimaSalida = new Date(entrada.value);
+        minimaSalida.setDate(minimaSalida.getDate() + 1);
+        salida.min = aISO(minimaSalida);
+
+        // Si la salida quedó por detrás se corrige sola, sin dar error.
+        if (salida.value && salida.value <= entrada.value) {
+          salida.value = salida.min;
+        }
+        calcular();
+      });
+
+      [salida, habitacion, regimen, huespedes].forEach(function (campo) {
+        campo.addEventListener('change', calcular);
+      });
+
+      function calcular() {
+        if (!entrada.value || !salida.value) {
+          resumen.textContent = 'Elige las fechas para ver el total estimado.';
+          return;
+        }
+
+        var noches = Math.round(
+          (new Date(salida.value) - new Date(entrada.value)) / MS_DIA
+        );
+
+        if (noches < 1) {
+          resumen.textContent = 'La salida debe ser posterior a la entrada.';
+          return;
+        }
+
+        var nombre = habitacion.options[habitacion.selectedIndex].text;
+        var nombreRegimen = regimen.options[regimen.selectedIndex].text;
+        var total = Math.round(
+          parseInt(habitacion.value, 10) * parseFloat(regimen.value) * noches
+        );
+
+        resumen.innerHTML =
+          nombre + ', ' + noches + (noches === 1 ? ' noche' : ' noches') +
+          ', ' + huespedes.value + (huespedes.value === '1' ? ' huésped' : ' huéspedes') +
+          '<br>' + nombreRegimen +
+          '<br><strong>' + total.toLocaleString('es-ES') + ' €</strong> ' +
+          '<span>tasas incluidas</span>';
+      }
+
+      // El asistente puede rellenar el formulario: al hacerlo dispara este
+      // evento para que el resumen se recalcule.
+      formulario.addEventListener('recalcular', calcular);
+
+      formulario.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        aviso.className = 'formulario__aviso';
+
+        // Se marca con aria-invalid, no solo con el borde de color: el
+        // color por sí solo no llega a quien usa lector de pantalla.
+        var invalido = null;
+
+        if (!entrada.value || !salida.value) {
+          invalido = !entrada.value ? entrada : salida;
+          aviso.textContent = 'Indica la fecha de entrada y la de salida.';
+        } else if (new Date(salida.value) <= new Date(entrada.value)) {
+          invalido = salida;
+          aviso.textContent = 'La salida debe ser posterior a la entrada.';
+        } else if (!correo.value || !correo.checkValidity()) {
+          invalido = correo;
+          aviso.textContent = 'Revisa el correo electrónico: falta algo.';
+        } else if (!consiento.checked) {
+          invalido = consiento;
+          aviso.textContent = 'Necesitamos tu permiso para tratar los datos de la consulta.';
+        }
+
+        [entrada, salida, correo].forEach(function (campo) {
+          campo.setAttribute('aria-invalid', campo === invalido ? 'true' : 'false');
+        });
+
+        if (invalido) {
+          invalido.focus();
+          return;
+        }
+
+        // PENDIENTE: punto de integración con el motor de reservas.
+        aviso.textContent = 'Hay disponibilidad. Te confirmamos en ' + correo.value + '.';
+        aviso.classList.add('is-correcto');
+      });
+    })();
+
+
+    /* ====================================================================
+       MÓDULO S4 — CONSENTIMIENTO DE COOKIES
+       --------------------------------------------------------------------
+       Reglas que cumple este módulo:
+       - Nada que no sea imprescindible se carga antes de la respuesta.
+       - Rechazar cuesta un solo clic, igual que aceptar.
+       - La decisión se guarda con fecha y versión, para poder volver a
+         preguntar si cambian las finalidades o pasan doce meses.
+       - Se puede cambiar de idea desde el pie, sin buscar nada.
+
+       Se guarda en localStorage, no en document.cookie: no hace falta
+       mandar el dato al servidor en cada petición. La función
+       hayConsentimiento() es el interruptor que deben consultar la
+       analítica y cualquier script de terceros antes de arrancar.
+       ==================================================================== */
+    window.Consentimiento = (function () {
+      'use strict';
+
+      var CLAVE = 'gpa_consentimiento';
+      var VERSION = 1;
+      var CADUCIDAD = 365 * 86400000;  // doce meses
+
+      var aviso = document.getElementById('aviso-cookies');
+      var ventana = document.getElementById('ventana-preferencias');
+      var formulario = document.getElementById('formulario-preferencias');
+      var casillaMedicion = document.getElementById('pref-medicion');
+      var casillaPersonalizacion = document.getElementById('pref-personalizacion');
+
+      /** Lee la decisión guardada, o null si no hay o ya caducó. */
+      function leer() {
+        try {
+          var bruto = localStorage.getItem(CLAVE);
+          if (!bruto) return null;
+          var dato = JSON.parse(bruto);
+          if (dato.version !== VERSION) return null;
+          if (Date.now() - dato.fecha > CADUCIDAD) return null;
+          return dato;
+        } catch (error) {
+          // Modo privado, almacenamiento lleno o datos corruptos: se trata
+          // como si no hubiera decisión, que es la opción conservadora.
+          return null;
+        }
+      }
+
+      function guardar(medicion, personalizacion) {
+        var dato = {
+          version: VERSION,
+          fecha: Date.now(),
+          medicion: medicion,
+          personalizacion: personalizacion
+        };
+        try {
+          localStorage.setItem(CLAVE, JSON.stringify(dato));
+        } catch (error) {
+          /* Sin almacenamiento se pierde la decisión al recargar. No es
+             motivo para romper la página. */
+        }
+        aplicar(dato);
+      }
+
+      /** Enciende lo que se haya permitido y avisa al resto del sitio. */
+      function aplicar(dato) {
+        if (aviso) aviso.hidden = true;
+
+        if (dato.medicion) {
+          // PENDIENTE: aquí va la carga de la analítica. Debe hacerse
+          // dentro de este bloque y en ningún otro sitio, para que no se
+          // ejecute nunca sin permiso.
+          // cargarScript('https://www.googletagmanager.com/gtag/js?id=...');
+        }
+
+        document.dispatchEvent(new CustomEvent('consentimiento', { detail: dato }));
+      }
+
+      function abrirPanel() {
+        var dato = leer();
+        casillaMedicion.checked = !!(dato && dato.medicion);
+        casillaPersonalizacion.checked = !!(dato && dato.personalizacion);
+        if (ventana && typeof ventana.showModal === 'function') ventana.showModal();
+      }
+
+      /* ---- Conexiones de la interfaz ---- */
+      document.getElementById('cookies-aceptar')
+        .addEventListener('click', function () { guardar(true, true); });
+
+      document.getElementById('cookies-rechazar')
+        .addEventListener('click', function () { guardar(false, false); });
+
+      document.getElementById('cookies-configurar')
+        .addEventListener('click', abrirPanel);
+
+      document.getElementById('abrir-preferencias')
+        .addEventListener('click', abrirPanel);
+
+      var abrirDesdeVentana = document.getElementById('abrir-preferencias-2');
+      if (abrirDesdeVentana) {
+        abrirDesdeVentana.addEventListener('click', function () {
+          document.getElementById('ventana-cookies').close();
+          abrirPanel();
+        });
+      }
+
+      document.getElementById('preferencias-rechazar')
+        .addEventListener('click', function () {
+          guardar(false, false);
+          ventana.close();
+        });
+
+      formulario.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        guardar(casillaMedicion.checked, casillaPersonalizacion.checked);
+        ventana.close();
+      });
+
+      /* ---- Arranque ---- */
+      var decision = leer();
+      if (decision) {
+        aplicar(decision);
+      } else if (aviso) {
+        aviso.hidden = false;
+      }
+
+      // Interfaz pública: cualquier otro módulo pregunta antes de guardar
+      // nada. Ver el uso en el MÓDULO S6.
+      return {
+        permite: function (categoria) {
+          var dato = leer();
+          return !!(dato && dato[categoria]);
+        },
+        abrirPanel: abrirPanel
+      };
+    })();
+
+
+    /* ====================================================================
+       MÓDULO S5 — ASISTENTE
+       --------------------------------------------------------------------
+       Qué es: un asistente de respuestas preparadas. Cada intención tiene
+       una lista de palabras clave y una respuesta escrita por el hotel. La
+       pregunta se normaliza (minúsculas, sin tildes) y se puntúa contra
+       cada intención; gana la de más aciertos.
+
+       Qué NO es: un modelo de lenguaje. No improvisa, así que no puede
+       inventarse precios ni disponibilidad, que es justo lo que no debe
+       hacer un asistente de un hotel. Por eso la cabecera dice "Respuestas
+       automáticas" y cualquier cosa que no entienda deriva a recepción.
+
+       PENDIENTE: para conectarlo a un modelo real, sustituir responder()
+       por una llamada al backend del hotel. La clave de la API nunca puede
+       ir en este archivo: tiene que quedarse en el servidor.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      var boton = document.getElementById('abrir-asistente');
+      var panel = document.getElementById('asistente');
+      var cerrar = document.getElementById('cerrar-asistente');
+      var hilo = document.getElementById('hilo-asistente');
+      var formulario = document.getElementById('formulario-asistente');
+      var entrada = document.getElementById('pregunta');
+      var sugerencias = document.getElementById('sugerencias-asistente');
+
+      if (!panel || !hilo) return;
+
+      /* ---- Base de conocimiento --------------------------------------
+         Datos verificados en la web oficial del hotel. Para ampliarla
+         basta con añadir objetos a esta lista; no hay que tocar nada más. */
+      var INTENCIONES = [
+        {
+          clave: 'reserva',
+          palabras: ['reservar', 'reserva', 'disponibilidad', 'libre', 'fechas', 'precio', 'cuanto', 'cuesta', 'tarifa', 'noche'],
+          respuesta: 'Puedo llevarte al formulario de reserva y dejarte las fechas puestas. También reservas por teléfono en el <a href="tel:+34928128510">928 12 85 10</a>.',
+          accion: 'reservar'
+        },
+        {
+          clave: 'habitaciones',
+          palabras: ['habitacion', 'habitaciones', 'suite', 'doble', 'familiar', 'premium', 'balcon', 'vistas', 'cama'],
+          respuesta: 'Hay cuatro tipos, todos con vistas al mar y balcón o terraza: Doble Vista Mar, Doble Thalasso Vista Mar, Suite Familiar Vista Mar (hasta 6 personas) y Doble Premium con piscina privada, que es solo para adultos.',
+          accion: 'habitaciones'
+        },
+        {
+          clave: 'thalasso',
+          palabras: ['thalasso', 'talaso', 'spa', 'masaje', 'tratamiento', 'sauna', 'circuito', 'balneario', 'hidroterapia'],
+          respuesta: 'El Thalasso Gloria tiene más de 1.800 m², veintiocho cabinas de tratamiento y estaciones de hidroterapia con agua de mar climatizada. El acceso es a partir de los 15 años.',
+          accion: 'thalasso'
+        },
+        {
+          clave: 'piscinas',
+          palabras: ['piscina', 'piscinas', 'banar', 'nadar', 'agua', 'splash', 'tobogan'],
+          respuesta: 'Dos piscinas de agua dulce climatizables en las terrazas, sobre el acantilado. Una tiene acceso para personas con movilidad reducida. Además hay piscina infantil y Splash Park.'
+        },
+        {
+          clave: 'ubicacion',
+          palabras: ['donde', 'ubicacion', 'direccion', 'llegar', 'mapa', 'playa', 'amadores', 'mogan', 'aeropuerto', 'puerto rico'],
+          respuesta: 'Estamos en la Calle La Palma 2, 35139 Mogán, sobre el acantilado entre Puerto Rico y Playa de Amadores. La playa queda a 300 metros y el aeropuerto a unos 35 minutos en coche.'
+        },
+        {
+          clave: 'comida',
+          palabras: ['comer', 'comida', 'restaurante', 'desayuno', 'cena', 'bufe', 'buffet', 'todo incluido', 'pension', 'bar'],
+          respuesta: 'El restaurante principal es un bufé con cocina en vivo y cenas temáticas cada noche. Hay también Bar Paseo y terrazas orientadas a la puesta de sol. Puedes elegir entre alojamiento y desayuno, media pensión, pensión completa o Todo incluido Premium.'
+        },
+        {
+          clave: 'horarios',
+          palabras: ['check', 'entrada', 'salida', 'hora', 'horario', 'llegada'],
+          respuesta: 'La entrada es a partir de las 15:00 y la salida hasta las 12:00. Con el Todo incluido y estancias de cuatro noches o más, el servicio se prolonga hasta las 18:00 del día de salida.'
+        },
+        {
+          clave: 'ninos',
+          palabras: ['nino', 'ninos', 'familia', 'bebe', 'cuna', 'miniclub', 'infantil'],
+          respuesta: 'Sí, es un hotel familiar: club infantil, parque, piscina para niños y Splash Park. La Suite Familiar Vista Mar admite hasta seis personas. Ten en cuenta que al talaso solo se entra a partir de los 15 años.'
+        },
+        {
+          clave: 'mascotas',
+          palabras: ['perro', 'mascota', 'gato', 'animal'],
+          respuesta: 'Se admiten mascotas de hasta cinco kilos, con coste añadido y sujeto a disponibilidad. Debe permanecer en la habitación. Conviene avisar al reservar.'
+        },
+        {
+          clave: 'accesibilidad',
+          palabras: ['accesible', 'silla', 'ruedas', 'movilidad', 'adaptada', 'ascensor'],
+          respuesta: 'El hotel es accesible para sillas de ruedas y una de las piscinas tiene acceso adaptado. Si nos cuentas qué necesitas al reservar, preparamos la habitación en consecuencia.'
+        },
+        {
+          clave: 'deporte',
+          palabras: ['tenis', 'gimnasio', 'deporte', 'golf', 'petanca', 'actividad'],
+          respuesta: 'Hay pista de tenis iluminada, gimnasio, tenis de mesa, petanca y tiro con carabina. Para golf tenemos condiciones especiales en los green fees de los campos del sur de la isla.'
+        },
+        {
+          clave: 'contacto',
+          palabras: ['telefono', 'llamar', 'correo', 'email', 'contacto', 'persona', 'humano', 'recepcion'],
+          respuesta: 'Recepción atiende las 24 horas en el <a href="tel:+34928128510">928 12 85 10</a> y en <a href="mailto:info.amadores@gloriapalaceth.com">info.amadores@gloriapalaceth.com</a>.'
+        }
+      ];
+
+      var BIENVENIDA = 'Hola. Soy el asistente del hotel y respondo con información ya preparada: habitaciones, talaso, horarios, cómo llegar o reservar. Si necesitas algo que no sepa, te paso con recepción.';
+
+      var NO_ENTIENDO = 'Eso no sé contestarlo con lo que tengo preparado. Recepción te lo resuelve en el <a href="tel:+34928128510">928 12 85 10</a> o en <a href="mailto:info.amadores@gloriapalaceth.com">info.amadores@gloriapalaceth.com</a>.';
+
+      var ATAJOS = [
+        { texto: 'Quiero reservar', clave: 'reserva' },
+        { texto: 'Tipos de habitación', clave: 'habitaciones' },
+        { texto: 'El talaso', clave: 'thalasso' },
+        { texto: 'Cómo llegar', clave: 'ubicacion' },
+        { texto: 'Horarios', clave: 'horarios' }
+      ];
+
+      /** Minúsculas y sin tildes, para que "habitación" case con "habitacion". */
+      function normalizar(texto) {
+        return texto.toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+      }
+
+      /** Devuelve la intención con más palabras clave coincidentes. */
+      function buscarIntencion(texto) {
+        var limpio = normalizar(texto);
+        var mejor = null;
+        var mejorPuntos = 0;
+
+        INTENCIONES.forEach(function (intencion) {
+          var puntos = 0;
+          intencion.palabras.forEach(function (palabra) {
+            if (limpio.indexOf(palabra) !== -1) puntos++;
+          });
+          if (puntos > mejorPuntos) {
+            mejorPuntos = puntos;
+            mejor = intencion;
+          }
+        });
+
+        return mejor;
+      }
+
+      function escribir(texto, quien) {
+        var burbuja = document.createElement('div');
+        burbuja.className = 'mensaje mensaje--' + quien;
+        burbuja.innerHTML = '<p>' + texto + '</p>';
+        hilo.appendChild(burbuja);
+        hilo.scrollTop = hilo.scrollHeight;
+        return burbuja;
+      }
+
+      /** Acciones que el asistente puede ejecutar además de contestar. */
+      function ejecutar(accion) {
+        var destinos = {
+          reservar: 'reserva',
+          habitaciones: 'habitaciones',
+          thalasso: 'thalasso'
+        };
+        var id = destinos[accion];
+        if (!id) return;
+
+        var seccion = document.getElementById(id);
+        if (!seccion) return;
+
+        // Se deja un momento para que se lea la respuesta antes de mover
+        // la página; si no, el salto desconcierta.
+        window.setTimeout(function () {
+          seccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 700);
+      }
+
+      function responder(pregunta) {
+        var intencion = buscarIntencion(pregunta);
+
+        // Pequeña pausa: una respuesta instantánea parece un error.
+        window.setTimeout(function () {
+          if (!intencion) {
+            escribir(NO_ENTIENDO, 'hotel');
+            return;
+          }
+          escribir(intencion.respuesta, 'hotel');
+          if (intencion.accion) ejecutar(intencion.accion);
+        }, 380);
+      }
+
+      function preguntar(texto) {
+        escribir(texto, 'visitante');
+        responder(texto);
+      }
+
+      /* ---- Atajos ---- */
+      ATAJOS.forEach(function (atajo) {
+        var boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'sugerencia';
+        boton.textContent = atajo.texto;
+        boton.addEventListener('click', function () { preguntar(atajo.texto); });
+        sugerencias.appendChild(boton);
+      });
+
+      /* ---- Apertura y cierre ---- */
+      var abrir = function (mostrar) {
+        panel.hidden = !mostrar;
+        boton.hidden = mostrar;
+        boton.setAttribute('aria-expanded', String(mostrar));
+
+        if (mostrar) {
+          if (!hilo.children.length) escribir(BIENVENIDA, 'hotel');
+          entrada.focus();
+        } else {
+          boton.focus();
+        }
+      };
+
+      boton.addEventListener('click', function () { abrir(true); });
+      cerrar.addEventListener('click', function () { abrir(false); });
+
+      document.addEventListener('keydown', function (evento) {
+        if (evento.key === 'Escape' && !panel.hidden) abrir(false);
+      });
+
+      formulario.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        var texto = entrada.value.trim();
+        if (!texto) return;
+        entrada.value = '';
+        preguntar(texto);
+      });
+    })();
+
+
+/* ====================================================================
+       MÓDULO S6 — SONIDO AMBIENTE (AUDIO LOCAL)
+       --------------------------------------------------------------------
+       Adaptado para usar una etiqueta <audio> nativa en lugar de YouTube.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      var CLAVE = 'gpa_sonido';
+
+      var boton = document.getElementById('boton-sonido');
+      var audio = document.getElementById('reproductor'); // Ahora es un <audio>
+      var estado = document.getElementById('estado-sonido');
+      if (!boton || !audio) return;
+
+      var listo = false;
+
+      function anunciar(texto) {
+        if (!estado) return;
+        estado.textContent = texto;
+        estado.hidden = !texto;
+      }
+
+      function encender(sonando) {
+        boton.setAttribute('aria-pressed', String(sonando));
+        boton.dataset.cargando = sonando ? 'true' : 'false';
+        boton.querySelector('span:last-child').textContent = sonando ? 'Silenciar' : 'Música';
+
+        if (sonando) {
+          anunciar(''); 
+          listo = true;
+          
+          // Inicia la reproducción local
+          var promesa = audio.play();
+          if (promesa !== undefined) {
+            promesa.catch(function(error) {
+              // Falla si el navegador bloquea el autoplay sin interacción
+              boton.setAttribute('aria-pressed', 'false');
+              boton.dataset.cargando = 'false';
+              boton.querySelector('span:last-child').textContent = 'Música';
+              anunciar('El navegador bloqueó el audio. Vuelve a pulsar.');
+            });
+          }
+        } else {
+          audio.pause();
+        }
+
+        // Solo se recuerda con permiso de personalización (MÓDULO S4).
+        if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
+          try {
+            localStorage.setItem(CLAVE, sonando ? '1' : '0');
+          } catch (error) { /* sin almacenamiento, no se recuerda */ }
+        }
+      }
+
+      boton.addEventListener('click', function () {
+        encender(boton.getAttribute('aria-pressed') !== 'true');
+      });
+
+      // Al cambiar de pestaña se pausa para que no moleste de fondo
+      document.addEventListener('visibilitychange', function () {
+        if (!listo) return;
+        if (document.hidden && boton.getAttribute('aria-pressed') === 'true') {
+          audio.pause();
+        } else if (!document.hidden && boton.getAttribute('aria-pressed') === 'true') {
+          audio.play();
+        }
+      });
+
+      // Si en una visita anterior lo dejó encendido
+      try {
+        if (localStorage.getItem(CLAVE) === '1') {
+          boton.querySelector('span:last-child').textContent = 'Reanudar música';
+        }
+      } catch (error) { /* sin almacenamiento, se queda como está */ }
+    })();
+
+
+    /* ====================================================================
+       MÓDULO S7 — VENTANAS MODALES LEGALES
+       Con <dialog> y showModal(), el navegador ya atrapa el foco, atiende
+       la tecla Escape y oculta el resto de la página a los lectores de
+       pantalla. Aquí solo hace falta abrir, cerrar y cerrar al pulsar fuera.
+       ==================================================================== */
+    (function () {
+      'use strict';
+
+      // Abrir: cualquier elemento con data-ventana apuntando a un id.
+      document.querySelectorAll('[data-ventana]').forEach(function (disparador) {
+        disparador.addEventListener('click', function () {
+          var ventana = document.getElementById(disparador.dataset.ventana);
+          if (ventana && typeof ventana.showModal === 'function') ventana.showModal();
+        });
+      });
+
+      document.querySelectorAll('.ventana').forEach(function (ventana) {
+
+        // Cerrar con el aspa
+        ventana.querySelectorAll('[data-cerrar]').forEach(function (boton) {
+          boton.addEventListener('click', function () { ventana.close(); });
+        });
+
+        // Cerrar al pulsar el fondo. El clic sobre el propio <dialog> solo
+        // ocurre en la zona del backdrop: el contenido está en hijos.
+        ventana.addEventListener('click', function (evento) {
+          if (evento.target === ventana) ventana.close();
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
