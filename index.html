@@ -356,206 +356,104 @@
 
 
     /* ====================================================================
-       MÓDULO 06 — CABECERA Y NAVEGACIÓN
+       MÓDULO S6 — SONIDO AMBIENTE (AUDIO LOCAL)
+       --------------------------------------------------------------------
+       Adaptado para usar una etiqueta <audio> nativa.
        ==================================================================== */
-    .cabecera {
-      position: fixed;
-      inset: 0 0 auto 0;
-      z-index: 60;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--hueco);
-      padding: calc(1.1rem + env(safe-area-inset-top, 0px)) max(var(--hueco), env(safe-area-inset-right)) 1.1rem max(var(--hueco), env(safe-area-inset-left));
-      color: var(--arena);
-      transition: background-color var(--suave), padding var(--suave), box-shadow var(--suave);
-    }
+    (function () {
+      'use strict';
 
-    /* Velo oscuro suave detrás de la barra mientras es transparente: el
-       texto claro se lee también sobre la parte luminosa de la portada. */
-    .cabecera::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 -2.2rem 0;
-      z-index: -1;
-      pointer-events: none;
-      background: linear-gradient(to bottom, rgba(6, 39, 51, 0.62), rgba(6, 39, 51, 0));
-      transition: opacity var(--suave);
-    }
+      var CLAVE = 'gpa_sonido';
 
-    /* RENDIMIENTO: sin backdrop-filter. Desenfocar lo que hay detrás obliga
-       al navegador a repintar ese desenfoque en cada fotograma del scroll;
-       con un fondo casi opaco el aspecto es el mismo y no cuesta nada. */
-    .cabecera.is-fija {
-      padding-top: calc(0.7rem + env(safe-area-inset-top, 0px));
-      padding-bottom: 0.7rem;
-      background: rgba(12, 62, 80, 0.97);
-      box-shadow: 0 1px 0 rgba(245, 242, 236, 0.08), 0 10px 30px rgba(6, 39, 51, 0.18);
-    }
+      var boton = document.getElementById('boton-sonido');
+      var audio = document.getElementById('reproductor'); 
+      var estado = document.getElementById('estado-sonido');
+      if (!boton || !audio) return;
 
-    .cabecera.is-fija::before {
-      opacity: 0;
-    }
+      var listo = false;
 
-    /* La marca y el botón van por encima del panel móvil, para que sigan
-       viéndose con el menú abierto. */
-    .cabecera__marca,
-    .cabecera__boton {
-      position: relative;
-      z-index: 2;
-    }
+      function anunciar(texto) {
+        if (!estado) return;
+        estado.textContent = texto;
+        estado.hidden = !texto;
+      }
 
-    .cabecera__marca {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      text-decoration: none;
-      min-width: 0;
-    }
+      function encender(sonando) {
+        // Marcamos que está cargando mientras el navegador intenta reproducir
+        boton.setAttribute('aria-pressed', String(sonando));
+        boton.dataset.cargando = sonando ? 'true' : 'false';
+        boton.querySelector('span:last-child').textContent = sonando ? 'Silenciar' : 'Música';
 
-    /* Logotipo provisional: una ola sobre el borde de la piscina.
-       PENDIENTE: sustituir por el logotipo oficial de la cadena. */
-    .marca__glifo {
-      width: 30px;
-      height: 30px;
-      flex-shrink: 0;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-    }
+        if (sonando) {
+          anunciar(''); 
+          listo = true;
+          
+          var promesa = audio.play();
+          if (promesa !== undefined) {
+            promesa.then(function() {
+              // ÉXITO: El navegador permitió la reproducción
+              boton.dataset.cargando = 'false'; // Quitamos el estado de carga
+              
+              // Solo se recuerda con permiso de personalización (MÓDULO S4).
+              if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
+                try { localStorage.setItem(CLAVE, '1'); } catch (e) {}
+              }
+            }).catch(function(error) {
+              // ERROR: El navegador bloqueó el autoplay
+              boton.setAttribute('aria-pressed', 'false');
+              boton.dataset.cargando = 'false';
+              boton.querySelector('span:last-child').textContent = 'Música';
+              anunciar('Pulsa de nuevo para activar el audio');
+              
+              if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
+                try { localStorage.setItem(CLAVE, '0'); } catch (e) {}
+              }
+            });
+          }
+        } else {
+          audio.pause();
+          boton.dataset.cargando = 'false';
+          
+          if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
+            try { localStorage.setItem(CLAVE, '0'); } catch (e) {}
+          }
+        }
+      }
 
-    .marca__texto {
-      font-family: var(--romana);
-      font-size: 1.15rem;
-      line-height: 1.1;
-      letter-spacing: 0.04em;
-    }
+      boton.addEventListener('click', function () {
+        encender(boton.getAttribute('aria-pressed') !== 'true');
+      });
 
-    .marca__texto small {
-      display: block;
-      font-family: var(--grotesca);
-      font-size: 0.6rem;
-      letter-spacing: 0.22em;
-      opacity: 0.75;
-    }
+      // Asegurarnos de que el botón se actualice si el audio termina o se pausa por otra razón
+      audio.addEventListener('pause', function() {
+        boton.setAttribute('aria-pressed', 'false');
+        boton.querySelector('span:last-child').textContent = 'Música';
+      });
 
-    /* ---- Menú de escritorio ------------------------------------------
-       Subrayado que se dibuja con transform (lo resuelve la GPU) y enlace
-       de la sección visible marcado con aria-current. */
-    .cabecera__nav {
-      display: flex;
-      align-items: center;
-      gap: clamp(1.2rem, 2.4vw, 2.4rem);
-      font-size: var(--t-s);
-      letter-spacing: 0.03em;
-    }
+      audio.addEventListener('play', function() {
+        boton.setAttribute('aria-pressed', 'true');
+        boton.dataset.cargando = 'false';
+        boton.querySelector('span:last-child').textContent = 'Silenciar';
+      });
 
-    .cabecera__nav a {
-      text-decoration: none;
-    }
+      // Al cambiar de pestaña se pausa para que no moleste de fondo
+      document.addEventListener('visibilitychange', function () {
+        if (!listo) return;
+        if (document.hidden && boton.getAttribute('aria-pressed') === 'true') {
+          audio.pause();
+          // No cambiamos el estado visual del botón para que al volver sepamos que quería escuchar música
+        } else if (!document.hidden && boton.getAttribute('aria-pressed') === 'true') {
+          audio.play().catch(function(){}); // Atrapamos el error silenciosamente si falla al volver
+        }
+      });
 
-    .cabecera__nav a:not(.nav__reservar) {
-      position: relative;
-      padding: 0.55rem 0;
-    }
-
-    .cabecera__nav a:not(.nav__reservar)::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0.2rem;
-      height: 1px;
-      background: currentColor;
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform var(--suave);
-    }
-
-    .cabecera__nav a:not(.nav__reservar):hover::after,
-    .cabecera__nav a:not(.nav__reservar)[aria-current]::after {
-      transform: scaleX(1);
-    }
-
-    .nav__reservar {
-      padding: 0.65rem 1.5rem;
-      border: 1px solid currentColor;
-      border-radius: 999px;
-      font-weight: 600;
-      transition: background-color var(--suave), color var(--suave), border-color var(--suave);
-    }
-
-    .nav__reservar:hover,
-    .nav__reservar[aria-current] {
-      background: var(--arena);
-      border-color: var(--arena);
-      color: var(--oceano);
-    }
-
-    /* Botón del menú móvil: círculo con tres barras. Solo aparece en el
-       punto de ruptura móvil (MÓDULO 18). */
-    .cabecera__boton {
-      display: none;
-      width: 46px;
-      height: 46px;
-      padding: 0;
-      background: transparent;
-      border: 1px solid rgba(245, 242, 236, 0.4);
-      border-radius: 50%;
-      color: inherit;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: border-color var(--suave), background-color var(--suave);
-    }
-
-    .cabecera__boton:hover,
-    .cabecera__boton[aria-expanded="true"] {
-      border-color: rgba(245, 242, 236, 0.85);
-    }
-
-    .boton__barras,
-    .boton__barras::before,
-    .boton__barras::after {
-      display: block;
-      width: 20px;
-      height: 2px;
-      border-radius: 2px;
-      background: currentColor;
-      transition: transform var(--suave), opacity var(--suave);
-    }
-
-    .boton__barras {
-      position: relative;
-      margin: 0 auto;
-    }
-
-    .boton__barras::before,
-    .boton__barras::after {
-      content: "";
-      position: absolute;
-      left: 0;
-    }
-
-    .boton__barras::before {
-      top: -7px;
-    }
-
-    .boton__barras::after {
-      top: 7px;
-    }
-
-    .cabecera__boton[aria-expanded="true"] .boton__barras {
-      background: transparent;
-    }
-
-    .cabecera__boton[aria-expanded="true"] .boton__barras::before {
-      transform: translateY(7px) rotate(45deg);
-    }
-
-    .cabecera__boton[aria-expanded="true"] .boton__barras::after {
-      transform: translateY(-7px) rotate(-45deg);
-    }
+      // Si en una visita anterior lo dejó encendido
+      try {
+        if (localStorage.getItem(CLAVE) === '1') {
+          boton.querySelector('span:last-child').textContent = 'Reanudar música';
+        }
+      } catch (error) { /* sin almacenamiento, se queda como está */ }
+    })();
 
 
     /* ====================================================================
