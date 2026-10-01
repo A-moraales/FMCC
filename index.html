@@ -1119,7 +1119,7 @@
     }
 
     .carrusel__elemento {
-      flex: 0 0 clamp(17rem, 30vw, 24rem);
+      flex: 0 0 clamp(18rem, 36vw, 30rem);
       scroll-snap-align: start;
     }
 
@@ -1133,7 +1133,7 @@
        con un <img> dentro (ver MARCOS DE IMAGEN más arriba). Los degradados
        de abajo son el marco que se ve hasta que existe el archivo. */
     .ficha__imagen {
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 1024 / 683;
       margin-bottom: 1.4rem;
       background-size: cover;
       background-position: center;
@@ -1153,6 +1153,14 @@
 
     .ficha__imagen--premium {
       background-image: linear-gradient(160deg, #6FD3D8 0%, #1B7E9C 50%, #082F44 100%);
+    }
+
+    /* El cuerpo ocupa el resto de la ficha: así el precio queda alineado
+       abajo en las cuatro tarjetas, tengan el texto que tengan. */
+    .ficha__cuerpo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .ficha__nombre {
@@ -2358,6 +2366,182 @@
         display: none;
       }
     }
+
+    /* ====================================================================
+       MÓDULO 20 — LOGOS, CUENTA DE USUARIO Y GALERÍA
+       ==================================================================== */
+
+    /* Huecos para logotipos: dejan de verse cuando existe el archivo. */
+    .hueco-logo {
+      position: relative;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px dashed currentColor;
+      border-radius: 6px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .hueco-logo::after {
+      content: "LOGO";
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      opacity: 0.8;
+    }
+
+    .hueco-logo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hueco-logo.tiene-imagen {
+      border-color: transparent;
+    }
+
+    .hueco-logo.tiene-imagen::after {
+      display: none;
+    }
+
+    .hueco-logo--cabecera {
+      width: 48px;
+      height: 48px;
+    }
+
+    .hueco-logo--experiencias {
+      width: clamp(9rem, 18vw, 13rem);
+      aspect-ratio: 3 / 2;
+      color: rgba(245, 242, 236, 0.7);
+    }
+
+    .hueco-logo--experiencias::after {
+      content: "Tu logo aqu\00ED\A" attr(data-archivo);
+      white-space: pre-line;
+      padding: 0.5rem;
+      font-size: var(--t-xs);
+      letter-spacing: 0.06em;
+      overflow-wrap: anywhere;
+    }
+
+    .thalasso__cabecera {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem var(--hueco);
+      margin-bottom: clamp(3rem, 8vh, 5rem);
+    }
+
+    .seccion--thalasso .thalasso__cabecera .titular {
+      margin-bottom: 0;
+    }
+
+    /* Botón de cuenta: mismo aspecto que "Reservar" (.nav__reservar) */
+    :where(button.nav__sesion) {
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .nav__sesion {
+      max-width: 12rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 60.01rem) and (max-width: 72rem) {
+      .cabecera__nav {
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 60rem) {
+      .nav__sesion {
+        max-width: none;
+        margin-top: 1rem;
+      }
+    }
+
+    /* Ventana de cuenta */
+    .ventana--sesion {
+      width: min(30rem, calc(100vw - 2rem));
+    }
+
+    .sesion__pestanas {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .sesion__pestanas .boton {
+      flex: 1;
+    }
+
+    .sesion__formulario {
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    .sesion__formulario .campo input {
+      background: #fff;
+      border-color: rgba(138, 123, 108, 0.35);
+    }
+
+    .ventana__cuerpo .sesion__ayuda {
+      margin: 0;
+      font-size: var(--t-xs);
+    }
+
+    .ventana__cuerpo .sesion__aviso {
+      margin: 0;
+      min-height: 1.4em;
+      font-size: var(--t-xs);
+      color: var(--alerta);
+    }
+
+    .ventana__cuerpo .sesion__aviso.is-correcto {
+      color: var(--turquesa);
+    }
+
+    /* Galería: una foto cada vez, mismo carrusel nativo que las habitaciones */
+    .seccion--galeria {
+      background: rgba(207, 231, 234, 0.4);
+    }
+
+    .seccion--galeria>* {
+      max-width: 64rem;
+    }
+
+    .galeria__entrada {
+      margin-top: 1rem;
+      font-size: var(--t-s);
+      color: var(--risco);
+    }
+
+    .galeria__pase {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+
+    .galeria__pase::-webkit-scrollbar {
+      display: none;
+    }
+
+    .galeria__elemento {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+
+    .galeria__marco {
+      aspect-ratio: 1024 / 683;
+    }
   </style>
 </head>
 
@@ -2369,11 +2553,12 @@
        ====================================================================== -->
   <header class="cabecera" id="cabecera">
     <a class="cabecera__marca" href="#top" aria-label="Gloria Palace Amadores, inicio">
-      <svg class="marca__glifo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-        <path d="M2 20 Q9 12 16 20 T30 20" />
-        <path d="M2 27 H30" />
-        <circle cx="16" cy="7" r="3.5" />
-      </svg>
+      <!-- HUECO PARA EL LOGO REAL: guarda el logotipo en la carpeta fotos/ con el
+           nombre LogoHotel.png (o cambia el src). Mientras no exista se ve el hueco. -->
+      <span class="hueco-logo hueco-logo--cabecera" aria-hidden="true">
+        <img src="fotos/LogoHotel.png" alt="" width="48" height="48" decoding="async"
+          onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+      </span>
       <span class="marca__texto">
         Gloria Palace Amadores
         <small>Thalasso &amp; Hotel</small>
@@ -2385,6 +2570,8 @@
       <a href="#habitaciones">Habitaciones</a>
       <a href="#thalasso">Thalasso</a>
       <a class="nav__reservar" href="#reserva">Reservar</a>
+      <button class="nav__reservar nav__sesion" id="boton-sesion" type="button" data-ventana="ventana-sesion"
+        aria-haspopup="dialog">Iniciar sesión</button>
     </nav>
 
     <button class="cabecera__boton" id="boton-menu" type="button" aria-expanded="false"
@@ -2645,7 +2832,7 @@
         <li class="carrusel__elemento">
           <article class="ficha">
             <figure class="ficha__imagen ficha__imagen--doble marco-imagen" data-archivo="habitacion-doble-vista-mar.jpg">
-              <img src="fotos/DobleVistaMar.jpg" alt="Doble Vista Mar: dormitorio con balcón orientado al Atlántico" width="1000" height="1000" loading="lazy" decoding="async"
+              <img src="fotos/DobleVistaMar.jpg" alt="Doble Vista Mar: dormitorio con balcón orientado al Atlántico" width="1024" height="683" loading="lazy" decoding="async"
                 onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
             </figure>
             <div class="ficha__cuerpo">
@@ -2663,7 +2850,7 @@
         <li class="carrusel__elemento">
           <article class="ficha">
             <figure class="ficha__imagen ficha__imagen--thalasso marco-imagen" data-archivo="habitacion-doble-thalasso.jpg">
-              <img src="fotos/DobleThalassoVistaMar.jpg" alt="Doble Thalasso Vista Mar: habitación con acceso al centro de talasoterapia" width="800" height="1000" loading="lazy" decoding="async"
+              <img src="fotos/DobleThalassoVistaMar.jpg" alt="Doble Thalasso Vista Mar: habitación con acceso al centro de talasoterapia" width="1024" height="683" loading="lazy" decoding="async"
                 onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
             </figure>
             <div class="ficha__cuerpo">
@@ -2681,7 +2868,7 @@
         <li class="carrusel__elemento">
           <article class="ficha">
             <figure class="ficha__imagen ficha__imagen--familiar marco-imagen" data-archivo="habitacion-suite-familiar.jpg">
-              <img src="fotos/SuiteFamiliarVistaMar.jpg" alt="Suite Familiar Vista Mar: dos ambientes separados con terraza" width="800" height="1000" loading="lazy" decoding="async"
+              <img src="fotos/SuiteFamiliarVistaMar.jpg" alt="Suite Familiar Vista Mar: dos ambientes separados con terraza" width="1024" height="683" loading="lazy" decoding="async"
                 onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
             </figure>
             <div class="ficha__cuerpo">
@@ -2699,7 +2886,7 @@
         <li class="carrusel__elemento">
           <article class="ficha">
             <figure class="ficha__imagen ficha__imagen--premium marco-imagen" data-archivo="habitacion-doble-premium.jpg">
-              <img src="fotos/DoblePremiumPiscinaPrivada.jpg" alt="Doble Premium Vista Mar: terraza con piscina privada sobre el océano" width="800" height="1000" loading="lazy" decoding="async"
+              <img src="fotos/DoblePremiumPiscinaPrivada.jpg" alt="Doble Premium Vista Mar: terraza con piscina privada sobre el océano" width="1024" height="683" loading="lazy" decoding="async"
                 onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
             </figure>
             <div class="ficha__cuerpo">
@@ -2719,11 +2906,110 @@
     </section>
 
     <!-- ==================================================================
+         MÓDULO D2 — GALERÍA
+         Diez huecos para fotos, de una en una. Guarda las imágenes en la
+         carpeta fotos/ con los nombres Galeria01.jpg ... Galeria10.jpg
+         (1024x683) y se verán solas. PENDIENTE: ajustar los textos alt.
+         ================================================================== -->
+    <section class="seccion seccion--galeria" id="galeria">
+      <p class="seccion__indice">Galería</p>
+
+      <div class="habitaciones__cabecera">
+        <div>
+          <h2 class="titular">Diez miradas al mismo mar.</h2>
+          <p class="galeria__entrada">Pasa las fotos una a una y deja que el acantilado, las piscinas y el talaso te cuenten el resto.</p>
+        </div>
+        <div class="carrusel__mandos">
+          <button class="mando" type="button" data-galeria="anterior">
+            <span aria-hidden="true">&#8592;</span>
+            <span class="oculto-visual">Foto anterior</span>
+          </button>
+          <button class="mando" type="button" data-galeria="siguiente">
+            <span aria-hidden="true">&#8594;</span>
+            <span class="oculto-visual">Foto siguiente</span>
+          </button>
+        </div>
+      </div>
+
+      <ul class="galeria__pase" id="galeria-pase" tabindex="0" aria-label="Galería de fotos, desplazable horizontalmente">
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria01.jpg">
+            <img src="fotos/Galeria01.jpg" alt="Fachada y acantilado" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria02.jpg">
+            <img src="fotos/Galeria02.jpg" alt="Piscinas de la terraza" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria03.jpg">
+            <img src="fotos/Galeria03.jpg" alt="Centro de talasoterapia" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria04.jpg">
+            <img src="fotos/Galeria04.jpg" alt="Habitación con vistas" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria05.jpg">
+            <img src="fotos/Galeria05.jpg" alt="Restaurante y terrazas" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria06.jpg">
+            <img src="fotos/Galeria06.jpg" alt="Atardecer sobre el Atlántico" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria07.jpg">
+            <img src="fotos/Galeria07.jpg" alt="Zona de piscinas" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria08.jpg">
+            <img src="fotos/Galeria08.jpg" alt="Suite familiar" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria09.jpg">
+            <img src="fotos/Galeria09.jpg" alt="Spa y relax" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+        <li class="galeria__elemento">
+          <figure class="marco-imagen galeria__marco" data-archivo="fotos/Galeria10.jpg">
+            <img src="fotos/Galeria10.jpg" alt="Vistas desde el hotel" width="1024" height="683" loading="lazy" decoding="async"
+              onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+          </figure>
+        </li>
+      </ul>
+
+      <p class="carrusel__posicion" id="posicion-galeria" aria-live="polite">1 de 10</p>
+    </section>
+
+    <!-- ==================================================================
          MÓDULO E — THALASSO Y EXPERIENCIAS
          ================================================================== -->
     <section class="seccion seccion--thalasso" id="thalasso">
       <p class="seccion__indice">Thalasso y experiencias</p>
-      <h2 class="titular">El agua del Atlántico entra en el edificio.</h2>
+      <div class="thalasso__cabecera">
+        <h2 class="titular">El agua del Atlántico entra en el edificio.</h2>
+        <!-- HUECO PARA EL LOGO: guarda el archivo como fotos/LogoThalasso.png -->
+        <div class="hueco-logo hueco-logo--experiencias" data-archivo="fotos/LogoThalasso.png">
+          <img src="fotos/LogoThalasso.png" alt="Logotipo" width="200" height="133" decoding="async"
+            onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+        </div>
+      </div>
 
       <ul class="experiencias">
         <li class="experiencia">
@@ -3137,6 +3423,70 @@
           </button>
         </div>
       </form>
+    </div>
+  </dialog>
+
+  <!-- ---- H5. Ventana de cuenta (iniciar sesión / registrarse) ------------
+       Los usuarios se guardan en localStorage de este navegador (demo).
+       PENDIENTE: en producción debe hacerlo un servidor. Ver MÓDULO S8. -->
+  <dialog class="ventana ventana--sesion" id="ventana-sesion" aria-labelledby="titulo-sesion">
+    <div class="ventana__cabecera">
+      <h2 id="titulo-sesion">Iniciar sesión</h2>
+      <button class="ventana__cerrar" type="button" data-cerrar>
+        <span aria-hidden="true">&times;</span>
+        <span class="oculto-visual">Cerrar</span>
+      </button>
+    </div>
+    <div class="ventana__cuerpo">
+      <div class="sesion__pestanas" id="sesion-pestanas" role="tablist">
+        <button class="boton boton--solido boton--menudo" type="button" role="tab" id="pestana-entrar"
+          aria-selected="true" aria-controls="form-entrar">Iniciar sesión</button>
+        <button class="boton boton--linea boton--menudo" type="button" role="tab" id="pestana-registro"
+          aria-selected="false" aria-controls="form-registro">Registrarse</button>
+      </div>
+
+      <form class="sesion__formulario" id="form-entrar" novalidate>
+        <div class="campo">
+          <label for="entrar-usuario">Usuario o correo</label>
+          <input type="text" id="entrar-usuario" autocomplete="username">
+        </div>
+        <div class="campo">
+          <label for="entrar-clave">Contraseña</label>
+          <input type="password" id="entrar-clave" autocomplete="current-password">
+        </div>
+        <p class="sesion__aviso" id="aviso-entrar" role="status"></p>
+        <button class="boton boton--solido boton--ancho" type="submit">Entrar</button>
+      </form>
+
+      <form class="sesion__formulario" id="form-registro" novalidate hidden>
+        <div class="campo">
+          <label for="reg-usuario">Nombre de usuario</label>
+          <input type="text" id="reg-usuario" autocomplete="username" maxlength="20">
+          <p class="sesion__ayuda">3 a 20 caracteres: letras, números, punto, guion o guion bajo.</p>
+        </div>
+        <div class="campo">
+          <label for="reg-correo">Correo electrónico</label>
+          <input type="email" id="reg-correo" autocomplete="email" placeholder="nombre@correo.com">
+        </div>
+        <div class="campo">
+          <label for="reg-clave">Contraseña</label>
+          <input type="password" id="reg-clave" autocomplete="new-password">
+          <p class="sesion__ayuda">Mínimo 8 caracteres, con al menos una letra y un número.</p>
+        </div>
+        <div class="campo">
+          <label for="reg-clave2">Repite la contraseña</label>
+          <input type="password" id="reg-clave2" autocomplete="new-password">
+        </div>
+        <p class="sesion__aviso" id="aviso-registro" role="status"></p>
+        <button class="boton boton--solido boton--ancho" type="submit">Crear cuenta</button>
+      </form>
+
+      <div id="sesion-activa" hidden>
+        <p id="sesion-saludo"></p>
+        <div class="ventana__acciones">
+          <button class="boton boton--linea boton--menudo" type="button" id="sesion-salir">Cerrar sesión</button>
+        </div>
+      </div>
     </div>
   </dialog>
 
@@ -4051,6 +4401,200 @@
           if (evento.target === ventana) ventana.close();
         });
       });
+    })();
+
+    /* ====================================================================
+       MÓDULO S8 — CUENTA DE USUARIO (DEMO)
+       Registro e inicio de sesión sencillos. Los usuarios se guardan en
+       localStorage (clave gpa_usuarios): no se permite repetir nombre de
+       usuario ni correo (sin distinguir mayúsculas). La contraseña se guarda
+       con hash SHA-256 y sal. PENDIENTE: esto es solo del lado del cliente;
+       para uso real debe hacerlo un servidor.
+       ==================================================================== */
+    (function () {
+      'use strict';
+      var CU = 'gpa_usuarios', CS = 'gpa_sesion';
+      var $ = function (id) { return document.getElementById(id); };
+      var ventana = $('ventana-sesion');
+      if (!ventana) return;
+      var botonNav = $('boton-sesion'), titulo = $('titulo-sesion'), tabs = $('sesion-pestanas');
+      var pestanas = { entrar: $('pestana-entrar'), registro: $('pestana-registro') };
+      var paneles = { entrar: $('form-entrar'), registro: $('form-registro') };
+      var activa = $('sesion-activa'), saludo = $('sesion-saludo');
+      var vista = 'entrar', actual = null;
+
+      function leer() {
+        try {
+          var d = JSON.parse(localStorage.getItem(CU));
+          return Array.isArray(d) ? d : [];
+        } catch (e) { return []; }
+      }
+      function guardar(lista) {
+        try { localStorage.setItem(CU, JSON.stringify(lista)); return true; } catch (e) { return false; }
+      }
+      function fijarSesion(nombre) {
+        actual = nombre;
+        try { nombre ? localStorage.setItem(CS, nombre) : localStorage.removeItem(CS); } catch (e) { }
+        pintar();
+      }
+      function cifrar(texto) {
+        if (window.crypto && crypto.subtle && window.TextEncoder) {
+          return crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto)).then(function (b) {
+            return Array.prototype.map.call(new Uint8Array(b), function (x) {
+              return ('0' + x.toString(16)).slice(-2);
+            }).join('');
+          });
+        }
+        var h = 5381;  // respaldo muy simple si el navegador no ofrece crypto.subtle
+        for (var i = 0; i < texto.length; i++) h = ((h << 5) + h + texto.charCodeAt(i)) | 0;
+        return Promise.resolve('s' + (h >>> 0).toString(16));
+      }
+      function aviso(id, texto, ok) {
+        var el = $(id);
+        el.textContent = texto || '';
+        el.classList.toggle('is-correcto', !!ok);
+      }
+      function fallo(id, campo, texto) {
+        aviso(id, texto, false);
+        if (campo) { campo.setAttribute('aria-invalid', 'true'); campo.focus(); }
+      }
+      function limpiar() {
+        aviso('aviso-entrar', ''); aviso('aviso-registro', '');
+        ventana.querySelectorAll('[aria-invalid]').forEach(function (c) { c.removeAttribute('aria-invalid'); });
+      }
+      function pintar() {
+        var dentro = !!actual;
+        botonNav.textContent = dentro ? 'Hola, ' + actual : 'Iniciar sesión';
+        tabs.hidden = dentro;
+        paneles.entrar.hidden = dentro || vista !== 'entrar';
+        paneles.registro.hidden = dentro || vista !== 'registro';
+        activa.hidden = !dentro;
+        titulo.textContent = dentro ? 'Tu cuenta' : (vista === 'registro' ? 'Crear cuenta' : 'Iniciar sesión');
+        if (dentro) saludo.textContent = 'Has iniciado sesión como ' + actual + '.';
+        Object.keys(pestanas).forEach(function (k) {
+          var on = k === vista;
+          pestanas[k].setAttribute('aria-selected', String(on));
+          pestanas[k].classList.toggle('boton--solido', on);
+          pestanas[k].classList.toggle('boton--linea', !on);
+        });
+      }
+
+      Object.keys(pestanas).forEach(function (k) {
+        pestanas[k].addEventListener('click', function () { vista = k; limpiar(); pintar(); });
+      });
+      ventana.addEventListener('input', function (e) { e.target.removeAttribute('aria-invalid'); });
+      ventana.addEventListener('close', function () {
+        paneles.entrar.reset(); paneles.registro.reset(); limpiar();
+      });
+      botonNav.addEventListener('click', function () {
+        var bm = $('boton-menu');  // si el menú móvil está abierto, se cierra
+        if (bm && bm.getAttribute('aria-expanded') === 'true') bm.click();
+        limpiar(); pintar();
+      });
+      $('sesion-salir').addEventListener('click', function () { vista = 'entrar'; fijarSesion(null); });
+
+      /* ---- Registro ---- */
+      paneles.registro.addEventListener('submit', function (e) {
+        e.preventDefault();
+        limpiar();
+        var fu = $('reg-usuario'), fc = $('reg-correo'), fp = $('reg-clave'), fp2 = $('reg-clave2');
+        var usuario = fu.value.trim(), correo = fc.value.trim().toLowerCase(), clave = fp.value;
+        var existe = function (lista) {
+          return lista.some(function (u) { return u.usuario.toLowerCase() === usuario.toLowerCase(); });
+        };
+        var correoUsado = function (lista) {
+          return lista.some(function (u) { return u.correo === correo; });
+        };
+        if (!/^[A-Za-z0-9._-]{3,20}$/.test(usuario))
+          return fallo('aviso-registro', fu, 'El usuario debe tener de 3 a 20 caracteres: letras, números, . - _');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo))
+          return fallo('aviso-registro', fc, 'Escribe un correo electrónico válido.');
+        if (clave.length < 8 || !/[A-Za-z]/.test(clave) || !/[0-9]/.test(clave))
+          return fallo('aviso-registro', fp, 'La contraseña debe tener al menos 8 caracteres, con una letra y un número.');
+        if (clave !== fp2.value)
+          return fallo('aviso-registro', fp2, 'Las contraseñas no coinciden.');
+        var lista = leer();
+        if (existe(lista)) return fallo('aviso-registro', fu, 'Ese nombre de usuario ya está registrado.');
+        if (correoUsado(lista)) return fallo('aviso-registro', fc, 'Ese correo ya está registrado.');
+
+        var sal = Date.now().toString(36) + Math.random().toString(36).slice(2);
+        cifrar(sal + clave).then(function (hash) {
+          var actualizada = leer();  // se vuelve a comprobar justo antes de guardar
+          if (existe(actualizada) || correoUsado(actualizada)) {
+            return fallo('aviso-registro', fu, 'Ese usuario o correo ya está registrado.');
+          }
+          actualizada.push({ usuario: usuario, correo: correo, sal: sal, clave: hash, alta: Date.now() });
+          if (!guardar(actualizada)) {
+            return fallo('aviso-registro', null, 'No se ha podido guardar el usuario en este navegador.');
+          }
+          paneles.registro.reset();
+          fijarSesion(usuario);
+        });
+      });
+
+      /* ---- Inicio de sesión ---- */
+      paneles.entrar.addEventListener('submit', function (e) {
+        e.preventDefault();
+        limpiar();
+        var fu = $('entrar-usuario'), fp = $('entrar-clave');
+        var id = fu.value.trim().toLowerCase();
+        if (!id) return fallo('aviso-entrar', fu, 'Escribe tu usuario o correo.');
+        if (!fp.value) return fallo('aviso-entrar', fp, 'Escribe tu contraseña.');
+        var u = leer().filter(function (x) { return x.usuario.toLowerCase() === id || x.correo === id; })[0];
+        var malo = function () { fallo('aviso-entrar', fp, 'Usuario o contraseña incorrectos.'); };
+        if (!u) return malo();
+        cifrar(u.sal + fp.value).then(function (hash) {
+          if (hash !== u.clave) return malo();
+          paneles.entrar.reset();
+          fijarSesion(u.usuario);
+        });
+      });
+
+      /* ---- Sesión recordada ---- */
+      try {
+        var guardado = localStorage.getItem(CS);
+        if (guardado && leer().some(function (u) { return u.usuario === guardado; })) actual = guardado;
+      } catch (e) { }
+      pintar();
+    })();
+
+    /* ====================================================================
+       MÓDULO S9 — GALERÍA
+       Mismo principio que el carrusel de habitaciones: el desplazamiento
+       lo hace el navegador (scroll-snap); aquí solo van las flechas y el
+       contador. Una foto por pase.
+       ==================================================================== */
+    (function () {
+      'use strict';
+      var pase = document.getElementById('galeria-pase');
+      if (!pase) return;
+      var cuenta = document.getElementById('posicion-galeria');
+      var ant = document.querySelector('[data-galeria="anterior"]');
+      var sig = document.querySelector('[data-galeria="siguiente"]');
+      var total = pase.querySelectorAll('.galeria__elemento').length;
+      var pendiente = false, ultimo = -1;
+
+      function pintar() {
+        pendiente = false;
+        var i = Math.max(0, Math.min(total - 1, Math.round(pase.scrollLeft / (pase.clientWidth || 1))));
+        if (ant) ant.disabled = i === 0;
+        if (sig) sig.disabled = i === total - 1;
+        if (cuenta && i !== ultimo) { ultimo = i; cuenta.textContent = (i + 1) + ' de ' + total; }
+      }
+      function pedir() {
+        if (pendiente) return;
+        pendiente = true;
+        window.requestAnimationFrame(pintar);
+      }
+      [ant, sig].forEach(function (boton) {
+        if (!boton) return;
+        boton.addEventListener('click', function () {
+          pase.scrollBy({ left: (boton === sig ? 1 : -1) * pase.clientWidth, behavior: 'smooth' });
+        });
+      });
+      pase.addEventListener('scroll', pedir, { passive: true });
+      window.addEventListener('resize', pedir);
+      pintar();
     })();
   </script>
 </body>
