@@ -2553,10 +2553,14 @@
        ====================================================================== -->
   <header class="cabecera" id="cabecera">
     <a class="cabecera__marca" href="#top" aria-label="Gloria Palace Amadores, inicio">
-      <span class="hueco-logo hueco-logo--cabecera" aria-hidden="true">
-        <img src="fotos/LogoHotel.jpg" alt="" width="48" height="48" decoding="async"
-          onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
-      </span>
+      <svg class="marca__glifo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sol de fondo -->
+        <circle cx="18" cy="7" r="3.5" opacity="0.6" />
+        <!-- Ola en primer plano -->
+        <path d="M1 14c3 0 4-3 7-3 3.5 0 4.5 4 8 4s3.5-1.5 5-3" />
+        <!-- Ola en segundo plano (con opacidad para dar profundidad) -->
+        <path d="M1 19c3 0 4-3 7-3 3.5 0 4.5 4 8 4s3.5-1.5 5-3" opacity="0.3" />
+      </svg>
       <span class="marca__texto">
         Gloria Palace Amadores
         <small>Thalasso &amp; Hotel</small>
