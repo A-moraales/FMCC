@@ -708,21 +708,20 @@
           rgba(10, 66, 90, 0.97) 100%);
     }
 
-    /* Línea de flotación ondulada (Mejorada y corregida sin línea intermedia) */
+    /* Línea de flotación ondulada sobre el borde superior del agua */
     .agua::before {
       content: "";
       position: absolute;
       left: 0;
       right: 0;
-      top: -59px; /* Solapa 1px con el fondo para evitar cortes visuales */
-      height: 60px; /* Más altura para fusionar mejor */
-      opacity: 0.86; /* Transparencia exacta para encajar con el color del agua */
+      top: -22px;
+      height: 24px;
       background-repeat: repeat-x;
-      background-size: 1200px 60px;
-      /* Las dos primeras olas son semitransparentes, la última es sólida para tapar el corte */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0 20 Q150 5 300 20 T600 20 T900 20 T1200 20 V60 H0 Z' fill='%23CFE7EA' fill-opacity='0.4'/%3E%3Cpath d='M0 25 Q100 10 200 25 T400 25 T600 25 T800 25 T1000 25 T1200 25 V60 H0 Z' fill='%231E9BB4' fill-opacity='0.6'/%3E%3Cpath d='M0 30 Q200 15 400 30 T800 30 T1200 30 V60 H0 Z' fill='%234AB0BE' fill-opacity='1'/%3E%3C/svg%3E");
-      animation: oleaje 24s linear infinite;
+      background-size: 240px 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 24'%3E%3Cpath d='M0 14 Q30 2 60 14 T120 14 T180 14 T240 14 V24 H0 Z' fill='%234AB0BE' fill-opacity='0.86'/%3E%3C/svg%3E");
+      animation: oleaje 7s linear infinite;
     }
+
     /* Espuma justo bajo la línea de flotación */
     .agua::after {
       content: "";
@@ -736,9 +735,10 @@
 
     @keyframes oleaje {
       to {
-        background-position-x: 1200px;
+        background-position-x: 240px;
       }
     }
+
     /* ---- Fondo sumergido: tinte y cáusticas, solo al final ------------- */
     .sumergido {
       position: absolute;
@@ -2553,14 +2553,10 @@
        ====================================================================== -->
   <header class="cabecera" id="cabecera">
     <a class="cabecera__marca" href="#top" aria-label="Gloria Palace Amadores, inicio">
-      <svg class="marca__glifo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <!-- Sol de fondo -->
-        <circle cx="18" cy="7" r="3.5" opacity="0.6" />
-        <!-- Ola en primer plano -->
-        <path d="M1 14c3 0 4-3 7-3 3.5 0 4.5 4 8 4s3.5-1.5 5-3" />
-        <!-- Ola en segundo plano (con opacidad para dar profundidad) -->
-        <path d="M1 19c3 0 4-3 7-3 3.5 0 4.5 4 8 4s3.5-1.5 5-3" opacity="0.3" />
-      </svg>
+      <span class="hueco-logo hueco-logo--cabecera" aria-hidden="true">
+        <img src="fotos/LogoHotel.jpg" alt="" width="48" height="48" decoding="async"
+          onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
+      </span>
       <span class="marca__texto">
         Gloria Palace Amadores
         <small>Thalasso &amp; Hotel</small>
