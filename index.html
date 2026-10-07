@@ -20,10 +20,10 @@
     10  Habitaciones (carrusel)
 
   MAQUETACIÓN (<body>)
-    A  Cabecera            E  Thalasso y experiencias
-    B  Inmersión           F  Motor de reserva
-    C  El hotel            G  Pie
-    D  Habitaciones        H  Capas flotantes: cookies, asistente, sonido, legal
+    A  Cabecera             E  Thalasso y experiencias
+    B  Inmersión            F  Motor de reserva
+    C  El hotel             G  Pie
+    D  Habitaciones         H  Capas flotantes: cookies, asistente, sonido, legal
 
   COMPORTAMIENTO (<script>)
     S1  Motor de la inmersión      S5  Asistente
@@ -559,25 +559,11 @@
 
 
     /* ====================================================================
-       MÓDULO 07 — INMERSIÓN
-       --------------------------------------------------------------------
-       La portada no es una imagen quieta: es un descenso. La sección mide
-       340vh y dentro lleva un lienzo pegado (position: sticky) que ocupa la
-       pantalla entera. Mientras se baja, el script calcula un progreso de 0
-       a 1 y lo escribe en la variable --p del lienzo. Todo lo demás está en
-       CSS leyendo esa variable.
-
-         --p 0.00 - 0.25   vistas del hotel desde el acantilado
-         --p 0.25 - 0.65   la cámara baja, aparece el borde de la piscina
-         --p 0.65 - 1.00   el agua cubre el encuadre: se entra en la piscina
-
-       PENDIENTE: para usar fotografías reales, sustituir el contenido de
-       cada .capa por <img src="..." alt=""> conservando data-velocidad,
-       que es lo que lee el script.
+       MÓDULO 07 — INMERSIÓN (Modificado a un Zoom)
        ==================================================================== */
     .inmersion {
       position: relative;
-      height: 340vh;
+      height: 340vh; /* Mantenemos la altura para el scroll */
       background: var(--abismo);
     }
 
@@ -589,84 +575,24 @@
       isolation: isolate;
       color: var(--arena);
       --p: 0;
-      /* valor inicial por si el script no llega a cargar */
     }
 
-    /* La cámara se acerca ligeramente durante el descenso.
-       En los navegadores que ya entienden las animaciones ligadas al
-       scroll de forma nativa (@supports más abajo), este acercamiento lo
-       calcula directamente el navegador a partir de cuánto se ve
-       .inmersion, sin que intervenga JavaScript en cada fotograma; en el
-       resto sigue funcionando exactamente igual que antes, leyendo --p. */
+    /* La escena ahora no aplica el zoom por defecto, lo hace la capa interna */
     .escena {
       position: absolute;
       inset: 0;
-      transform: scale(calc(1 + var(--p) * 0.14));
-      transform-origin: 50% 40%;
-      will-change: transform;
     }
 
-    /* OPTIMIZACIÓN DE RENDIMIENTO: mismo acercamiento de cámara, pero
-       resuelto enteramente por el navegador. view-timeline convierte el
-       propio recorrido de scroll de .inmersion en una línea de tiempo de
-       animación nativa; animation-range "contain" es, literalmente, el
-       tramo en el que .inmersion "contiene" a la pantalla —el mismo
-       tramo que ocupa el lienzo fijo—, así que reproduce el mismo
-       recorrido que --p sin que JavaScript tenga que tocarlo. Al no
-       depender de un valor que llega por JavaScript, el navegador puede
-       resolverlo íntegramente en el hilo de composición, en paralelo con
-       cualquier otra cosa que esté pasando en la página.
-       Es una mejora progresiva: en un navegador que no la entienda,
-       @supports no llega a aplicarse y todo sigue exactamente como en la
-       regla de arriba. Comprobado a fotograma por fotograma que reproduce
-       el mismo valor que la versión por JavaScript en todo el recorrido. */
-    @supports (animation-timeline: view()) {
-      .inmersion {
-        view-timeline-name: --recorrido-inmersion;
-        view-timeline-axis: block;
-      }
-
-      @keyframes gp-zoom-camara {
-        from {
-          transform: scale(1);
-        }
-
-        to {
-          transform: scale(1.14);
-        }
-      }
-
-      .escena {
-        animation: gp-zoom-camara linear both;
-        animation-timeline: --recorrido-inmersion;
-        animation-range: contain 0% contain 100%;
-      }
-    }
-
-    /* Cada capa desborda el encuadre para que al desplazarse no se vea el
-       borde. El script le aplica translate3d según data-velocidad. */
-    .capa {
+    /* NUEVA CLASE: Capa con efecto de Zoom */
+    .capa-zoom {
       position: absolute;
-      inset: -15% -2%;
+      inset: 0; /* Ocupa todo el espacio de la escena */
+      /* Aplica un zoom progresivo usando la variable --p calculada en JS */
+      transform: scale(calc(1 + var(--p) * 0.5)); /* Ajusta el multiplicador 0.5 según necesites */
+      transform-origin: center center; /* El zoom se hace desde el centro */
       will-change: transform;
     }
 
-    /* OPTIMIZACIÓN DE RENDIMIENTO: las cuatro ilustraciones de la portada
-       eran <svg> vivos. Un SVG es contenido vectorial: cuando su tamaño en
-       pantalla cambia —y aquí cambiaba en cada fotograma, tanto por su
-       propio desplazamiento como por el zoom de la cámara en .escena—,
-       el navegador vuelve a dibujar sus trazos y degradados desde cero
-       para que no se vea borroso, en vez de limitarse a mover un dibujo
-       ya hecho. Comprobado con el propio navegador: era, con diferencia,
-       el coste más alto de toda la portada.
-       Ahora cada capa es una imagen ya renderizada a partir de ese mismo
-       SVG, a una resolución de sobra para pantallas grandes: un bloque de
-       píxeles fijo que la tarjeta gráfica solo tiene que desplazar, nunca
-       volver a dibujar. El resultado en pantalla es idéntico —es, píxel a
-       píxel, una foto de ese mismo dibujo—, pero mucho más barato.
-       PENDIENTE: el día que lleguen las fotografías reales del hotel,
-       estas imágenes son justo lo que hay que sustituir; ver el aviso en
-       el módulo D más abajo. */
     .capa__imagen {
       width: 100%;
       height: 100%;
@@ -674,26 +600,7 @@
       display: block;
     }
 
-    .capa svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ---- Agua de la piscina: crece desde abajo a partir de --p 0.28 ----
-       OPTIMIZACIÓN DE RENDIMIENTO: esta capa medía "height" con un valor
-       que cambiaba en cada fotograma del scroll. "height" es una
-       propiedad de diseño: cada vez que cambiaba, el navegador tenía que
-       recalcular la posición de todo lo demás en la página antes de
-       poder pintar el siguiente fotograma, y ese recálculo es justo lo
-       que se nota como cortes en equipos modestos.
-
-       Ahora la caja mide siempre 150vh, fija, y lo único que cambia es su
-       posición vertical con translate3d. Una traslación no es una
-       propiedad de diseño: la resuelve directamente la tarjeta gráfica
-       por composición de capas, sin tocar el resto de la página. El
-       resultado en pantalla es idéntico —la fórmula de abajo reproduce
-       exactamente el mismo punto de la pantalla en el que antes quedaba
-       el borde superior del agua— pero mucho más barato de calcular. */
+    /* ---- Agua de la piscina: crece desde abajo a partir de --p 0.28 ---- */
     .agua {
       position: absolute;
       left: -5%;
@@ -794,22 +701,12 @@
       animation-delay: 4.6s;
     }
 
-    /* OPTIMIZACIÓN DE RENDIMIENTO: el oleaje y las burbujas son
-       animaciones "infinite": sin este freno seguirían corriendo para
-       siempre en segundo plano mucho después de que el visitante haya
-       dejado atrás la portada, gastando ciclos de la tarjeta gráfica en
-       algo que ya no se ve. El script (MÓDULO S1) añade la clase
-       is-en-pausa en cuanto la sección deja de estar cerca de la
-       pantalla, y la quita en cuanto vuelve a acercarse. */
     .lienzo.is-en-pausa .agua::before,
     .lienzo.is-en-pausa .burbujas span {
       animation-play-state: paused;
     }
 
-    /* RENDIMIENTO: con la portada lejos, cada .capa, la escena y el agua
-       dejan de ser capas propias de la GPU. Eran cuatro imágenes enormes
-       más el agua ocupando memoria de vídeo durante toda la visita. */
-    .lienzo.is-en-pausa .capa,
+    .lienzo.is-en-pausa .capa-zoom,
     .lienzo.is-en-pausa .escena,
     .lienzo.is-en-pausa .agua {
       will-change: auto;
@@ -831,8 +728,7 @@
           rgba(6, 39, 51, 0.5) 100%);
     }
 
-    /* ---- Rótulos: tres bloques que se relevan durante el descenso.
-       La opacidad se recorta sola, el navegador limita el valor a 0-1. */
+    /* ---- Rótulos: tres bloques que se relevan durante el descenso. */
     .rotulo {
       position: absolute;
       left: var(--hueco);
@@ -966,12 +862,6 @@
 
     /* ====================================================================
        MARCOS DE IMAGEN (hotel, habitaciones y reserva)
-       --------------------------------------------------------------------
-       Cada marco enseña un degradado con el nombre del archivo que espera.
-       Para poner tu foto: guárdala en la MISMA CARPETA que este .html con
-       ese nombre exacto (o cambia el src del <img> por el nombre que
-       quieras). Mientras el archivo no exista, el <img> se oculta solo y se
-       ve el marco; cuando exista, la foto lo cubre y la etiqueta desaparece.
        ==================================================================== */
     .marco-imagen {
       position: relative;
@@ -1067,8 +957,6 @@
 
     /* ====================================================================
        MÓDULO 10 — HABITACIONES (CARRUSEL)
-       scroll-snap nativo: funciona con el dedo, la rueda y el teclado sin
-       librerías. El script solo añade los botones y el indicador.
        ==================================================================== */
     .habitaciones__cabecera {
       display: flex;
@@ -1129,9 +1017,6 @@
       flex-direction: column;
     }
 
-    /* Fotografía de cada habitación: es un <figure class="marco-imagen">
-       con un <img> dentro (ver MARCOS DE IMAGEN más arriba). Los degradados
-       de abajo son el marco que se ve hasta que existe el archivo. */
     .ficha__imagen {
       aspect-ratio: 1024 / 683;
       margin-bottom: 1.4rem;
@@ -1155,8 +1040,6 @@
       background-image: linear-gradient(160deg, #6FD3D8 0%, #1B7E9C 50%, #082F44 100%);
     }
 
-    /* El cuerpo ocupa el resto de la ficha: así el precio queda alineado
-       abajo en las cuatro tarjetas, tengan el texto que tengan. */
     .ficha__cuerpo {
       flex: 1;
       display: flex;
@@ -1206,7 +1089,6 @@
 
     /* ====================================================================
        MÓDULO 11 — THALASSO Y EXPERIENCIAS
-       Única sección oscura del cuerpo: enlaza con el fondo submarino.
        ==================================================================== */
     .seccion--thalasso {
       content-visibility: auto;
@@ -1324,7 +1206,6 @@
       background: rgba(180, 67, 47, 0.06);
     }
 
-    /* Casilla de consentimiento: por ley no puede estar marcada de serie */
     .formulario__consentimiento {
       display: flex;
       align-items: flex-start;
@@ -1417,8 +1298,6 @@
       color: rgba(245, 242, 236, 0.55);
     }
 
-    /* Los enlaces legales abren una ventana modal, así que son botones:
-       no llevan a otra dirección, ejecutan una acción en esta página. */
     .pie__legal button {
       padding: 0;
       background: none;
@@ -1435,9 +1314,6 @@
       border-bottom-color: var(--arena);
     }
 
-
-    /* Mapa interactivo junto a la dirección. OpenStreetMap: no instala
-       cookies, así que no choca con el aviso de cookies de la página. */
     .pie__mapa-marco {
       height: clamp(14rem, 26vw, 18rem);
       overflow: hidden;
@@ -1469,10 +1345,6 @@
 
     /* ====================================================================
        MÓDULO 14 — AVISO Y PANEL DE COOKIES
-       --------------------------------------------------------------------
-       El aviso ofrece las tres acciones al mismo nivel: aceptar, rechazar y
-       configurar. Rechazar tiene que costar lo mismo que aceptar, y ninguna
-       cookie que no sea imprescindible se activa antes de la respuesta.
        ==================================================================== */
     .cookies {
       position: fixed;
@@ -1531,7 +1403,6 @@
       color: var(--arena);
     }
 
-    /* Panel de preferencias, dentro de la ventana modal genérica */
     .preferencia {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -1566,11 +1437,6 @@
 
     /* ====================================================================
        MÓDULO 15 — ASISTENTE
-       --------------------------------------------------------------------
-       Asistente de respuestas preparadas, no un modelo de lenguaje: cada
-       pregunta se compara con una lista de intenciones y devuelve la
-       respuesta escrita por el hotel. Ver MÓDULO S5 para el detalle y para
-       saber cómo enchufarlo a una API real.
        ==================================================================== */
     .asistente__abrir {
       position: fixed;
@@ -1710,7 +1576,6 @@
       color: var(--espuma);
     }
 
-    /* Sugerencias: atajos a las preguntas que más se repiten */
     .asistente__sugerencias {
       display: flex;
       flex-wrap: wrap;
@@ -1768,19 +1633,6 @@
 
     /* ====================================================================
        MÓDULO 16 — CONTROL DE SONIDO
-       --------------------------------------------------------------------
-       El sonido arranca apagado y solo suena si el visitante lo pide. Las
-       normas de accesibilidad (WCAG 1.4.2) exigen poder pararlo, y todos
-       los navegadores bloquean el audio automático de todas formas.
-       El reproductor se inserta en el momento de activarlo, no antes, para
-       no cargar nada de YouTube sin permiso.
-
-       El conjunto de abajo (.sonido__estado) es la red de seguridad: si el
-       vídeo no llega a sonar en unos segundos —está bloqueado por quien lo
-       subió, ha caído la conexión, el entorno donde se ve esta página
-       bloquea los iframes externos—, aparece un aviso con un enlace directo
-       a YouTube para que el sonido no dependa de que el iframe funcione.
-       Ver el porqué exacto en el MÓDULO S6.
        ==================================================================== */
     .sonido {
       position: fixed;
@@ -1817,7 +1669,6 @@
       opacity: 0.5;
     }
 
-    /* Cuatro barras que se mueven solo cuando hay música sonando */
     .sonido__barras {
       display: flex;
       align-items: flex-end;
@@ -1836,31 +1687,16 @@
       animation: ecualizador 1.1s ease-in-out infinite;
     }
 
-    .sonido__barras i:nth-child(2) {
-      animation-delay: 0.18s;
-    }
-
-    .sonido__barras i:nth-child(3) {
-      animation-delay: 0.36s;
-    }
-
-    .sonido__barras i:nth-child(4) {
-      animation-delay: 0.54s;
-    }
+    .sonido__barras i:nth-child(2) { animation-delay: 0.18s; }
+    .sonido__barras i:nth-child(3) { animation-delay: 0.36s; }
+    .sonido__barras i:nth-child(4) { animation-delay: 0.54s; }
 
     @keyframes ecualizador {
-
       0%,
-      100% {
-        height: 4px;
-      }
-
-      50% {
-        height: 14px;
-      }
+      100% { height: 4px; }
+      50% { height: 14px; }
     }
 
-    /* El reproductor no se ve: solo aporta el audio */
     .sonido__reproductor {
       position: absolute;
       width: 1px;
@@ -1869,8 +1705,6 @@
       pointer-events: none;
     }
 
-    /* Aviso de respaldo: oculto mientras todo va bien, aparece si el
-       iframe no llega a sonar. Nunca sustituye al botón, se añade debajo. */
     .sonido__estado {
       display: flex;
       align-items: center;
@@ -1894,9 +1728,6 @@
 
     /* ====================================================================
        MÓDULO 17 — VENTANAS MODALES LEGALES
-       Se usa <dialog> nativo: el navegador ya se encarga del foco atrapado,
-       de la tecla Escape y de ocultar el resto de la página al lector de
-       pantalla. No hace falta programar nada de eso.
        ==================================================================== */
     .ventana {
       width: min(46rem, calc(100vw - 2rem));
@@ -1981,8 +1812,6 @@
       color: var(--turquesa);
     }
 
-    /* Aviso de texto provisional: tiene que cantar, para que nadie lo
-       publique por descuido. */
     .ventana__provisional {
       padding: 0.9rem 1.1rem;
       margin-bottom: 1.6rem;
@@ -2001,7 +1830,6 @@
       border-top: 1px solid rgba(138, 123, 108, 0.28);
     }
 
-    /* Tabla de cookies */
     .tabla {
       width: 100%;
       border-collapse: collapse;
@@ -2032,9 +1860,7 @@
        MÓDULO 18 — RESPONSIVE
        ==================================================================== */
 
-    /* Tabletas */
     @media (max-width: 62rem) {
-
       .experiencias {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -2049,19 +1875,11 @@
       }
     }
 
-    /* ---- Menú móvil y tableta -----------------------------------------
-       Por debajo de 60rem (960 px) el logotipo y los cuatro enlaces ya no
-       caben con holgura: la navegación pasa a un panel a pantalla
-       completa. El panel es position:fixed, así que NO depende de la
-       altura de la barra (que cambia al hacerse fija) ni se corta en
-       móviles apaisados: tiene su propio scroll. La marca y el botón
-       siguen visibles encima (z-index en MÓDULO 06). */
     @keyframes gp-entra-enlace {
       from {
         opacity: 0;
         transform: translateY(0.9rem);
       }
-
       to {
         opacity: 1;
         transform: none;
@@ -2078,7 +1896,6 @@
         display: none;
       }
 
-      /* Con el panel abierto la barra se funde con él */
       .cabecera.is-menu-abierto {
         background: transparent;
         box-shadow: none;
@@ -2105,8 +1922,6 @@
         letter-spacing: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
-        /* Se oculta con opacidad + visibility (no display:none) para poder
-           animar la entrada; visibility evita que quede tabulable. */
         opacity: 0;
         visibility: hidden;
         transform: translateY(-1rem);
@@ -2129,7 +1944,6 @@
         border-bottom: 1px solid rgba(245, 242, 236, 0.14);
       }
 
-      /* La flecha sustituye al subrayado de escritorio */
       .cabecera__nav a:not(.nav__reservar)::after {
         content: "\2192";
         position: static;
@@ -2171,7 +1985,6 @@
         color: var(--arena);
       }
 
-      /* Entrada escalonada de los enlaces al abrir el panel */
       .cabecera__nav.is-abierto a {
         animation: gp-entra-enlace 480ms var(--suave) both;
       }
@@ -2182,7 +1995,6 @@
       .cabecera__nav.is-abierto a:nth-child(4) { animation-delay: 230ms; }
     }
 
-    /* Móviles apaisados: poco alto, los enlaces se compactan */
     @media (max-width: 60rem) and (max-height: 32rem) {
       .cabecera__nav {
         padding-top: calc(4.2rem + env(safe-area-inset-top, 0px));
@@ -2200,7 +2012,6 @@
       }
     }
 
-    /* ---- Piezas nuevas en tableta: imágenes, hotel, reserva y pie ---- */
     @media (max-width: 62rem) {
       .hotel__fila {
         grid-template-columns: 1fr;
@@ -2234,11 +2045,7 @@
       }
     }
 
-    /* Móvil */
     @media (max-width: 44rem) {
-
-      /* El recorrido de la portada se acorta: en pantallas altas y
-         estrechas, 340vh de scroll se hacen largos. */
       .inmersion {
         height: 280vh;
       }
@@ -2282,8 +2089,6 @@
         justify-items: start;
       }
 
-      /* Las capas flotantes comparten el borde inferior: el asistente a la
-         derecha, el sonido a la izquierda, y ninguno tapa al otro. */
       .asistente {
         right: 0;
         left: 0;
@@ -2321,9 +2126,6 @@
 
     /* ====================================================================
        MÓDULO 19 — MOVIMIENTO REDUCIDO
-       Si el sistema lo pide, la portada se queda quieta en las vistas y la
-       sección se reduce a una pantalla. El script comprueba la misma
-       consulta y no se activa.
        ==================================================================== */
     @media (prefers-reduced-motion: reduce) {
 
@@ -2344,16 +2146,11 @@
       }
 
       .escena,
-      .capa {
+      .capa-zoom {
         transform: none !important;
       }
 
       .agua {
-        /* Con movimiento reducido, --p ya no se actualiza (el MÓDULO S1
-           ni siquiera arranca), así que esta capa se queda congelada en
-           su posición inicial. Se fuerza aquí una franja de 18vh fija en
-           la parte baja, para conservar la misma referencia visual de
-           "hay agua abajo" sin ninguna animación. */
         transform: translate3d(0, 132vh, 0) !important;
       }
 
@@ -2370,8 +2167,6 @@
     /* ====================================================================
        MÓDULO 20 — LOGOS, CUENTA DE USUARIO Y GALERÍA
        ==================================================================== */
-
-    /* Huecos para logotipos: dejan de verse cuando existe el archivo. */
     .hueco-logo {
       position: relative;
       flex-shrink: 0;
@@ -2440,7 +2235,6 @@
       margin-bottom: 0;
     }
 
-    /* Botón de cuenta: mismo aspecto que "Reservar" (.nav__reservar) */
     :where(button.nav__sesion) {
       background: transparent;
       cursor: pointer;
@@ -2466,7 +2260,6 @@
       }
     }
 
-    /* Ventana de cuenta */
     .ventana--sesion {
       width: min(30rem, calc(100vw - 2rem));
     }
@@ -2507,7 +2300,6 @@
       color: var(--turquesa);
     }
 
-    /* Galería: una foto cada vez, mismo carrusel nativo que las habitaciones */
     .seccion--galeria {
       background: rgba(207, 231, 234, 0.4);
     }
@@ -2582,38 +2374,23 @@
   <main id="top">
 
     <!-- ==================================================================
-         MÓDULO B — INMERSIÓN
-         Portada de 340vh. Se empieza mirando la bahía desde el acantilado
-         y se termina dentro de la piscina. Ver MÓDULO 07 y S1.
+         MÓDULO B — INMERSIÓN (Modificado a un Zoom)
          ================================================================== -->
     <section class="inmersion" id="inmersion">
       <div class="lienzo" id="lienzo">
 
         <div class="escena" aria-hidden="true">
 
-          <div class="escena" aria-hidden="true">
-
-          <!-- ESTO ES LO QUE PEGAS NUEVO: Las 4 capas con tus fotos -->
-          <div class="capa" data-velocidad="0.06">
-            <img class="capa__imagen" src="fotos/01-cielo.jpg" alt="Cielo despejado de Gran Canaria">
+          <!-- Capa Única: Imagen principal del hotel -->
+          <div class="capa-zoom">
+            <!-- REEMPLAZA AQUÍ el nombre por tu foto real si no se llama 01-cielo.jpg -->
+            <img class="capa__imagen" src="fotos/01-cielo.jpg" alt="Vistas del Gloria Palace Amadores">
           </div>
 
-          <div class="capa" data-velocidad="0.16">
-            <img class="capa__imagen" src="fotos/02-oceano.png" alt="">
-          </div>
-
-          <div class="capa" data-velocidad="0.34">
-            <img class="capa__imagen" src="fotos/03-acantilados.png" alt="">
-          </div>
-
-          <div class="capa" data-velocidad="0.62">
-            <img class="capa__imagen" src="fotos/04-terraza.png" alt="Borde de la piscina infinita del hotel">
-          </div>
-
-          <!-- Agua de la piscina: sube hasta cubrir el encuadre -->
+          <!-- Agua de la piscina: crece desde abajo a partir de --p 0.28 -->
           <div class="agua"></div>
 
-          <!-- Fondo sumergido: tinte, cáusticas y burbujas -->
+          <!-- Fondo sumergido: tinte y cáusticas, solo al final -->
           <div class="sumergido"></div>
           <div class="burbujas">
             <span></span><span></span><span></span><span></span><span></span>
@@ -2683,8 +2460,6 @@
         </p>
       </div>
 
-        <!-- Imagen: guarda tu foto en la misma carpeta que este archivo con el
-             nombre imagen-hotel.jpg (o cambia el src). -->
         <figure class="marco-imagen marco-imagen--hotel" data-archivo="fotos/.jpg">
           <img src="fotos/HotelporFuera.jpg" alt="El Gloria Palace Amadores sobre el acantilado" width="800" height="1000"
             loading="lazy" decoding="async" onload="this.parentNode.classList.add('tiene-imagen')"
@@ -2701,9 +2476,6 @@
 
     <!-- ==================================================================
          MÓDULO F — MOTOR DE RESERVA
-         Valida en el cliente y estima el total. PENDIENTE: en producción el
-         envío va al motor de reservas de la cadena y el servidor tiene que
-         volver a validarlo todo.
          ================================================================== -->
     <section class="seccion seccion--reserva" id="reserva">
       <p class="seccion__indice">Reserva</p>
@@ -2718,8 +2490,6 @@
             <a href="tel:+34928128510">928 12 85 10</a>.
           </p>
         
-          <!-- Imagen: guarda tu foto en la misma carpeta que este archivo con el
-               nombre imagen-reserva.jpg (o cambia el src). -->
           <figure class="marco-imagen marco-imagen--reserva" data-archivo="imagen-reserva.jpg">
             <img src="fotos/RecepcionHotel.jpg" alt="Terraza del hotel con vistas al Atlántico" width="800" height="600"
               loading="lazy" decoding="async" onload="this.parentNode.classList.add('tiene-imagen')"
@@ -2750,7 +2520,6 @@
             </select>
           </div>
 
-          <!-- El value es la tarifa base por noche; el régimen la multiplica -->
           <div class="campo">
             <label for="habitacion">Habitación</label>
             <select id="habitacion" name="habitacion">
@@ -2776,8 +2545,6 @@
             <input type="email" id="correo" name="correo" placeholder="nombre@correo.com" required>
           </div>
 
-          <!-- Consentimiento expreso. Sin marcar de serie: el RGPD no
-               admite casillas premarcadas ni consentimiento tácito. -->
           <label class="formulario__consentimiento">
             <input type="checkbox" id="consiento" name="consiento">
             <span>
@@ -2801,7 +2568,6 @@
 
     <!-- ==================================================================
          MÓDULO D — HABITACIONES
-         Los cuatro tipos son los de la carta oficial del hotel.
          ================================================================== -->
     <section class="seccion seccion--habitaciones" id="habitaciones">
       <p class="seccion__indice">Habitaciones</p>
@@ -2901,9 +2667,6 @@
 
     <!-- ==================================================================
          MÓDULO D2 — GALERÍA
-         Diez huecos para fotos, de una en una. Guarda las imágenes en la
-         carpeta fotos/ con los nombres Galeria01.jpg ... Galeria10.jpg
-         (1024x683) y se verán solas. PENDIENTE: ajustar los textos alt.
          ================================================================== -->
     <section class="seccion seccion--galeria" id="galeria">
       <p class="seccion__indice">Galería</p>
@@ -2998,7 +2761,6 @@
       <p class="seccion__indice">Thalasso y experiencias</p>
       <div class="thalasso__cabecera">
         <h2 class="titular">El agua del Atlántico entra en el edificio.</h2>
-        <!-- HUECO PARA EL LOGO: guarda el archivo como fotos/LogoThalasso.png -->
         <div class="hueco-logo hueco-logo--experiencias" data-archivo="fotos/LogoThalasso.png">
           <img src="fotos/LogoHotel2.png" alt="Logotipo" width="250" height="200" decoding="async"
             onload="this.parentNode.classList.add('tiene-imagen')" onerror="this.hidden=true">
@@ -3061,9 +2823,6 @@
 
   <!-- ======================================================================
        MÓDULO G — PIE
-       Los enlaces de navegación llevan a su sección; los de contacto abren
-       el cliente de correo y el marcador del teléfono; los legales abren
-       una ventana modal, por eso son <button> y no <a>.
        ====================================================================== -->
   <footer class="pie">
     <div class="pie__marca">
@@ -3107,9 +2866,6 @@
        MÓDULO H — CAPAS FLOTANTES
        ====================================================================== -->
 
-  <!-- ---- H1. Aviso de cookies -------------------------------------------
-       Empieza oculto: el script lo muestra solo si no hay una decisión
-       guardada. Las tres acciones tienen el mismo peso visual. -->
   <section class="cookies" id="aviso-cookies" aria-labelledby="titulo-cookies" hidden>
     <div class="cookies__caja">
       <p class="cookies__texto">
@@ -3127,8 +2883,6 @@
     </div>
   </section>
 
-  <!-- ---- H2. Asistente --------------------------------------------------
-       El botón abre el panel. El panel empieza oculto con [hidden]. -->
   <button class="asistente__abrir" id="abrir-asistente" type="button" aria-expanded="false"
     aria-controls="asistente">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -3151,7 +2905,6 @@
       </button>
     </div>
 
-    <!-- aria-live: los lectores de pantalla anuncian cada respuesta nueva -->
     <div class="asistente__hilo" id="hilo-asistente" aria-live="polite"></div>
 
     <div class="asistente__sugerencias" id="sugerencias-asistente"></div>
@@ -3167,11 +2920,6 @@
     </form>
   </div>
 
-  <!-- ---- H3. Sonido ambiente --------------------------------------------
-       Apagado de serie. El reproductor se inserta al pulsar, nunca antes.
-       El aviso de abajo (oculto mientras todo va bien) es la red de
-       seguridad si el iframe no llega a sonar: ver el MÓDULO S6.
-       PENDIENTE: ver el mismo comentario sobre la licencia de la música. -->
   <div class="sonido">
     <button class="sonido__boton" id="boton-sonido" type="button" aria-pressed="false">
       <span class="sonido__barras" aria-hidden="true">
@@ -3183,10 +2931,6 @@
   </div>
  <audio class="sonido__reproductor" id="reproductor" src="jazz.mp3" loop preload="none" aria-hidden="true"></audio>
 
-  <!-- ---- H4. Ventanas legales -------------------------------------------
-       PENDIENTE: los tres textos son plantillas de estructura, NO textos
-       legales válidos. Antes de publicar tienen que redactarlos o revisarlos
-       los servicios jurídicos del hotel. -->
 
   <dialog class="ventana" id="ventana-aviso">
     <div class="ventana__cabecera">
@@ -3227,7 +2971,7 @@
         El código, diseño, estructura, textos, fotografías, logotipos, marcas,
         gráficos y demás elementos del sitio están protegidos por la normativa
         de propiedad intelectual e industrial y pertenecen a su titular o a
-        terceros que hayan autorizado su uso. No se permite su reproducción,
+        tercidos que hayan autorizado su uso. No se permite su reproducción,
         distribución, transformación o explotación sin la autorización que
         corresponda.
       </p>
@@ -3476,7 +3220,7 @@
         el pie de la página. También puedes borrar los datos almacenados por
         este sitio desde las opciones de privacidad de tu navegador. Si
         eliminas el almacenamiento local, es posible que el sitio vuelva a
-        solicitar tus preferencias.
+        solicico tus preferencias.
       </p>
 
       <h3>Servicios de terceros</h3>
@@ -3497,7 +3241,6 @@
     </div>
   </dialog>
 
-  <!-- Panel de preferencias granulares -->
   <dialog class="ventana" id="ventana-preferencias">
     <div class="ventana__cabecera">
       <h2>Configuración de cookies</h2>
@@ -3552,9 +3295,6 @@
     </div>
   </dialog>
 
-  <!-- ---- H5. Ventana de cuenta (iniciar sesión / registrarse) ------------
-       Los usuarios se guardan en localStorage de este navegador (demo).
-       PENDIENTE: en producción debe hacerlo un servidor. Ver MÓDULO S8. -->
   <dialog class="ventana ventana--sesion" id="ventana-sesion" aria-labelledby="titulo-sesion">
     <div class="ventana__cabecera">
       <h2 id="titulo-sesion">Iniciar sesión</h2>
@@ -3618,52 +3358,7 @@
 
   <script>
     /* ====================================================================
-       MÓDULO S1 — MOTOR DE LA INMERSIÓN
-       --------------------------------------------------------------------
-       Calcula un progreso de 0 a 1 según lo recorrido de la sección
-       .inmersion y lo publica en la variable CSS --p del lienzo. El CSS
-       (MÓDULO 07) hace el resto: el agua sube, el tinte aparece y los
-       rótulos se relevan.
-
-       Además desplaza cada capa hacia arriba en proporción a su atributo
-       data-velocidad. Al bajar la cámara, lo cercano se desplaza mucho y lo
-       lejano casi nada: de ahí la sensación de profundidad.
-
-       --------------------------------------------------------------------
-       OPTIMIZACIÓN DE RENDIMIENTO (por qué el arranque iba a tirones en
-       equipos modestos, y qué cambia aquí sin tocar el resultado visual):
-
-       1. Antes, cada fotograma llamaba a seccion.getBoundingClientRect()
-          y a seccion.offsetHeight. Son lecturas de diseño: si algo en la
-          página tiene un cambio de diseño pendiente —y el fotograma
-          anterior siempre dejaba uno pendiente, porque el agua entonces
-          animaba su "height"—, el navegador tiene que recalcular el
-          diseño de toda la página ahí mismo, de forma síncrona, antes de
-          poder devolver el dato. Eso, repetido en cada fotograma durante
-          todo el descenso, es exactamente lo que se nota como cortes.
-          Ahora esas dos medidas se toman solo una vez, al cargar la
-          página y al cambiar el tamaño de la ventana, y se guardan; en
-          cada fotograma solo se lee window.scrollY, que es la posición
-          del scroll y no obliga a recalcular nada.
-
-       2. El agua (MÓDULO 07) ha dejado de animar "height" —una propiedad
-          de diseño— y ahora se traslada con translate3d, que la tarjeta
-          gráfica resuelve por composición. Entre los dos cambios, todo
-          el recorrido queda en manos de la GPU y no exige ya ningún
-          recálculo de diseño.
-
-       3. Un IntersectionObserver apaga el motor entero en cuanto la
-          portada lleva un rato fuera de la pantalla (el visitante ya ha
-          bajado a las demás secciones) y lo vuelve a encender solo si
-          sube de nuevo. Mientras está apagado tampoco se anima el
-          oleaje ni las burbujas (MÓDULO 07), así que no queda nada
-          corriendo en segundo plano el resto de la visita.
-
-       Otros detalles que ya evitaban tirones y se mantienen igual:
-       - translate3d, que compone la GPU, en lugar de top o margin.
-       - El evento scroll solo anota la posición; el dibujado ocurre dentro
-         de requestAnimationFrame, sincronizado con el refresco de pantalla.
-       - Si el sistema pide movimiento reducido, el módulo no se activa.
+       MÓDULO S1 — MOTOR DE LA INMERSIÓN (Modificado a Zoom)
        ==================================================================== */
     (function () {
       'use strict';
@@ -3674,12 +3369,7 @@
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      var capas = lienzo.querySelectorAll('[data-velocidad]');
       var rotulos = lienzo.querySelectorAll('[data-rango]');
-      // RENDIMIENTO: velocidades y rangos se leen del DOM una sola vez aquí,
-      // no en cada fotograma.
-      var velocidades = [];
-      for (var k = 0; k < capas.length; k++) velocidades.push(parseFloat(capas[k].dataset.velocidad) || 0);
       var rangos = [];
       for (var m = 0; m < rotulos.length; m++) {
         var r = rotulos[m].dataset.rango.split(' ');
@@ -3687,18 +3377,14 @@
       }
       var ultimoP = -1;
       var pendiente = false;
-      var enPantalla = true;   // el IntersectionObserver de más abajo lo mantiene al día
+      var enPantalla = true;
 
-      // Medidas cacheadas: nada de esto se vuelve a leer del DOM dentro de
-      // dibujar(). Se recalculan solo al cargar y al cambiar el tamaño.
       var inicioSeccion = 0;
       var recorrido = 1;
-      var alto = window.innerHeight;
 
       function medir() {
         inicioSeccion = seccion.offsetTop;
         recorrido = Math.max(1, seccion.offsetHeight - window.innerHeight);
-        alto = window.innerHeight;
       }
 
       function limitar(valor, minimo, maximo) {
@@ -3709,23 +3395,11 @@
         pendiente = false;
 
         var p = limitar((window.scrollY - inicioSeccion) / recorrido, 0, 1);
-        // Si el progreso no ha cambiado (p. ej. ya está en 0 o en 1) no se
-        // escribe nada: ni variable CSS ni transformaciones.
         if (p === ultimoP) return;
         ultimoP = p;
 
-        // Una sola escritura: el CSS lee --p para todo lo demás.
         lienzo.style.setProperty('--p', p.toFixed(4));
 
-        // Desplazamiento de las capas. Hacia arriba, porque la cámara baja.
-        for (var i = 0; i < capas.length; i++) {
-          var velocidad = velocidades[i];
-          capas[i].style.transform =
-            'translate3d(0, ' + (-p * velocidad * alto) + 'px, 0)';
-        }
-
-        // Solo el rótulo visible acepta clics: los demás están a opacidad 0
-        // pero seguirían siendo pulsables si no se desactivaran.
         for (var j = 0; j < rotulos.length; j++) {
           var dentro = p >= rangos[j][0] && p <= rangos[j][1];
           rotulos[j].classList.toggle('is-visible', dentro);
@@ -3749,11 +3423,6 @@
       window.addEventListener('resize', alCambiarTamano, { passive: true });
       alHacerScroll();
 
-      // Apaga el motor —y, con la clase is-en-pausa, también el oleaje y
-      // las burbujas— en cuanto la portada queda lejos de la pantalla en
-      // cualquiera de las dos direcciones, y lo reengancha al volver a
-      // acercarse. El margen del 25% evita que se note el enganche justo
-      // en el borde.
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entradas) {
           enPantalla = entradas[0].isIntersecting;
@@ -3766,14 +3435,10 @@
 
     /* ====================================================================
        MÓDULO S2 — INTERFAZ
-       Cabecera, menú desplegable y carrusel de habitaciones.
        ==================================================================== */
     (function () {
       'use strict';
 
-      /* ---- Cabecera ---------------------------------------------------
-         Fondo sólido al salir de la portada. IntersectionObserver en lugar
-         del evento scroll: el navegador avisa solo al cambiar el estado. */
       var cabecera = document.getElementById('cabecera');
       var inmersion = document.getElementById('inmersion');
 
@@ -3783,16 +3448,6 @@
         }, { rootMargin: '-90px 0px 0px 0px' }).observe(inmersion);
       }
 
-      /* ---- Menú desplegable --------------------------------------------
-         CORRECCIÓN DEL BUG: antes el panel se pintaba a pantalla completa
-         y tapaba el logotipo, y el fondo transparente de la barra dejaba
-         el texto ilegible sobre la portada clara. Ahora el panel baja por
-         detrás de la barra (MÓDULO 18), que conserva su fondo y su
-         logotipo, y el resto de la página sigue a la vista por debajo.
-
-         Se bloquea el scroll del cuerpo mientras está abierto y el menú se
-         cierra solo al elegir destino, al pulsar Escape o al ensanchar la
-         ventana por encima del punto de ruptura. */
       var botonMenu = document.getElementById('boton-menu');
       var menu = document.getElementById('menu');
 
@@ -3823,16 +3478,11 @@
           }
         });
 
-        // Al pasar a escritorio, el panel deja de existir: si se quedara
-        // marcado como abierto, el body seguiría sin poder desplazarse.
         anchoMovil.addEventListener('change', function (consulta) {
           if (!consulta.matches) alternarMenu(false);
         });
       }
 
-      /* ---- Sección activa en el menú ------------------------------------
-         Marca con aria-current el enlace de la sección que cruza el centro
-         de la pantalla. Usa IntersectionObserver: sin evento scroll. */
       if (menu && 'IntersectionObserver' in window) {
         var enlacesMenu = {};
         menu.querySelectorAll('a[href^="#"]').forEach(function (a) {
@@ -3857,23 +3507,9 @@
           if (seccion) espia.observe(seccion);
         });
       }
-      /* ---- Imágenes ya cargadas -----------------------------------------
-         Si la foto estaba en caché antes de engancharse el onload, el marco
-         ocultaría igualmente su etiqueta aquí. */
       document.querySelectorAll('.marco-imagen img').forEach(function (img) {
         if (img.complete && img.naturalWidth > 0) img.parentNode.classList.add('tiene-imagen');
       });
-      /* ---- Carrusel ----------------------------------------------------
-         El desplazamiento lo hace el navegador con scroll-snap. El script
-         solo añade los botones y el indicador, así que sigue funcionando
-         aunque el JavaScript falle.
-         RENDIMIENTO (aquí se trababa el carrusel): antes, CADA evento de
-         scroll llamaba a getComputedStyle y getBoundingClientRect (lecturas
-         de diseño que fuerzan recalcular la página) y reescribía el texto
-         del indicador aunque no hubiera cambiado. Ahora las medidas se
-         toman solo al cargar y al cambiar el tamaño del carrusel, el scroll
-         se procesa como mucho una vez por fotograma y el DOM solo se toca
-         cuando cambia el botón o el número de habitación. */
       var carrusel = document.getElementById('carrusel-habitaciones');
       var posicion = document.getElementById('posicion-carrusel');
       var mandos = document.querySelectorAll('[data-carrusel]');
@@ -3937,9 +3573,6 @@
     })();
     /* ====================================================================
        MÓDULO S3 — MOTOR DE RESERVA
-       Validación en español y estimación del total. El formulario lleva
-       novalidate para dar mensajes propios; en producción el servidor debe
-       repetir todas las comprobaciones.
        ==================================================================== */
     (function () {
       'use strict';
@@ -3959,12 +3592,10 @@
 
       var MS_DIA = 86400000;
 
-      /** Fecha en formato aaaa-mm-dd, el que acepta input[type=date]. */
       function aISO(fecha) {
         return fecha.toISOString().slice(0, 10);
       }
 
-      // No se puede reservar en el pasado ni salir antes de entrar.
       var hoy = new Date();
       entrada.min = aISO(hoy);
       salida.min = aISO(new Date(hoy.getTime() + MS_DIA));
@@ -3976,7 +3607,6 @@
         minimaSalida.setDate(minimaSalida.getDate() + 1);
         salida.min = aISO(minimaSalida);
 
-        // Si la salida quedó por detrás se corrige sola, sin dar error.
         if (salida.value && salida.value <= entrada.value) {
           salida.value = salida.min;
         }
@@ -4016,16 +3646,12 @@
           '<span>tasas incluidas</span>';
       }
 
-      // El asistente puede rellenar el formulario: al hacerlo dispara este
-      // evento para que el resumen se recalcule.
       formulario.addEventListener('recalcular', calcular);
 
       formulario.addEventListener('submit', function (evento) {
         evento.preventDefault();
         aviso.className = 'formulario__aviso';
 
-        // Se marca con aria-invalid, no solo con el borde de color: el
-        // color por sí solo no llega a quien usa lector de pantalla.
         var invalido = null;
 
         if (!entrada.value || !salida.value) {
@@ -4051,7 +3677,6 @@
           return;
         }
 
-        // PENDIENTE: punto de integración con el motor de reservas.
         aviso.textContent = 'Hay disponibilidad. Te confirmamos en ' + correo.value + '.';
         aviso.classList.add('is-correcto');
       });
@@ -4060,25 +3685,13 @@
 
     /* ====================================================================
        MÓDULO S4 — CONSENTIMIENTO DE COOKIES
-       --------------------------------------------------------------------
-       Reglas que cumple este módulo:
-       - Nada que no sea imprescindible se carga antes de la respuesta.
-       - Rechazar cuesta un solo clic, igual que aceptar.
-       - La decisión se guarda con fecha y versión, para poder volver a
-         preguntar si cambian las finalidades o pasan doce meses.
-       - Se puede cambiar de idea desde el pie, sin buscar nada.
-
-       Se guarda en localStorage, no en document.cookie: no hace falta
-       mandar el dato al servidor en cada petición. La función
-       hayConsentimiento() es el interruptor que deben consultar la
-       analítica y cualquier script de terceros antes de arrancar.
        ==================================================================== */
     window.Consentimiento = (function () {
       'use strict';
 
       var CLAVE = 'gpa_consentimiento';
       var VERSION = 1;
-      var CADUCIDAD = 365 * 86400000;  // doce meses
+      var CADUCIDAD = 365 * 86400000;
 
       var aviso = document.getElementById('aviso-cookies');
       var ventana = document.getElementById('ventana-preferencias');
@@ -4086,7 +3699,6 @@
       var casillaMedicion = document.getElementById('pref-medicion');
       var casillaPersonalizacion = document.getElementById('pref-personalizacion');
 
-      /** Lee la decisión guardada, o null si no hay o ya caducó. */
       function leer() {
         try {
           var bruto = localStorage.getItem(CLAVE);
@@ -4096,8 +3708,6 @@
           if (Date.now() - dato.fecha > CADUCIDAD) return null;
           return dato;
         } catch (error) {
-          // Modo privado, almacenamiento lleno o datos corruptos: se trata
-          // como si no hubiera decisión, que es la opción conservadora.
           return null;
         }
       }
@@ -4111,22 +3721,15 @@
         };
         try {
           localStorage.setItem(CLAVE, JSON.stringify(dato));
-        } catch (error) {
-          /* Sin almacenamiento se pierde la decisión al recargar. No es
-             motivo para romper la página. */
-        }
+        } catch (error) {}
         aplicar(dato);
       }
 
-      /** Enciende lo que se haya permitido y avisa al resto del sitio. */
       function aplicar(dato) {
         if (aviso) aviso.hidden = true;
 
         if (dato.medicion) {
-          // PENDIENTE: aquí va la carga de la analítica. Debe hacerse
-          // dentro de este bloque y en ningún otro sitio, para que no se
-          // ejecute nunca sin permiso.
-          // cargarScript('https://www.googletagmanager.com/gtag/js?id=...');
+          // Carga de analítica
         }
 
         document.dispatchEvent(new CustomEvent('consentimiento', { detail: dato }));
@@ -4139,7 +3742,6 @@
         if (ventana && typeof ventana.showModal === 'function') ventana.showModal();
       }
 
-      /* ---- Conexiones de la interfaz ---- */
       document.getElementById('cookies-aceptar')
         .addEventListener('click', function () { guardar(true, true); });
 
@@ -4172,7 +3774,6 @@
         ventana.close();
       });
 
-      /* ---- Arranque ---- */
       var decision = leer();
       if (decision) {
         aplicar(decision);
@@ -4180,8 +3781,6 @@
         aviso.hidden = false;
       }
 
-      // Interfaz pública: cualquier otro módulo pregunta antes de guardar
-      // nada. Ver el uso en el MÓDULO S6.
       return {
         permite: function (categoria) {
           var dato = leer();
@@ -4194,20 +3793,6 @@
 
     /* ====================================================================
        MÓDULO S5 — ASISTENTE
-       --------------------------------------------------------------------
-       Qué es: un asistente de respuestas preparadas. Cada intención tiene
-       una lista de palabras clave y una respuesta escrita por el hotel. La
-       pregunta se normaliza (minúsculas, sin tildes) y se puntúa contra
-       cada intención; gana la de más aciertos.
-
-       Qué NO es: un modelo de lenguaje. No improvisa, así que no puede
-       inventarse precios ni disponibilidad, que es justo lo que no debe
-       hacer un asistente de un hotel. Por eso la cabecera dice "Respuestas
-       automáticas" y cualquier cosa que no entienda deriva a recepción.
-
-       PENDIENTE: para conectarlo a un modelo real, sustituir responder()
-       por una llamada al backend del hotel. La clave de la API nunca puede
-       ir en este archivo: tiene que quedarse en el servidor.
        ==================================================================== */
     (function () {
       'use strict';
@@ -4222,9 +3807,6 @@
 
       if (!panel || !hilo) return;
 
-      /* ---- Base de conocimiento --------------------------------------
-         Datos verificados en la web oficial del hotel. Para ampliarla
-         basta con añadir objetos a esta lista; no hay que tocar nada más. */
       var INTENCIONES = [
         {
           clave: 'reserva',
@@ -4303,14 +3885,12 @@
         { texto: 'Horarios', clave: 'horarios' }
       ];
 
-      /** Minúsculas y sin tildes, para que "habitación" case con "habitacion". */
       function normalizar(texto) {
         return texto.toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
       }
 
-      /** Devuelve la intención con más palabras clave coincidentes. */
       function buscarIntencion(texto) {
         var limpio = normalizar(texto);
         var mejor = null;
@@ -4339,7 +3919,6 @@
         return burbuja;
       }
 
-      /** Acciones que el asistente puede ejecutar además de contestar. */
       function ejecutar(accion) {
         var destinos = {
           reservar: 'reserva',
@@ -4352,8 +3931,6 @@
         var seccion = document.getElementById(id);
         if (!seccion) return;
 
-        // Se deja un momento para que se lea la respuesta antes de mover
-        // la página; si no, el salto desconcierta.
         window.setTimeout(function () {
           seccion.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 700);
@@ -4362,7 +3939,6 @@
       function responder(pregunta) {
         var intencion = buscarIntencion(pregunta);
 
-        // Pequeña pausa: una respuesta instantánea parece un error.
         window.setTimeout(function () {
           if (!intencion) {
             escribir(NO_ENTIENDO, 'hotel');
@@ -4378,7 +3954,6 @@
         responder(texto);
       }
 
-      /* ---- Atajos ---- */
       ATAJOS.forEach(function (atajo) {
         var boton = document.createElement('button');
         boton.type = 'button';
@@ -4388,7 +3963,6 @@
         sugerencias.appendChild(boton);
       });
 
-      /* ---- Apertura y cierre ---- */
       var abrir = function (mostrar) {
         panel.hidden = !mostrar;
         boton.hidden = mostrar;
@@ -4421,8 +3995,6 @@
 
 /* ====================================================================
        MÓDULO S6 — SONIDO AMBIENTE (AUDIO LOCAL)
-       --------------------------------------------------------------------
-       Adaptado para usar una etiqueta <audio> nativa en lugar de YouTube.
        ==================================================================== */
     (function () {
       'use strict';
@@ -4430,7 +4002,7 @@
       var CLAVE = 'gpa_sonido';
 
       var boton = document.getElementById('boton-sonido');
-      var audio = document.getElementById('reproductor'); // Ahora es un <audio>
+      var audio = document.getElementById('reproductor');
       var estado = document.getElementById('estado-sonido');
       if (!boton || !audio) return;
 
@@ -4451,11 +4023,9 @@
           anunciar(''); 
           listo = true;
           
-          // Inicia la reproducción local
           var promesa = audio.play();
           if (promesa !== undefined) {
             promesa.catch(function(error) {
-              // Falla si el navegador bloquea el autoplay sin interacción
               boton.setAttribute('aria-pressed', 'false');
               boton.dataset.cargando = 'false';
               boton.querySelector('span:last-child').textContent = 'Música';
@@ -4466,11 +4036,10 @@
           audio.pause();
         }
 
-        // Solo se recuerda con permiso de personalización (MÓDULO S4).
         if (window.Consentimiento && window.Consentimiento.permite('personalizacion')) {
           try {
             localStorage.setItem(CLAVE, sonando ? '1' : '0');
-          } catch (error) { /* sin almacenamiento, no se recuerda */ }
+          } catch (error) {}
         }
       }
 
@@ -4478,7 +4047,6 @@
         encender(boton.getAttribute('aria-pressed') !== 'true');
       });
 
-      // Al cambiar de pestaña se pausa para que no moleste de fondo
       document.addEventListener('visibilitychange', function () {
         if (!listo) return;
         if (document.hidden && boton.getAttribute('aria-pressed') === 'true') {
@@ -4488,25 +4056,20 @@
         }
       });
 
-      // Si en una visita anterior lo dejó encendido
       try {
         if (localStorage.getItem(CLAVE) === '1') {
           boton.querySelector('span:last-child').textContent = 'Reanudar música';
         }
-      } catch (error) { /* sin almacenamiento, se queda como está */ }
+      } catch (error) {}
     })();
 
 
     /* ====================================================================
        MÓDULO S7 — VENTANAS MODALES LEGALES
-       Con <dialog> y showModal(), el navegador ya atrapa el foco, atiende
-       la tecla Escape y oculta el resto de la página a los lectores de
-       pantalla. Aquí solo hace falta abrir, cerrar y cerrar al pulsar fuera.
        ==================================================================== */
     (function () {
       'use strict';
 
-      // Abrir: cualquier elemento con data-ventana apuntando a un id.
       document.querySelectorAll('[data-ventana]').forEach(function (disparador) {
         disparador.addEventListener('click', function () {
           var ventana = document.getElementById(disparador.dataset.ventana);
@@ -4516,13 +4079,10 @@
 
       document.querySelectorAll('.ventana').forEach(function (ventana) {
 
-        // Cerrar con el aspa
         ventana.querySelectorAll('[data-cerrar]').forEach(function (boton) {
           boton.addEventListener('click', function () { ventana.close(); });
         });
 
-        // Cerrar al pulsar el fondo. El clic sobre el propio <dialog> solo
-        // ocurre en la zona del backdrop: el contenido está en hijos.
         ventana.addEventListener('click', function (evento) {
           if (evento.target === ventana) ventana.close();
         });
@@ -4531,11 +4091,6 @@
 
     /* ====================================================================
        MÓDULO S8 — CUENTA DE USUARIO (DEMO)
-       Registro e inicio de sesión sencillos. Los usuarios se guardan en
-       localStorage (clave gpa_usuarios): no se permite repetir nombre de
-       usuario ni correo (sin distinguir mayúsculas). La contraseña se guarda
-       con hash SHA-256 y sal. PENDIENTE: esto es solo del lado del cliente;
-       para uso real debe hacerlo un servidor.
        ==================================================================== */
     (function () {
       'use strict';
@@ -4571,7 +4126,7 @@
             }).join('');
           });
         }
-        var h = 5381;  // respaldo muy simple si el navegador no ofrece crypto.subtle
+        var h = 5381; 
         for (var i = 0; i < texto.length; i++) h = ((h << 5) + h + texto.charCodeAt(i)) | 0;
         return Promise.resolve('s' + (h >>> 0).toString(16));
       }
@@ -4613,13 +4168,12 @@
         paneles.entrar.reset(); paneles.registro.reset(); limpiar();
       });
       botonNav.addEventListener('click', function () {
-        var bm = $('boton-menu');  // si el menú móvil está abierto, se cierra
+        var bm = $('boton-menu'); 
         if (bm && bm.getAttribute('aria-expanded') === 'true') bm.click();
         limpiar(); pintar();
       });
       $('sesion-salir').addEventListener('click', function () { vista = 'entrar'; fijarSesion(null); });
 
-      /* ---- Registro ---- */
       paneles.registro.addEventListener('submit', function (e) {
         e.preventDefault();
         limpiar();
@@ -4645,7 +4199,7 @@
 
         var sal = Date.now().toString(36) + Math.random().toString(36).slice(2);
         cifrar(sal + clave).then(function (hash) {
-          var actualizada = leer();  // se vuelve a comprobar justo antes de guardar
+          var actualizada = leer(); 
           if (existe(actualizada) || correoUsado(actualizada)) {
             return fallo('aviso-registro', fu, 'Ese usuario o correo ya está registrado.');
           }
@@ -4658,7 +4212,6 @@
         });
       });
 
-      /* ---- Inicio de sesión ---- */
       paneles.entrar.addEventListener('submit', function (e) {
         e.preventDefault();
         limpiar();
@@ -4676,7 +4229,6 @@
         });
       });
 
-      /* ---- Sesión recordada ---- */
       try {
         var guardado = localStorage.getItem(CS);
         if (guardado && leer().some(function (u) { return u.usuario === guardado; })) actual = guardado;
@@ -4686,9 +4238,6 @@
 
     /* ====================================================================
        MÓDULO S9 — GALERÍA
-       Mismo principio que el carrusel de habitaciones: el desplazamiento
-       lo hace el navegador (scroll-snap); aquí solo van las flechas y el
-       contador. Una foto por pase.
        ==================================================================== */
     (function () {
       'use strict';
